@@ -1070,6 +1070,14 @@ public class CohortMaster {
 		    viralLoadEligiblePatients);
 		cohortDictionary.put(VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE, viralLoadResultWithSampleCollectionCohort);
 		cohortDictionary.put(VIRAL_LOAD_ELIGIBLE_WITH_SAMPLE_COLLECTION, eligibleWithSampleCollectionDateCohort);
+                
+                /*
+                   Proportion of patients with Viral Load result that had documented specimen sent date 
+                    -Proportion of patients with Viral Load Resuls
+                    -Proportion of patients with Viral Load Results and Specimen Sent Date
+                */
+                
+                
 		
 	}
 	
