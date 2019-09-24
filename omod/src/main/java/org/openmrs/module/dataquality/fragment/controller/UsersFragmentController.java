@@ -210,6 +210,14 @@ public class UsersFragmentController {
         map.put("viralloadeligiblewithsamplecollection",(int)denominator);
         map.put("viralloadresultwithsamplecollection", (int) numerator);
         map.put("percentageeligiblewithsamplecollected", (int) cohortMaster.getPercentage(numerator, denominator));
+        
+        //Proportion of patients with Viral Load result that had documented specimen sent date 
+        numerator = cohortMaster.countCohort(CohortMaster.SAMPLE_COLLECTED_WITH_SAMPLE_SENT_COHORT);
+        denominator = cohortMaster.countCohort(CohortMaster.VIRAL_LOAD_ELIGIBLE_WITH_SAMPLE_COLLECTION);
+
+        map.put("viralloadeligiblewithsamplecollection",(int)denominator);
+        map.put("samplesollectedwithsamplesentcohort", (int) numerator);
+        map.put("percentagesamplecollectedwithsamplesent", (int) cohortMaster.getPercentage(numerator, denominator));
        
         SummaryDashboard summaryDashboard = summaryDashboardList.stream().filter(x -> x.getEncounterTypeID().equals(11)).findFirst().orElse(null);
         if (summaryDashboard != null) {

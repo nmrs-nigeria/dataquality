@@ -122,6 +122,8 @@ public class CohortMaster {
 	
 	public final static int NEWLY_STARTED_ON_ART_WITH_DOCUMENTED_LGA = 41;
 	
+	public final static int SAMPLE_COLLECTED_WITH_SAMPLE_SENT_COHORT = 42;
+	
 	/*
 	   Concept IDs
 	 */
@@ -164,6 +166,8 @@ public class CohortMaster {
 	private final static int ARV_REGIMEN_DURATION = 159368;
 	
 	private final static int ARV_COMMENCEMENT_FORM = 53;
+	
+	private final static int DATE_SAMPLE_SENT_CONCEPT = 165988;
 	
 	private Map<Integer, String> indicatorNamesMap = new HashMap<Integer, String>();
 	
@@ -1070,14 +1074,17 @@ public class CohortMaster {
 		    viralLoadEligiblePatients);
 		cohortDictionary.put(VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE, viralLoadResultWithSampleCollectionCohort);
 		cohortDictionary.put(VIRAL_LOAD_ELIGIBLE_WITH_SAMPLE_COLLECTION, eligibleWithSampleCollectionDateCohort);
-                
-                /*
-                   Proportion of patients with Viral Load result that had documented specimen sent date 
-                    -Proportion of patients with Viral Load Resuls
-                    -Proportion of patients with Viral Load Results and Specimen Sent Date
-                */
-                
-                
+		
+		/*
+		   Proportion of patients with Viral Load result that had documented specimen sent date 
+		    -Proportion of patients with Viral Load Resuls
+		    -Proportion of patients with Viral Load Results and Specimen Sent Date
+		*/
+		Set<Integer> viralLoadResultSpecimenSentDateCohort, viralLoadResultSampleCollectedWithSampleSentDate;
+		viralLoadResultSpecimenSentDateCohort = buildCohortByObs(DATE_SAMPLE_SENT_CONCEPT);
+		viralLoadResultSampleCollectedWithSampleSentDate = interset(viralLoadResultSpecimenSentDateCohort,
+		    patientsWithSampleCollectionDateCohort);
+		cohortDictionary.put(SAMPLE_COLLECTED_WITH_SAMPLE_SENT_COHORT, viralLoadResultSampleCollectedWithSampleSentDate);
 		
 	}
 	

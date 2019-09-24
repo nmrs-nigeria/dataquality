@@ -334,9 +334,9 @@ def id = config.id
             <tr>
                 <td>III</td> 
                 <td>Proportion of patients with Viral Load result that had documented specimen sent date </td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>${ui.format(samplesollectedwithsamplesentcohort)}</td>
+                <td>${ui.format(viralloadeligiblewithsamplecollection)}</td>
+                <td>${ui.format(percentagesamplecollectedwithsamplesent)}</td>
                 <td></td>      
             </tr>
             <tr>
