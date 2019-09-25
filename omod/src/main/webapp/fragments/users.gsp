@@ -336,12 +336,20 @@ def id = config.id
                 <td>Proportion of patients with Viral Load result that had documented specimen sent date </td>
                 <td>${ui.format(samplesollectedwithsamplesentcohort)}</td>
                 <td>${ui.format(viralloadeligiblewithsamplecollection)}</td>
-                <td>${ui.format(percentagesamplecollectedwithsamplesent)}</td>
+                <td>${ui.format(percentagesamplecollectedwithsamplesent)}%</td>
                 <td></td>      
             </tr>
             <tr>
                 <td>IV</td> 
                 <td>Proportion of patients with Viral load results with a documented date sample was received at the PCR lab</td>
+                <td>${ui.format(viralloadresultswithsamplesentandreceivedatpcrlab)}</td>
+                <td>${ui.format(samplesollectedwithsamplesentcohort)}</td>
+                <td>${ui.format(percentagesamplereceivedatpcrwithsamplesent)}%</td>
+                <td></td>       
+            </tr>
+            <tr>
+                <td>V</td> 
+                <td>Proportion of patients  with Viral Load result that had documented indication for viral load</td>
                 <td></td>
                 <td></td>
                 <td></td>

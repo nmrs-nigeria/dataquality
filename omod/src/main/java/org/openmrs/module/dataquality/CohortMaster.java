@@ -124,6 +124,8 @@ public class CohortMaster {
 	
 	public final static int SAMPLE_COLLECTED_WITH_SAMPLE_SENT_COHORT = 42;
 	
+	public final static int SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR = 43;
+	
 	/*
 	   Concept IDs
 	 */
@@ -168,6 +170,8 @@ public class CohortMaster {
 	private final static int ARV_COMMENCEMENT_FORM = 53;
 	
 	private final static int DATE_SAMPLE_SENT_CONCEPT = 165988;
+	
+	private final static int DATE_RECEIVED_AT_PCR_LAB = 165716;
 	
 	private Map<Integer, String> indicatorNamesMap = new HashMap<Integer, String>();
 	
@@ -1085,6 +1089,17 @@ public class CohortMaster {
 		viralLoadResultSampleCollectedWithSampleSentDate = interset(viralLoadResultSpecimenSentDateCohort,
 		    patientsWithSampleCollectionDateCohort);
 		cohortDictionary.put(SAMPLE_COLLECTED_WITH_SAMPLE_SENT_COHORT, viralLoadResultSampleCollectedWithSampleSentDate);
+		
+		/*
+		  Proportion of patients with Viral load results with a documented date sample was received at the PCR lab
+		     -Documented Date Sample Received at PCR lab
+		     -Documented Sample Sent Date
+		*/
+		Set<Integer> viralLoadResultsWithSampleReceivedAtPCRLabDate, viralLoadResultSampleReceivedSampleSentCohort;
+		viralLoadResultsWithSampleReceivedAtPCRLabDate = buildCohortByConceptID(DATE_RECEIVED_AT_PCR_LAB);
+		viralLoadResultSampleReceivedSampleSentCohort = interset(viralLoadResultsWithSampleReceivedAtPCRLabDate,
+		    viralLoadResultSampleCollectedWithSampleSentDate);
+		cohortDictionary.put(SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR, viralLoadResultSampleReceivedSampleSentCohort);
 		
 	}
 	
