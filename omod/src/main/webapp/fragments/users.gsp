@@ -1,5 +1,7 @@
 <%
 ui.includeJavascript("dataquality", "jquery.js")
+ui.includeJavascript("dataquality", "jquery.dataTables.min.js")
+ui.includeJavascript("dataquality", "datatables.min.js")
 
 def id = config.id
 %>
