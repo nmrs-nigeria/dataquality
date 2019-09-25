@@ -319,14 +319,7 @@ jq(document).ready(function() {
                 <td>${ui.format(percentagesamplereceivedatpcrwithsamplesent)}%</td>
                 <td></td>       
             </tr>
-            <tr>
-                <td>V</td> 
-                <td>Proportion of patients  with Viral Load result that had documented indication for viral load</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>       
-            </tr>
+           
 
 
         </tbody>
