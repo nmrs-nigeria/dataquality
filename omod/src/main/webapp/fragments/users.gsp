@@ -38,8 +38,8 @@ jq(document).ready(function() {
     margin-bottom: 60px;
     }
     #myTable {
-        width: 70%;
-        margin-left: 15%;
+        width: 90%;
+        margin-left: 5%;
     }
     .buttons-html5{
     text-decoration: none;
@@ -98,9 +98,9 @@ jq(document).ready(function() {
 
 <div class="container">
     <table id="myTable" class="display">
-        <!--<thead>
+        <thead>
             <tr><th colspan='6' style='text-align: left; font-size: 16px;'>Clinical</th></tr>
-        </thead>-->
+        </thead>
         <thead style="font-size: 13px;">
             <tr>
                 <th>S/N</th>
@@ -232,7 +232,7 @@ jq(document).ready(function() {
                 <td>${ui.format(percentagestclinicvisitlast6monthswithdocumentedtbstatus)}%</td>
                 <td></td>
             </tr>
-            <!--<tr>
+            <tr>
                 <th colspan='6'  style='text-align: left; font-size: 16px;'>Pharmacy</th>
             </tr> 
             <tr>
@@ -276,7 +276,7 @@ jq(document).ready(function() {
                 <td></td>    
             </tr>
 
-            <!--<tr>
+            <tr>
                 <th colspan='6'  style='text-align: left; font-size: 16px;'>Laboratory</th>
             </tr> 
             <tr>
@@ -286,7 +286,7 @@ jq(document).ready(function() {
                 <th>Denominator</th>
                 <th>Performance</th>
                 <th>Export</th>
-            </tr>-->
+            </tr>
             <tr>
                 <td>I</td>
                 <td>Proportion of eligible patients with documented Viral Load results done in the last one year</td>
