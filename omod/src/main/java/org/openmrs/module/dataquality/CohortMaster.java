@@ -125,6 +125,8 @@ public class CohortMaster {
 	public final static int SAMPLE_COLLECTED_WITH_SAMPLE_SENT_COHORT = 42;
 	
 	public final static int SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR = 43;
+        
+        public final static int CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS=165039;
 	
 	/*
 	   Concept IDs
@@ -172,6 +174,8 @@ public class CohortMaster {
 	private final static int DATE_SAMPLE_SENT_CONCEPT = 165988;
 	
 	private final static int DATE_RECEIVED_AT_PCR_LAB = 165716;
+        
+        private final static int FUNCTIONAL_STATUS_CONCEPT =165039;
 	
 	private Map<Integer, String> indicatorNamesMap = new HashMap<Integer, String>();
 	
@@ -1100,6 +1104,17 @@ public class CohortMaster {
 		viralLoadResultSampleReceivedSampleSentCohort = interset(viralLoadResultsWithSampleReceivedAtPCRLabDate,
 		    viralLoadResultSampleCollectedWithSampleSentDate);
 		cohortDictionary.put(SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR, viralLoadResultSampleReceivedSampleSentCohort);
+                
+                /*
+		  Proportion of patients with a clinic visit in the last 6 months that had documented functional status
+		     -Documented Functional Status last 6 Months
+		     -Clinic Visit Last 6 Months
+		*/
+                endDateTime=new DateTime(new Date());
+                startDateTime=endDateTime.minusMonths(6);
+		Set<Integer> clinicVisitLast6MonthsWithFunctionalStatusCohort;
+		clinicVisitLast6MonthsWithFunctionalStatusCohort = buildCohortByConceptID(FUNCTIONAL_STATUS_CONCEPT,startDateTime.toDate(),endDateTime.toDate());
+		cohortDictionary.put(CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS, clinicVisitLast6MonthsWithFunctionalStatusCohort);
 		
 	}
 	
