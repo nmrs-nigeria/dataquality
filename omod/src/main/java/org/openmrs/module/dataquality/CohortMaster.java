@@ -128,7 +128,7 @@ public class CohortMaster {
 
     public final static int CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS = 165039;
     
-    private final static int STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN=44;
+    public final static int STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN=44;
 
     /*
 	   Concept IDs

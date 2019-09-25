@@ -241,9 +241,9 @@ jq(document).ready(function() {
                 <td></td>
             </tr>
              <td>Proportion of patients newly started on ART in the last 6 months with initial ART regimen</td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>${ui.format(newlystartedonartwithinitialartregimen)}</td>
+                <td>${ui.format(startedartlast6monthscount)}</td>
+                <td>${ui.format(percentagenewlystartedonartdocumentedinitialregimen)}</td>
                 <td></td>
             <tr>
                 <th colspan='6'  style='text-align: left; font-size: 16px;'>Pharmacy</th>
