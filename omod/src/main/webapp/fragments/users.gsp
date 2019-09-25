@@ -2,6 +2,13 @@
 ui.includeJavascript("dataquality", "jquery.js")
 ui.includeJavascript("dataquality", "jquery.dataTables.min.js")
 ui.includeJavascript("dataquality", "datatables.min.js")
+ui.includeJavascript("dataquality", "buttons.flash.min.js")
+ui.includeJavascript("dataquality", "jszip.min.js")
+ui.includeJavascript("dataquality", "pdfmake.min.js")
+ui.includeJavascript("dataquality", "vfs_fonts.js")
+ui.includeJavascript("dataquality", "buttons.html5.min.js")
+ui.includeJavascript("dataquality", "buttons.print.min.js")
+
 
 def id = config.id
 %>
