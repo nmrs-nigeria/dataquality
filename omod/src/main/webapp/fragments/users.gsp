@@ -70,9 +70,9 @@ def id = config.id
 
 
 
-<script src="js/jquery.js" type="text/javascript" >
-    var jq = jQuery;
-        
+<script type="text/javascript" >
+var jq = jQuery;
+      
 jq(document).ready(function() {
     jq('#example').DataTable( {
         dom: 'Bfrtip',
