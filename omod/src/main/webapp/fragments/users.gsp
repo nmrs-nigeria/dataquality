@@ -71,15 +71,7 @@ def id = config.id
 
 <script>
     jq = jQuery;
-    jq(document).ready(function () {
-    jq('#myTable').DataTable({
-    dom: 'Bfrtip',
-    buttons: [
-    'copy', 'excel', 'pdf'
-    ]
-    });
-    });
-    
+        
 jq(document).ready(function() {
     jq('#example').DataTable( {
         dom: 'Bfrtip',

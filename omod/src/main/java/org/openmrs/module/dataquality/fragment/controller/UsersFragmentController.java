@@ -27,6 +27,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 //import liquibase.util.csv.opencsv.CSVWriter;
 import com.opencsv.CSVWriter;
+import java.util.ArrayList;
 import static org.openmrs.module.dataquality.CohortMaster.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.supercsv.io.CsvBeanWriter;
@@ -37,17 +38,18 @@ public class UsersFragmentController {
 	
 	public void controller(FragmentModel model, @SpringBean("userService") UserService service) {
 		
-		DbConnection connection = new DbConnection();
-		FactoryUtils factoryUtils = new FactoryUtils();
+		//DbConnection connection = new DbConnection();
+		//FactoryUtils factoryUtils = new FactoryUtils();
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		//List<SummaryDashboard> summaryDashboardList = factoryUtils.getEncounters();
 		CohortMaster cohortMaster = new CohortMaster();
 		
 		//List<PatientLineList> patientLineList = factoryUtils.getPatientsLineList();
-		
+		List<PatientLineList> patientLineList = new ArrayList<PatientLineList>();
 		//model.addAttribute("patientLineList", patientLineList);
 		
 		//map.put("totalPatients", Context.getPatientService().getAllPatients().size());
+                map.put("totalPatients", 0);
 		double numerator = 0.0, denominator = 0.0;
 		String fileName = "";
 		//Educational Status
