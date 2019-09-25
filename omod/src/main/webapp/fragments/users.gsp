@@ -17,7 +17,7 @@ def id = config.id
 
 
 <style type="text/css">
-    .dt-buttons{
+    /* .dt-buttons{
     float: right;
     }
     #apps{
@@ -76,7 +76,8 @@ def id = config.id
 
     #myTable_paginate li a{
     color:white;
-    }
+    } 
+    */
 </style>
 
 <script>
