@@ -237,9 +237,14 @@ jq(document).ready(function() {
                 <td>Proportion of patients with a clinic visit in the last 6 months that had documented functional status</td>
                 <td>${ui.format(clinicvisitdocumentedfunctionalstatus)}</td>
                 <td>${ui.format(clinicvisitlast6monthscount)}</td>
-                <td>${ui.format(percentageclinicvisitdocumentedfunctionalstatus)}</td>
+                <td>${ui.format(percentageclinicvisitdocumentedfunctionalstatus)}%</td>
                 <td></td>
             </tr>
+             <td>Proportion of patients newly started on ART in the last 6 months with initial ART regimen</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             <tr>
                 <th colspan='6'  style='text-align: left; font-size: 16px;'>Pharmacy</th>
             </tr> 
