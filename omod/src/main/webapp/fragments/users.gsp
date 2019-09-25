@@ -233,6 +233,14 @@ jq(document).ready(function() {
                 <td></td>
             </tr>
             <tr>
+                <td>XV</td>
+                <td>Proportion of patients with a clinic visit in the last 6 months that had documented functional status</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
                 <th colspan='6'  style='text-align: left; font-size: 16px;'>Pharmacy</th>
             </tr> 
             <tr>

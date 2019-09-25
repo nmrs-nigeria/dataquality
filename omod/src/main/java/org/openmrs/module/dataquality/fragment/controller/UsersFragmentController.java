@@ -234,24 +234,9 @@ public class UsersFragmentController {
 		map.put("viralloadresultswithsamplesentandreceivedatpcrlab", (int) numerator);
 		map.put("percentagesamplereceivedatpcrwithsamplesent", (int) cohortMaster.getPercentage(numerator, denominator));
 		
-		/*SummaryDashboard summaryDashboard = summaryDashboardList.stream().filter(x -> x.getEncounterTypeID().equals(11)).findFirst().orElse(null);
-		if (summaryDashboard != null) {
-		    map.put("totallLaboratoryEncounter", summaryDashboard.getCountOfEncounter());
-		} else {
-		    map.put("totallLaboratoryEncounter", 0);
-		}
-		summaryDashboard = summaryDashboardList.stream().filter(x -> x.getEncounterTypeID().equals(13)).findFirst().orElse(null);
-		if (summaryDashboard != null) {
-		    map.put("totalPharmacyEncounter", summaryDashboard.getCountOfEncounter());
-		} else {
-		    map.put("totalPharmacyEncounter", 0);
-		}
-		summaryDashboard = summaryDashboardList.stream().filter(x -> x.getEncounterTypeID().equals(12)).findFirst().orElse(null);
-		if (summaryDashboard != null) {
-		    map.put("totalCareCardEncounter", summaryDashboard.getCountOfEncounter());
-		} else {
-		    map.put("totalCareCardEncounter", 0);
-		}*/
+                
+                
+		
 		model.mergeAttributes(map);
 		
 	}
