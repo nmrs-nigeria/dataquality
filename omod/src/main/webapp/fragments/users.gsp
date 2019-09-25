@@ -79,12 +79,20 @@ def id = config.id
     ]
     });
     });
-
+    
+jq(document).ready(function() {
+    jq('#example').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    } );
+} );
 </script>
 
 
 <div class="container">
-    <table id="myTable">
+    <table id="example">
         <thead>
             <tr><th colspan='6' style='text-align: left; font-size: 16px;'>Clinical</th></tr>
         </thead>
