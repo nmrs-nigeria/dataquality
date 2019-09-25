@@ -16,14 +16,31 @@ def id = config.id
 <%=ui.resourceLinks()%>
 
 
-<style type="text/css">
-    /* .dt-buttons{
+
+
+<script>
+jq = jQuery;
+      
+jq(document).ready(function() {
+    jq('#myTable').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    } );
+} );
+</script>
+<style>
+     .dt-buttons{
     float: right;
     }
     #apps{
     margin-bottom: 60px;
     }
-
+    #myTable {
+        width: 70%;
+        margin-left: 15%;
+    }
     .buttons-html5{
     text-decoration: none;
     margin-left: 5px;
@@ -77,25 +94,10 @@ def id = config.id
     #myTable_paginate li a{
     color:white;
     } 
-    */
 </style>
 
-<script>
-jq = jQuery;
-      
-jq(document).ready(function() {
-    jq('#myTable').DataTable( {
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-    } );
-} );
-</script>
-
-
 <div class="container">
-    <table id="myTable" class="display nowrap">
+    <table id="myTable" class="display">
         <!--<thead>
             <tr><th colspan='6' style='text-align: left; font-size: 16px;'>Clinical</th></tr>
         </thead>-->
