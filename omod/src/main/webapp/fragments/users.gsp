@@ -1,4 +1,5 @@
 <%
+ui.includeJavascript("dataquality", "jquery.js")
 def id = config.id
 %>
 <%=ui.resourceLinks()%>
@@ -69,7 +70,7 @@ def id = config.id
 
 
 
-<script>
+<script src="js/jquery.js" type="text/javascript" >
     var jq = jQuery;
         
 jq(document).ready(function() {
