@@ -251,9 +251,9 @@ def id = config.id
              <tr>
                 <td>XVII</td>
                 <td>Proportion of all patients with a clinic visit in the last 6 months that have documented next scheduled appointment date</td>
-                <td>${}</td>
-                <td>${}</td>
-                <td>${}%</td>
+                <td>${clinicvisitlast6monthswithnextappointmentdate}</td>
+                <td>${clinicvisitlast6monthscount}</td>
+                <td>${percentageclinicvisitwithnextappointmentdate}%</td>
                 <td></td>
             </tr>
             <tr>

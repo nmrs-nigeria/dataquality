@@ -130,7 +130,7 @@ public class CohortMaster {
 	
 	public final static int STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN = 44;
         
-        private final static int CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE=45;
+        public final static int CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE=45;
 	
 	/*
 	   Concept IDs
@@ -1175,8 +1175,10 @@ public class CohortMaster {
 		 */
                 endDateTime=new DateTime(new Date());
                 startDateTime=endDateTime.minusMonths(6);
-                Set<Integer> clinicVisitWithNextAppointmentDate6Months;
-                
+                Set<Integer> nextAppointmentDate6Months,clinicVisitWithNextAppointmentDate6Months;
+                nextAppointmentDate6Months=buildCohortByObsDate(NEXT_APPOINTMENT_DATE, startDateTime.toDate(), endDateTime.toDate());
+                clinicVisitWithNextAppointmentDate6Months=interset(nextAppointmentDate6Months, clinicVisitLast6Months);
+                cohortDictionary.put(CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE,clinicVisitWithNextAppointmentDate6Months);
 		
 	}
 	
