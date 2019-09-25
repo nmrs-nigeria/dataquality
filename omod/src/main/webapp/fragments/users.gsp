@@ -19,27 +19,27 @@ def id = config.id
 
 
 <script>
-jq = jQuery;
-      
-jq(document).ready(function() {
+    jq = jQuery;
+
+    jq(document).ready(function() {
     jq('#myTable').DataTable( {
-        dom: 'Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
+    dom: 'Bfrtip',
+    buttons: [
+    'copy', 'csv', 'excel', 'pdf', 'print'
+    ]
     } );
-} );
+    } );
 </script>
 <style>
-     .dt-buttons{
+    .dt-buttons{
     float: right;
     }
     #apps{
     margin-bottom: 60px;
     }
     #myTable {
-        width: 90%;
-        margin-left: 5%;
+    width: 90%;
+    margin-left: 5%;
     }
     .buttons-html5{
     text-decoration: none;
@@ -240,11 +240,22 @@ jq(document).ready(function() {
                 <td>${ui.format(percentageclinicvisitdocumentedfunctionalstatus)}%</td>
                 <td></td>
             </tr>
-             <td>Proportion of patients newly started on ART in the last 6 months with initial ART regimen</td>
+            <tr>
+                <td>XVI</td>
+                <td>Proportion of patients newly started on ART in the last 6 months with initial ART regimen</td>
                 <td>${ui.format(newlystartedonartwithinitialartregimen)}</td>
                 <td>${ui.format(startedartlast6monthscount)}</td>
-                <td>${ui.format(percentagenewlystartedonartdocumentedinitialregimen)}</td>
+                <td>${ui.format(percentagenewlystartedonartdocumentedinitialregimen)}%</td>
                 <td></td>
+            </tr>
+             <tr>
+                <td>XVII</td>
+                <td>Proportion of all patients with a clinic visit in the last 6 months that have documented next scheduled appointment date</td>
+                <td>${}</td>
+                <td>${}</td>
+                <td>${}%</td>
+                <td></td>
+            </tr>
             <tr>
                 <th colspan='6'  style='text-align: left; font-size: 16px;'>Pharmacy</th>
             </tr> 
@@ -332,7 +343,7 @@ jq(document).ready(function() {
                 <td>${ui.format(percentagesamplereceivedatpcrwithsamplesent)}%</td>
                 <td></td>       
             </tr>
-           
+
 
 
         </tbody>
