@@ -259,7 +259,15 @@ public class UsersFragmentController {
 		map.put("clinicvisitlast6monthswithnextappointmentdate", (int) numerator);
 		map.put("percentageclinicvisitwithnextappointmentdate", (int) cohortMaster.getPercentage(numerator, denominator));
 		
-		model.mergeAttributes(map);
+                //Proportion of all inactive patients with a documented exit reason
+		numerator = cohortMaster.countCohort(CohortMaster.DOCUMENTED_EXIT_REASON_INACTIVE_COHORT);
+		denominator = cohortMaster.countCohort(CohortMaster.INACTIVE_PATIENT_COHORT);
+		
+		map.put("inactiveccohort",(int)denominator);
+		map.put("documentedexitreasoninactive", (int) numerator);
+		map.put("percentageinactivedocumentedexitreason", (int) cohortMaster.getPercentage(numerator, denominator));
+		
+                model.mergeAttributes(map);
 		
 	}
 }

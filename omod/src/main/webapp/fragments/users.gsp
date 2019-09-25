@@ -248,7 +248,7 @@ def id = config.id
                 <td>${ui.format(percentagenewlystartedonartdocumentedinitialregimen)}%</td>
                 <td></td>
             </tr>
-             <tr>
+            <tr>
                 <td>XVII</td>
                 <td>Proportion of all patients with a clinic visit in the last 6 months that have documented next scheduled appointment date</td>
                 <td>${clinicvisitlast6monthswithnextappointmentdate}</td>
@@ -256,6 +256,15 @@ def id = config.id
                 <td>${percentageclinicvisitwithnextappointmentdate}%</td>
                 <td></td>
             </tr>
+            <tr>
+                <td>XVIII</td>
+                <td>Proportion of all inactive patients with a documented exit reason</td>
+                <td>${ui.format(documentedexitreasoninactive)}</td>
+                <td>${ui.format(inactiveccohort)}</td>
+                <td>${ui.format(percentageinactivedocumentedexitreason)}</td>
+                <td></td>
+            </tr>
+            
             <tr>
                 <th colspan='6'  style='text-align: left; font-size: 16px;'>Pharmacy</th>
             </tr> 
