@@ -534,8 +534,8 @@ public class CohortMaster {
 		Obs obs = null;
 		DateTime encounterDateTime = null;
 		for (Patient pts : patientList) {
-			obsList = obsService.getObservationsByPerson(pts);
-                        encounterList=encounterService.getEncountersByPatient(pts);
+			//obsList = obsService.getObservationsByPerson(pts);
+			encounterList = encounterService.getEncountersByPatient(pts);
 			/*obs = getLastObs(DURATION_CONCEPT, obsList);
 			if (obs != null) {
 				drugDurationInDays = obs.getValueNumeric().intValue();
