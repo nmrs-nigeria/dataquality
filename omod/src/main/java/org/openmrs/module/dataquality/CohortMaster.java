@@ -132,19 +132,20 @@ public class CohortMaster {
 	
 	public final static int CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE = 45;
 	
-        public final static int DOCUMENTED_EXIT_REASON_COHORT=46;
-        
-        public final static int DOCUMENTED_EXIT_REASON_INACTIVE_COHORT=47;
-        
-        public final static int INACTIVE_PATIENT_COHORT=47;
+	public final static int DOCUMENTED_EXIT_REASON_COHORT = 46;
+	
+	public final static int DOCUMENTED_EXIT_REASON_INACTIVE_COHORT = 47;
+	
+	public final static int INACTIVE_PATIENT_COHORT = 47;
+	
 	/*
 	   Concept IDs
 	 */
 	private final static int EDUCATIONAL_STATUS_CONCEPT = 1712;
 	
 	private final static int MARITAL_STATUS_CONCEPT = 1054;
-        
-        private final static int EXIT_REASON_CONCEPT=165470;
+	
+	private final static int EXIT_REASON_CONCEPT = 165470;
 	
 	private final static int OCCUPATIONAL_STATUS_CONCEPT = 1542;
 	
@@ -440,15 +441,17 @@ public class CohortMaster {
 		}
 		return patientSet;
 	}
-	public Set<Integer> allPatientsCohorts(){
-            PatientService patientService=Context.getPatientService();
-            List<Patient> patientList=patientService.getAllPatients();
-            Set<Integer> patientSet=new HashSet<Integer>();
-            for(Patient patient: patientList){
-                patientSet.add(patient.getPatientId());
-            }
-            return patientSet;
-        }
+	
+	public Set<Integer> allPatientsCohorts() {
+		PatientService patientService = Context.getPatientService();
+		List<Patient> patientList = patientService.getAllPatients();
+		Set<Integer> patientSet = new HashSet<Integer>();
+		for (Patient patient : patientList) {
+			patientSet.add(patient.getPatientId());
+		}
+		return patientSet;
+	}
+	
 	public Set<Integer> buildCohortByDocumentedGender() {
 		Set<Integer> patientSet = new HashSet<Integer>();
 		PatientService patientService = Context.getPatientService();
@@ -517,7 +520,7 @@ public class CohortMaster {
 	
 	public Set<Integer> buildCohortByActive() {
 		Set<Integer> patientSet = new HashSet<Integer>();
-		//EncounterService encounterService = Context.getEncounterService();
+		EncounterService encounterService = Context.getEncounterService();
 		PatientService patientService = Context.getPatientService();
 		ObsService obsService = Context.getObsService();
 		Date startDate = null, endDate = new Date(), lastPickupDate = null, reportingPeriodDate = new Date();
@@ -529,10 +532,11 @@ public class CohortMaster {
 		List<Obs> obsList = null;
 		int drugDurationInDays = 0;
 		Obs obs = null;
-		//DateTime encounterDateTime = null;
+		DateTime encounterDateTime = null;
 		for (Patient pts : patientList) {
 			obsList = obsService.getObservationsByPerson(pts);
-			obs = getLastObs(DURATION_CONCEPT, obsList);
+                        encounterList=encounterService.getEncountersByPatient(pts);
+			/*obs = getLastObs(DURATION_CONCEPT, obsList);
 			if (obs != null) {
 				drugDurationInDays = obs.getValueNumeric().intValue();
 			}
@@ -541,14 +545,14 @@ public class CohortMaster {
 				if (isActive(lastPickupDate, reportingPeriodDate, drugDurationInDays)) {
 					patientSet.add(pts.getPatientId());
 				}
-			}
+			}*/
 			
-			/*for (Encounter enc : encounterList) {
-				//encounterDateTime = new DateTime(enc.getEncounterDatetime());
+			for (Encounter enc : encounterList) {
+				encounterDateTime = new DateTime(enc.getEncounterDatetime());
 				if (isBetweenDate(startDateTime.toDate(), endDateTime.toDate(), enc.getEncounterDatetime())) {
 					patientSet.add(enc.getPatient().getPatientId());
 				}
-			}*/
+			}
 		}
 		//encounterList.addAll(encounterService.getEncounters(startDateTime.toDate(), endDateTime.toDate()));
 		
@@ -1236,23 +1240,22 @@ public class CohortMaster {
 		clinicVisitWithNextAppointmentDate6Months = interset(nextAppointmentDate6Months, clinicVisitLast6Months);
 		cohortDictionary.put(CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE,
 		    clinicVisitWithNextAppointmentDate6Months);
-                
-                /*
-                  Proportion of all inactive patients with a documented exit reason
-		     -Active Patients Cohort
-                     -Not Active Patient
-                     -Documented Exit Reason
-		     
-                */
-                Set<Integer> documentedExitReasonCohort,allPatientCohort,inactivePatientsCohort,inactiveDocumentedExitReasonCohort;
-                documentedExitReasonCohort=buildCohortByObs(EXIT_REASON_CONCEPT);
-                allPatientCohort=allPatientsCohorts();
-                inactivePatientsCohort=minus(allPatientCohort, activePatientCohort);
-                inactiveDocumentedExitReasonCohort=interset(documentedExitReasonCohort, inactivePatientsCohort);
-                cohortDictionary.put(DOCUMENTED_EXIT_REASON_COHORT,documentedExitReasonCohort);
-                cohortDictionary.put(INACTIVE_PATIENT_COHORT,inactivePatientsCohort);
-                cohortDictionary.put(DOCUMENTED_EXIT_REASON_INACTIVE_COHORT,inactiveDocumentedExitReasonCohort);
-                
+		
+		/*
+		  Proportion of all inactive patients with a documented exit reason
+		-Active Patients Cohort
+		     -Not Active Patient
+		     -Documented Exit Reason
+		
+		*/
+		Set<Integer> documentedExitReasonCohort, allPatientCohort, inactivePatientsCohort, inactiveDocumentedExitReasonCohort;
+		documentedExitReasonCohort = buildCohortByObs(EXIT_REASON_CONCEPT);
+		allPatientCohort = allPatientsCohorts();
+		inactivePatientsCohort = minus(allPatientCohort, activePatientCohort);
+		inactiveDocumentedExitReasonCohort = interset(documentedExitReasonCohort, inactivePatientsCohort);
+		cohortDictionary.put(DOCUMENTED_EXIT_REASON_COHORT, documentedExitReasonCohort);
+		cohortDictionary.put(INACTIVE_PATIENT_COHORT, inactivePatientsCohort);
+		cohortDictionary.put(DOCUMENTED_EXIT_REASON_INACTIVE_COHORT, inactiveDocumentedExitReasonCohort);
 		
 	}
 	
