@@ -8,7 +8,8 @@ ui.includeJavascript("dataquality", "pdfmake.min.js")
 ui.includeJavascript("dataquality", "vfs_fonts.js")
 ui.includeJavascript("dataquality", "buttons.html5.min.js")
 ui.includeJavascript("dataquality", "buttons.print.min.js")
-
+ui.includeCss("dataquality", "buttons.dataTables.min")
+ui.includeCss("dataquality", "jquery.dataTables.min")
 
 def id = config.id
 %>
@@ -93,10 +94,10 @@ jq(document).ready(function() {
 
 
 <div class="container">
-    <table id="myTable">
-        <thead>
+    <table id="myTable" class="display nowrap">
+        <!--<thead>
             <tr><th colspan='6' style='text-align: left; font-size: 16px;'>Clinical</th></tr>
-        </thead>
+        </thead>-->
         <thead style="font-size: 13px;">
             <tr>
                 <th>S/N</th>
@@ -228,7 +229,7 @@ jq(document).ready(function() {
                 <td>${ui.format(percentagestclinicvisitlast6monthswithdocumentedtbstatus)}%</td>
                 <td></td>
             </tr>
-            <tr>
+            <!--<tr>
                 <th colspan='6'  style='text-align: left; font-size: 16px;'>Pharmacy</th>
             </tr> 
             <tr>
@@ -238,7 +239,7 @@ jq(document).ready(function() {
                 <th>Denominator</th>
                 <th>Performance</th>
                 <th>Export</th>
-            </tr>
+            </tr>-->
             <tr>
                 <td>I</td> 
                 <td>Proportion of patients with a documented ART regimen quantity in the last drug refill visit</td>
@@ -272,7 +273,7 @@ jq(document).ready(function() {
                 <td></td>    
             </tr>
 
-            <tr>
+            <!--<tr>
                 <th colspan='6'  style='text-align: left; font-size: 16px;'>Laboratory</th>
             </tr> 
             <tr>
@@ -282,7 +283,7 @@ jq(document).ready(function() {
                 <th>Denominator</th>
                 <th>Performance</th>
                 <th>Export</th>
-            </tr>
+            </tr>-->
             <tr>
                 <td>I</td>
                 <td>Proportion of eligible patients with documented Viral Load results done in the last one year</td>
