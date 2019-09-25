@@ -83,47 +83,6 @@ def id = config.id
 </script>
 
 
-<!--<div id="apps" align="center">
-
-    <a id="demoapp-homepageLink-demoapp-homepageLink-extension" href="#"
-       class="button app big">
-
-        <i class="icon-user"></i>
-        <br>
-
-        Total Pateints
-        <p><b>${ui.format(totalPatients)}</b></p>
-    </a>
-
-    <a id="coreapps-activeVisitsHomepageLink-coreapps-activeVisitsHomepageLink-extension"
-       href="#" class="button app big">
-
-        <i class="icon-stethoscope"></i>
-        <br>
-        Lab Records
-        <p><b>${ui.format(totallLaboratoryEncounter)}</b></p>
-    </a>
-
-    <a id="org-openmrs-module-coreapps-activeVisitsHomepageLink-org-openmrs-module-coreapps-activeVisitsHomepageLink-extension"
-       href="#" class="button app big">
-
-        <i class="icon-vitals"></i>
-        <br>
-        Pharmacy Records
-        <p><b>${ui.format(totalPharmacyEncounter)}</b></p>
-    </a>
-
-    <a id="referenceapplication-registrationapp-registerPatient-homepageLink-referenceapplication-registrationapp-registerPatient-homepageLink-extension"
-       href="#"
-       class="button app big">
-
-        <i class="icon-calendar"></i>
-        <br>
-        Care card Records
-        <p><b>${ui.format(totalCareCardEncounter)}</b></p>
-    </a>
-
-</div>-->
 <div class="container">
     <table id="myTable">
         <thead>
