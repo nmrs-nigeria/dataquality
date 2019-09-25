@@ -1,4 +1,5 @@
 <%
+ui.includeJavascript("dataquality-omod", "jquery.js")
 def id = config.id
 %>
 <%=ui.resourceLinks()%>
