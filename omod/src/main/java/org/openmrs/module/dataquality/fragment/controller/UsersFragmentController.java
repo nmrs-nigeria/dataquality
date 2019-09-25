@@ -250,14 +250,14 @@ public class UsersFragmentController {
 		map.put("newlystartedonartwithinitialartregimen", (int) numerator);
 		map.put("percentagenewlystartedonartdocumentedinitialregimen",
 		    (int) cohortMaster.getPercentage(numerator, denominator));
-                
-                //Proportion of all patients with a clinic visit in the last 6 months that have documented next scheduled appointment date
+		
+		//Proportion of all patients with a clinic visit in the last 6 months that have documented next scheduled appointment date
 		numerator = cohortMaster.countCohort(CohortMaster.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE);
 		denominator = cohortMaster.countCohort(CohortMaster.CLINIC_VISIT_LAST_6MONTHS_COHORT);
 		
 		//map.put("samp",(int)denominator);
-		map.put("clinicvisitlast6monthswithnextappointmentdate",(int) numerator);
-		map.put("percentageclinicvisitwithnextappointmentdate",(int) cohortMaster.getPercentage(numerator, denominator));
+		map.put("clinicvisitlast6monthswithnextappointmentdate", (int) numerator);
+		map.put("percentageclinicvisitwithnextappointmentdate", (int) cohortMaster.getPercentage(numerator, denominator));
 		
 		model.mergeAttributes(map);
 		

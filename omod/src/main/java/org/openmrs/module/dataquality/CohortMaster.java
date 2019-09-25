@@ -129,8 +129,8 @@ public class CohortMaster {
 	public final static int CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS = 165039;
 	
 	public final static int STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN = 44;
-        
-        public final static int CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE=45;
+	
+	public final static int CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE = 45;
 	
 	/*
 	   Concept IDs
@@ -162,8 +162,8 @@ public class CohortMaster {
 	private final static int MUAC_CONCEPT = 165935;
 	
 	private final static int WHO_CONCEPT = 5356;
-        
-        private final static int NEXT_APPOINTMENT_DATE=5096;
+	
+	private final static int NEXT_APPOINTMENT_DATE = 5096;
 	
 	private final static int TB_STATUS_CONCEPT = 1659;
 	
@@ -1167,18 +1167,20 @@ public class CohortMaster {
 		newlyStartedARTWithInitialARTRegimenLast6Months = interset(newlyStartedARTLast6MonthsCohort,
 		    initialARTRegimenLast6Months);
 		cohortDictionary.put(STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN, newlyStartedARTWithInitialARTRegimenLast6Months);
-                
-                /*
-		           Proportion of all patients with a clinic visit in the last 6 months that have documented next scheduled appointment date
-		             -Clinic visit last 6 months
-		             -Clinic visit last 6 months with Next Appointment Dates
-		 */
-                endDateTime=new DateTime(new Date());
-                startDateTime=endDateTime.minusMonths(6);
-                Set<Integer> nextAppointmentDate6Months,clinicVisitWithNextAppointmentDate6Months;
-                nextAppointmentDate6Months=buildCohortByObsDate(NEXT_APPOINTMENT_DATE, startDateTime.toDate(), endDateTime.toDate());
-                clinicVisitWithNextAppointmentDate6Months=interset(nextAppointmentDate6Months, clinicVisitLast6Months);
-                cohortDictionary.put(CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE,clinicVisitWithNextAppointmentDate6Months);
+		
+		/*
+		   Proportion of all patients with a clinic visit in the last 6 months that have documented next scheduled appointment date
+		     -Clinic visit last 6 months
+		     -Clinic visit last 6 months with Next Appointment Dates
+		*/
+		endDateTime = new DateTime(new Date());
+		startDateTime = endDateTime.minusMonths(6);
+		Set<Integer> nextAppointmentDate6Months, clinicVisitWithNextAppointmentDate6Months;
+		nextAppointmentDate6Months = buildCohortByObsDate(NEXT_APPOINTMENT_DATE, startDateTime.toDate(),
+		    endDateTime.toDate());
+		clinicVisitWithNextAppointmentDate6Months = interset(nextAppointmentDate6Months, clinicVisitLast6Months);
+		cohortDictionary.put(CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE,
+		    clinicVisitWithNextAppointmentDate6Months);
 		
 	}
 	
