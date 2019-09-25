@@ -46,10 +46,10 @@ public class UsersFragmentController {
 		
 		//List<PatientLineList> patientLineList = factoryUtils.getPatientsLineList();
 		List<PatientLineList> patientLineList = new ArrayList<PatientLineList>();
-		//model.addAttribute("patientLineList", patientLineList);
+		model.addAttribute("patientLineList", patientLineList);
 		
 		//map.put("totalPatients", Context.getPatientService().getAllPatients().size());
-                map.put("totalPatients", 0);
+		map.put("totalPatients", 0);
 		double numerator = 0.0, denominator = 0.0;
 		String fileName = "";
 		//Educational Status
