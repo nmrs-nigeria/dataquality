@@ -1,6 +1,6 @@
 <%
 ui.includeJavascript("dataquality", "jquery.js")
-ui.includeJavascript("dataquality", "datatables.js")
+
 def id = config.id
 %>
 <%=ui.resourceLinks()%>
