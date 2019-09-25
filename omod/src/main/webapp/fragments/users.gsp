@@ -70,7 +70,7 @@ def id = config.id
 
 
 <script>
-    jq = jQuery;
+    var jq = jQuery;
         
 jq(document).ready(function() {
     jq('#example').DataTable( {
