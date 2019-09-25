@@ -242,7 +242,7 @@ jq(document).ready(function() {
                 <th>Denominator</th>
                 <th>Performance</th>
                 <th>Export</th>
-            </tr>-->
+            </tr>
             <tr>
                 <td>I</td> 
                 <td>Proportion of patients with a documented ART regimen quantity in the last drug refill visit</td>
