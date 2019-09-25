@@ -1,5 +1,4 @@
 <%
-ui.includeJavascript("dataquality", "jquery.js")
 def id = config.id
 %>
 <%=ui.resourceLinks()%>
@@ -68,13 +67,11 @@ def id = config.id
     }
 </style>
 
-
-
-<script type="text/javascript" >
-var jq = jQuery;
+<script>
+jq = jQuery;
       
 jq(document).ready(function() {
-    jq('#example').DataTable( {
+    jq('#myTable').DataTable( {
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
@@ -85,7 +82,7 @@ jq(document).ready(function() {
 
 
 <div class="container">
-    <table id="example">
+    <table id="myTable">
         <thead>
             <tr><th colspan='6' style='text-align: left; font-size: 16px;'>Clinical</th></tr>
         </thead>
