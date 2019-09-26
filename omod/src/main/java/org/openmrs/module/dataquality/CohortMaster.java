@@ -1468,6 +1468,7 @@ public class CohortMaster {
 		Set<Integer> documentedExitReasonCohort, allPatientCohort, inactivePatientsCohort, inactiveDocumentedExitReasonCohort;
 		documentedExitReasonCohort = buildCohortByObs(EXIT_REASON_CONCEPT);
 		allPatientCohort = allPatientsCohorts();
+                activePatientCohort=minus(activePatientCohort,documentedExitReasonCohort);
 		inactivePatientsCohort = minus(allPatientCohort, activePatientCohort);
 		inactiveDocumentedExitReasonCohort = interset(documentedExitReasonCohort, inactivePatientsCohort);
 		cohortDictionary.put(DOCUMENTED_EXIT_REASON_COHORT, documentedExitReasonCohort);
