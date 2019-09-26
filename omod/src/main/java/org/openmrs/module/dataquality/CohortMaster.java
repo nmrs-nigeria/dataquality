@@ -911,12 +911,12 @@ public class CohortMaster {
 		EncounterService encounterService = Context.getEncounterService();
 		List<Patient> allPatientList = patientService.getAllPatients();
 		List<Encounter> encounterList = null;
-		List<Obs> obsListForLastVisit = null,obsListForGroup=null;
+		List<Obs> obsListForLastVisit = null, obsListForGroup = null;
 		Set<Obs> obsGroupingSet = null;
 		Set<Obs> obsGroupMembers = null;
 		Encounter encounter = null;
 		boolean allDrugsHaveConcept = true;
-                
+		
 		for (Patient patient : allPatientList) {
 			encounterList = encounterService.getEncountersByPatient(patient);
 			encounter = getLastEncounterForForm(PHARMACY_FORM_ID, encounterList);
@@ -928,15 +928,15 @@ public class CohortMaster {
 					if (obsGroupingSet != null && !obsGroupingSet.isEmpty()) {
 						for (Obs obs : obsGroupingSet) {
 							obsGroupMembers = obs.getGroupMembers();
-                                                        obsListForGroup=new ArrayList<Obs>(obsGroupMembers);
-                                                        for(Integer ele: conceptIDArr){
-                                                            if(!containsConceptID(ele, obsListForGroup)){
-                                                                allDrugsHaveConcept = false;
-                                                            }
-                                                        }
+							obsListForGroup = new ArrayList<Obs>(obsGroupMembers);
+							for (Integer ele : conceptIDArr) {
+								if (!containsConceptID(ele, obsListForGroup)) {
+									allDrugsHaveConcept = false;
+								}
+							}
 							//if (!containsAnyOfConceptIDs(conceptIDArr, new ArrayList<Obs>(obsGroupMembers))) {
-								//allDrugsHaveConcept = false;
-								//patientSet.add(patient.getPatientId());
+							//allDrugsHaveConcept = false;
+							//patientSet.add(patient.getPatientId());
 							//}
 						}
 						if (allDrugsHaveConcept) {
