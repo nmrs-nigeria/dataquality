@@ -297,7 +297,6 @@ public class CohortMaster {
 		}
 		return patientSet;
 	}
-	
 	public Set<Integer> buildCohortByObsDate(Integer[] conceptIDArr, int formID, Date startDate, Date endDate) {
 		Set<Integer> patientSet = new HashSet<Integer>();
 		List<Integer> conceptIDList = new ArrayList<Integer>();
@@ -315,6 +314,35 @@ public class CohortMaster {
 				for (Obs ele : obsList) {
 					if (conceptIDList.contains(ele.getConcept().getConceptId())
 					        && ele.getEncounter().getForm().getFormId() == formID
+					        && isBetweenDate(startDate, endDate, ele.getObsDatetime())) {
+						
+						patientSet.add(patient.getPatientId());
+					}
+				}
+			}
+		}
+		return patientSet;
+	}
+	
+	public Set<Integer> buildCohortByObsDate(Integer[] conceptIDArr, Integer[] formIDArr, Date startDate, Date endDate) {
+		Set<Integer> patientSet = new HashSet<Integer>();
+		List<Integer> conceptIDList = new ArrayList<Integer>();
+                List<Integer> formIDArrList=new ArrayList<Integer>();
+		conceptIDList.addAll(Arrays.asList(conceptIDArr));
+                formIDArrList.addAll(Arrays.asList(formIDArr));
+		ObsService obsService = Context.getObsService();
+		PatientService patientService = Context.getPatientService();
+		List<Patient> patientList = patientService.getAllPatients();
+		List<Obs> obsList = null;
+		DateTime startDateTime, endDateTime;
+		//endDateTime=new DateTime(new Date());
+		
+		for (Patient patient : patientList) {
+			obsList = obsService.getObservationsByPerson(patient);
+			if (obsList != null && !obsList.isEmpty()) {
+				for (Obs ele : obsList) {
+					if (conceptIDList.contains(ele.getConcept().getConceptId())
+					        && formIDArrList.contains(ele.getEncounter().getForm().getFormId())
 					        && isBetweenDate(startDate, endDate, ele.getObsDatetime())) {
 						
 						patientSet.add(patient.getPatientId());
