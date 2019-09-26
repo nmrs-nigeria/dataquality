@@ -915,6 +915,7 @@ public class CohortMaster {
 		Set<Obs> obsGroupingSet = null;
 		Set<Obs> obsGroupMembers = null;
 		Encounter encounter = null;
+		boolean allDrugsHaveConcept = true;
 		for (Patient patient : allPatientList) {
 			encounterList = encounterService.getEncountersByPatient(patient);
 			encounter = getLastEncounterForForm(PHARMACY_FORM_ID, encounterList);
@@ -926,9 +927,13 @@ public class CohortMaster {
 					if (obsGroupingSet != null && !obsGroupingSet.isEmpty()) {
 						for (Obs obs : obsGroupingSet) {
 							obsGroupMembers = obs.getGroupMembers();
-							if (containsAllOfConceptIDs(conceptIDArr, new ArrayList<Obs>(obsGroupMembers))) {
-								patientSet.add(patient.getPatientId());
+							if (!containsAllOfConceptIDs(conceptIDArr, new ArrayList<Obs>(obsGroupMembers))) {
+								allDrugsHaveConcept = false;
+								//patientSet.add(patient.getPatientId());
 							}
+						}
+						if (allDrugsHaveConcept) {
+							patientSet.add(patient.getPatientId());
 						}
 					}
 				}
