@@ -1363,9 +1363,12 @@ public class CohortMaster {
 		endDateTime = new DateTime(new Date());
 		startDateTime = endDateTime.minusMonths(12);
 		Set<Integer> viralLoadEligiblePatients, viralLoadEligibleWithDocumentedResults12Months;
-		//Integer[] targetVariables = { ARV_GROUPING_CONCEPT, 164506, 164513, 165702, 164507, 164514, 165703 };
-		viralLoadEligibleWithDocumentedResults12Months = buildCohortByObsDate(VIRAL_LOAD_CONCEPT, startDateTime.toDate(),
+		targetVariables = new Integer[] { VIRAL_LOAD_CONCEPT};
+                formIDArr=new Integer[]{21};
+		viralLoadEligibleWithDocumentedResults12Months = buildCohortByObsDate(targetVariables,formIDArr ,startDateTime.toDate(),
 		    endDateTime.toDate());
+                //viralLoadEligibleWithDocumentedResults12Months = buildCohortByObsDate(VIRAL_LOAD_CONCEPT, startDateTime.toDate(),
+		    //endDateTime.toDate());
 		viralLoadEligibleWithDocumentedResults12Months = interset(viralLoadEligibleWithDocumentedResults12Months,
 		    activePatientCohort);
 		viralLoadEligiblePatients = buildCohortOfViralLoadEligible();
