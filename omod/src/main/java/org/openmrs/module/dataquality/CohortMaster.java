@@ -132,7 +132,7 @@ public class CohortMaster {
 	
 	public final static int SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR = 43;
 	
-	public final static int CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS = 165039;
+	
 	
 	public final static int STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN = 44;
 	
@@ -142,7 +142,8 @@ public class CohortMaster {
 	
 	public final static int DOCUMENTED_EXIT_REASON_INACTIVE_COHORT = 47;
 	
-	public final static int INACTIVE_PATIENT_COHORT = 47;
+	public final static int INACTIVE_PATIENT_COHORT = 48;
+        public final static int CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS = 49;
 	
 	/*
 	   Concept IDs
@@ -186,8 +187,6 @@ public class CohortMaster {
 	private final static int VIRAL_LOAD_CONCEPT = 856;
 	
 	private final static int DATE_SAMPLE_COLLECTED_CONCEPT = 159951;
-	
-	private final static int DURATION_CONCEPT = 160856;
 	
 	private final static int ARV_GROUPING_CONCEPT = 162240;
 	
@@ -1039,7 +1038,7 @@ public class CohortMaster {
 		ObsService obsService = Context.getObsService();
 		List<Patient> patientList = patientService.getAllPatients();
 		List<Obs> obsList = null;
-		DateTime startDateTime = null, endDateTime = null, artStartDateTime = null;
+		DateTime startDateTime = null, endDateTime = null, artStartDateTime = null, lastViralLoadDateTime = null;
 		endDateTime = new DateTime(new Date());
 		startDateTime = endDateTime.minusMonths(12);
 		Obs obsLastViralLoad, obsARTStartDate = null;
@@ -1047,13 +1046,22 @@ public class CohortMaster {
 			obsList = obsService.getObservationsByPerson(patient);
 			obsLastViralLoad = getLastObs(VIRAL_LOAD_CONCEPT, obsList);
 			obsARTStartDate = extractObs(ART_START_DATE_CONCEPT, obsList);
+			int durationOnART = 0, lastViralLoadDuration = 0;
+			
 			if (obsARTStartDate != null) {
 				artStartDateTime = new DateTime(obsARTStartDate.getValueDate());
 				int monthsDiff = Months.monthsBetween(artStartDateTime, endDateTime).getMonths();
-				//if (obsLastViralLoad != null) {
+				// (obsLastViralLoad != null) {
 				if (monthsDiff >= 6) {
+					if (obsLastViralLoad != null) {
+						lastViralLoadDateTime = new DateTime(obsLastViralLoad.getObsDatetime());
+						lastViralLoadDuration = Months.monthsBetween(lastViralLoadDateTime, endDateTime).getMonths();
+						if (lastViralLoadDuration >= 12) {
+							patientSet.add(patient.getPatientId());
+						}
+					}
 					//& !isBetweenDate(startDateTime.toDate(), endDateTime.toDate(), obsLastViralLoad.getObsDatetime())) {
-					patientSet.add(patient.getPatientId());
+					
 				}
 				//}
 			}
@@ -1468,7 +1476,7 @@ public class CohortMaster {
 		Set<Integer> documentedExitReasonCohort, allPatientCohort, inactivePatientsCohort, inactiveDocumentedExitReasonCohort;
 		documentedExitReasonCohort = buildCohortByObs(EXIT_REASON_CONCEPT);
 		allPatientCohort = allPatientsCohorts();
-                activePatientCohort=minus(activePatientCohort,documentedExitReasonCohort);
+		activePatientCohort = minus(activePatientCohort, documentedExitReasonCohort);
 		inactivePatientsCohort = minus(allPatientCohort, activePatientCohort);
 		inactiveDocumentedExitReasonCohort = interset(documentedExitReasonCohort, inactivePatientsCohort);
 		cohortDictionary.put(DOCUMENTED_EXIT_REASON_COHORT, documentedExitReasonCohort);
