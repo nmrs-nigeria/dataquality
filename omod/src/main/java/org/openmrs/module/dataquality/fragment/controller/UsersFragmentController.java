@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 //import liquibase.util.csv.opencsv.CSVWriter;
 import com.opencsv.CSVWriter;
 import java.util.ArrayList;
+import static org.openmrs.module.dataquality.CohortMaster.PICKED_UP_ARV_DRUG_LAST_6MONTHS_COHORT;
 import static org.openmrs.module.dataquality.CohortMaster.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.supercsv.io.CsvBeanWriter;
@@ -109,7 +110,7 @@ public class UsersFragmentController {
 		
 		//Proportion of patients newly started on ART in the last 6 months with documented ART Start Date
 		numerator = cohortMaster.countCohort(CohortMaster.DOCUMENTED_ART_START_DATE_ARV_PICKUP_COHORT);
-		denominator = cohortMaster.countCohort(CohortMaster.STARTED_ART_LAST_6MONTHS_COHORT);
+		denominator = cohortMaster.countCohort(CohortMaster.PICKED_UP_ARV_DRUG_LAST_6MONTHS_COHORT);
 		//map.put("startedartlast6monthscount",(int)denominator);
 		map.put("startedartlast6monthscountwithdrugpickup", (int) numerator);
 		map.put("percentagestartedartlast6monthswithdrugpickup", (int) cohortMaster.getPercentage(numerator, denominator));
