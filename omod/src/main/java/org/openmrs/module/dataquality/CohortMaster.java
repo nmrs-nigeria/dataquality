@@ -132,8 +132,6 @@ public class CohortMaster {
 	
 	public final static int SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR = 43;
 	
-	
-	
 	public final static int STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN = 44;
 	
 	public final static int CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE = 45;
@@ -143,7 +141,8 @@ public class CohortMaster {
 	public final static int DOCUMENTED_EXIT_REASON_INACTIVE_COHORT = 47;
 	
 	public final static int INACTIVE_PATIENT_COHORT = 48;
-        public final static int CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS = 49;
+	
+	public final static int CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS = 49;
 	
 	/*
 	   Concept IDs
@@ -1478,6 +1477,7 @@ public class CohortMaster {
 		allPatientCohort = allPatientsCohorts();
 		activePatientCohort = minus(activePatientCohort, documentedExitReasonCohort);
 		inactivePatientsCohort = minus(allPatientCohort, activePatientCohort);
+		inactivePatientsCohort = interset(inactivePatientsCohort, patientsWithDocumentedHIVEnrollmentDateCohort);
 		inactiveDocumentedExitReasonCohort = interset(documentedExitReasonCohort, inactivePatientsCohort);
 		cohortDictionary.put(DOCUMENTED_EXIT_REASON_COHORT, documentedExitReasonCohort);
 		cohortDictionary.put(INACTIVE_PATIENT_COHORT, inactivePatientsCohort);
