@@ -261,7 +261,7 @@ def id = config.id
                 <td>Proportion of all inactive patients with a documented exit reason</td>
                 <td>${ui.format(documentedexitreasoninactive)}</td>
                 <td>${ui.format(inactiveccohort)}</td>
-                <td>${ui.format(percentageinactivedocumentedexitreason)}</td>
+                <td>${ui.format(percentageinactivedocumentedexitreason)}%</td>
                 <td></td>
             </tr>
             
