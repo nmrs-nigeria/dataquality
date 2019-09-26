@@ -365,6 +365,7 @@ public class CohortMaster {
 		return patientSet;
 		
 	}
+	
 	public Set<Integer> buildCohortByEncounter(Date startDate, Date endDate) {
 		Set<Integer> patientSet = new HashSet<Integer>();
 		List<Encounter> encounterList = new ArrayList<Encounter>();
@@ -396,16 +397,17 @@ public class CohortMaster {
 		DateTime startDateTime, endDateTime;
 		endDateTime = new DateTime(endDate);
 		startDateTime = new DateTime(startDate);
-		Integer[] targetFormID={22,14,20};
-                List<Integer> targetFormList=new ArrayList<Integer>(Arrays.asList(targetFormID));
+		Integer[] targetFormID = { 22, 14, 20 };
+		List<Integer> targetFormList = new ArrayList<Integer>(Arrays.asList(targetFormID));
 		List<Patient> patientList = patientService.getAllPatients();
-                Form form=null;
+		Form form = null;
 		for (Patient pts : patientList) {
 			encounterList = encounterService.getEncountersByPatient(pts);
-			for (Encounter enc : encounterList){
-                                form=enc.getForm();
+			for (Encounter enc : encounterList) {
+				form = enc.getForm();
 				//encounterDateTime = new DateTime(enc.getEncounterDatetime());
-				if (form!=null && targetFormList.contains(form.getFormId()) && isBetweenDate(startDateTime.toDate(), endDateTime.toDate(), enc.getEncounterDatetime())) {
+				if (form != null && targetFormList.contains(form.getFormId())
+				        && isBetweenDate(startDateTime.toDate(), endDateTime.toDate(), enc.getEncounterDatetime())) {
 					patientSet.add(enc.getPatient().getPatientId());
 				}
 			}
