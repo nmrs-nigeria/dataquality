@@ -927,7 +927,7 @@ public class CohortMaster {
 					if (obsGroupingSet != null && !obsGroupingSet.isEmpty()) {
 						for (Obs obs : obsGroupingSet) {
 							obsGroupMembers = obs.getGroupMembers();
-							if (!containsAllOfConceptIDs(conceptIDArr, new ArrayList<Obs>(obsGroupMembers))) {
+							if (!containsAnyOfConceptIDs(conceptIDArr, new ArrayList<Obs>(obsGroupMembers))) {
 								allDrugsHaveConcept = false;
 								//patientSet.add(patient.getPatientId());
 							}
