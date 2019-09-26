@@ -1053,7 +1053,7 @@ public class CohortMaster {
 	
 	public void loadCohortDictionary() {
 		DateTime startDateTime = null, endDateTime = null;
-		Set<Integer> patientsWithDocumentedHIVEnrollmentDateCohort,pediatricCohort, childrenCohort, activePatientCohort, documentedEducationalStatusCohort, documentedMaritalStatusCohort, documentedOccupationalStatusCohort;
+		Set<Integer> patientsWithDocumentedHIVEnrollmentDateCohort, pediatricCohort, childrenCohort, activePatientCohort, documentedEducationalStatusCohort, documentedMaritalStatusCohort, documentedOccupationalStatusCohort;
 		Set<Integer> answerSet = new HashSet<Integer>();
 		activePatientCohort = buildCohortByActive();
 		
@@ -1086,7 +1086,8 @@ public class CohortMaster {
 		Integer[] formIDArr = { 23, 56 };
 		newlyStartedARTLast6MonthsCohort = buildCohortByDateConcept(ART_START_DATE_CONCEPT, formIDArr,
 		    startDateTime.toDate(), endDateTime.toDate());
-                newlyStartedARTLast6MonthsCohort=interset(newlyStartedARTLast6MonthsCohort, patientsWithDocumentedHIVEnrollmentDateCohort);
+		newlyStartedARTLast6MonthsCohort = interset(newlyStartedARTLast6MonthsCohort,
+		    patientsWithDocumentedHIVEnrollmentDateCohort);
 		patientsWithDocumentedAgeCohort = buildCohortByDocumentedDOB();
 		answerSet = interset(newlyStartedARTLast6MonthsCohort, patientsWithDocumentedAgeCohort);
 		cohortDictionary.put(STARTED_ART_LAST_6MONTHS_COHORT, newlyStartedARTLast6MonthsCohort);
