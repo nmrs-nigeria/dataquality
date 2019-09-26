@@ -1338,8 +1338,11 @@ public class CohortMaster {
 		 */
 		endDateTime = new DateTime(new Date());
 		startDateTime = endDateTime.minusMonths(6);
+                Integer[] targetFormID = { 22, 14, 20 };
+                Integer[] conceptIDArr={FUNCTIONAL_STATUS_CONCEPT};
 		Set<Integer> clinicVisitLast6MonthsWithFunctionalStatusCohort;
-		clinicVisitLast6MonthsWithFunctionalStatusCohort = buildCohortByConceptID(FUNCTIONAL_STATUS_CONCEPT,
+                
+		clinicVisitLast6MonthsWithFunctionalStatusCohort = buildCohortByObsDate(conceptIDArr,targetFormID,
 		    startDateTime.toDate(), endDateTime.toDate());
 		cohortDictionary.put(CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS,
 		    clinicVisitLast6MonthsWithFunctionalStatusCohort);
