@@ -29,8 +29,12 @@ import java.util.stream.Collectors;
 import org.azeckoski.reflectutils.DateUtils;
 import org.joda.time.Interval;
 import org.joda.time.Months;
+import org.openmrs.Cohort;
 import org.openmrs.Form;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientProgram;
+import org.openmrs.Program;
+import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.module.dataquality.HITTCohort;
 import org.openmrs.util.OpenmrsUtil;
 
@@ -157,6 +161,8 @@ public class CohortMaster {
 	private final static int HIV_ENROLLMENT_FORM = 23;
 	
 	private final static int PHARMACY_FORM_ID = 27;
+        
+        private final static int HIV_PROGRAM_ID=1;
 	
 	private final static int ART_COMMENCEMENT_FORM_ID = 53;
 	
@@ -168,7 +174,7 @@ public class CohortMaster {
 	
 	private final static int WEIGHT_CONCEPT = 5089;
 	
-	private final static int MUAC_CONCEPT = 165935;
+	private final static int MUAC_CONCEPT = 165243;
 	
 	private final static int WHO_CONCEPT = 5356;
 	
@@ -438,20 +444,40 @@ public class CohortMaster {
 		return patientSet;
 		
 	}
-	
+	public PatientProgram getPatientProgramFromList(List<PatientProgram> patientProgramList, Patient patient){
+            PatientProgram patientProgram=null;
+            for(PatientProgram pp: patientProgramList){
+                if(pp.getPatient().equals(patient)){
+                    patientProgram=pp;
+                }
+            }
+            return patientProgram;
+        }
 	public Set<Integer> buildCohortByHIVEnrollment() {
 		Set<Integer> patientSet = new HashSet<Integer>();
 		EncounterService encounterService = Context.getEncounterService();
 		PatientService patientService = Context.getPatientService();
+                ProgramWorkflowService programService=Context.getProgramWorkflowService();
+                Program program=programService.getProgram(HIV_PROGRAM_ID);
+                List<Program> programList=new ArrayList<Program>();
+                programList.add(program);
 		List<Patient> patientList = patientService.getAllPatients();
-		List<Encounter> encounterList = null;
-		for (Patient patient : patientList) {
-			encounterList = encounterService.getEncountersByPatient(patient);
+                List<Encounter> encounterList = null;
+                Cohort cohort=null;
+                cohort=new Cohort("allPatients","Cohort of all patients",patientList);
+                List<PatientProgram> patientProgramList=programService.getPatientPrograms(cohort, programList);
+		PatientProgram patientProgram=null;
+                for (Patient patient : patientList) {
+                        patientProgram=getPatientProgramFromList(patientProgramList, patient);
+                        if(patientProgram!=null){
+                            patientSet.add(patient.getPatientId());
+                        }
+			/*encounterList = encounterService.getEncountersByPatient(patient);
 			for (Encounter enc : encounterList) {
 				if (enc != null && enc.getForm() != null && enc.getForm().getFormId() == HIV_ENROLLMENT_FORM) {
 					patientSet.add(patient.getPatientId());
 				}
-			}
+			}*/
 		}
 		
 		return patientSet;
