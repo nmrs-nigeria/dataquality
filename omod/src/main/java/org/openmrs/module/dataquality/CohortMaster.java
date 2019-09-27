@@ -35,6 +35,7 @@ import org.openmrs.Form;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientProgram;
 import org.openmrs.Program;
+import org.openmrs.api.CohortService;
 import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.module.dataquality.HITTCohort;
 import org.openmrs.util.OpenmrsUtil;
@@ -1388,11 +1389,14 @@ public class CohortMaster {
 		          -- Everybody with viral Load Result
 		          -- Everybody with viral Load Result and has Sample Collection Date
 		 */
+                //CohortService cservice=Context.getCohortService();
+                //cservice.
 		Set<Integer> eligibleWithSampleCollectionDateCohort, viralLoadResultEverCohort, viralLoadResultWithSampleCollectionCohort, patientsWithSampleCollectionDateCohort;
-		endDateTime=new DateTime(new Date());
-                startDateTime=endDateTime.minusMonths(12);
-                viralLoadResultEverCohort = buildCohortByObsDate(VIRAL_LOAD_CONCEPT, startDateTime.toDate(), endDateTime.toDate());
-		patientsWithSampleCollectionDateCohort = buildCohortByObsDate(DATE_SAMPLE_COLLECTED_CONCEPT,startDateTime.toDate(), endDateTime.toDate());
+		endDateTime = new DateTime(new Date());
+		startDateTime = endDateTime.minusMonths(12);
+		viralLoadResultEverCohort = buildCohortByObsDate(VIRAL_LOAD_CONCEPT, startDateTime.toDate(), endDateTime.toDate());
+		patientsWithSampleCollectionDateCohort = buildCohortByObsDate(DATE_SAMPLE_COLLECTED_CONCEPT, startDateTime.toDate(),
+		    endDateTime.toDate());
 		viralLoadResultWithSampleCollectionCohort = interset(viralLoadEligiblePatients,
 		    patientsWithSampleCollectionDateCohort);
 		eligibleWithSampleCollectionDateCohort = interset(viralLoadResultWithSampleCollectionCohort,
