@@ -928,6 +928,7 @@ public class CohortMaster {
 						for (Obs obs : obsGroupingSet) {
 							obsGroupMembers = obs.getGroupMembers();
 							obsListForGroup = new ArrayList<Obs>(obsGroupMembers);
+                                                        //if(containsConceptID(WHO_CONCEPT, obsListForGroup))
 							for (Integer ele : conceptIDArr) {
 								if (!containsConceptID(ele, obsListForGroup)) {
 									allDrugsHaveConcept = false;
@@ -1343,8 +1344,7 @@ public class CohortMaster {
 		//Patients with ARV Pickup Last Visit
 		//Patients with ARV Pickup Last Visit Having Quantity
 		Set<Integer> arvPickupLastVisitDocumentedQuantity;
-		arvPickupLastVisitDocumentedQuantity = buildCohortOfPatientsWithARVPickupWithGroupMemberConcept(new Integer[] {
-		        ARV_REGIMEN_QUANTITY, 1443 });
+		arvPickupLastVisitDocumentedQuantity = buildCohortOfPatientsWithARVPickupWithGroupMemberConcept(ARV_REGIMEN_QUANTITY);
 		cohortDictionary.put(LAST_ARV_PHARMACY_PICKUP_WITH_QUANTITY, arvPickupLastVisitDocumentedQuantity);
 		
 		//Proportion of patients with documented ART regimen in the last drug refill visit
