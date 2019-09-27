@@ -928,7 +928,7 @@ public class CohortMaster {
 						for (Obs obs : obsGroupingSet) {
 							obsGroupMembers = obs.getGroupMembers();
 							obsListForGroup = new ArrayList<Obs>(obsGroupMembers);
-                                                        //if(containsConceptID(WHO_CONCEPT, obsListForGroup))
+							//if(containsConceptID(WHO_CONCEPT, obsListForGroup))
 							for (Integer ele : conceptIDArr) {
 								if (!containsConceptID(ele, obsListForGroup)) {
 									allDrugsHaveConcept = false;
@@ -1351,7 +1351,7 @@ public class CohortMaster {
 		//Patients with ARV Pickup Last Visit
 		//Patients with ARV Pickup Last Visit Having Documented Regimen
 		Set<Integer> arvPickupLastVisitDocumentedRegimen;
-		Integer[] targetVariables = { 164506, 164513, 165702, 164507, 164514, 165703 };
+		Integer[] targetVariables = {164506, 164513, 165702, 164507, 164514, 165703};
 		arvPickupLastVisitDocumentedRegimen = buildCohortOfPatientsWithARVPickupWithConcept(targetVariables);
 		cohortDictionary.put(LAST_ARV_PHARMACY_PICKUP_WITH_REGIMEN, arvPickupLastVisitDocumentedRegimen);
 		
@@ -1389,8 +1389,8 @@ public class CohortMaster {
 		          -- Everybody with viral Load Result
 		          -- Everybody with viral Load Result and has Sample Collection Date
 		 */
-                //CohortService cservice=Context.getCohortService();
-                //cservice.
+		//CohortService cservice=Context.getCohortService();
+		//cservice.
 		Set<Integer> eligibleWithSampleCollectionDateCohort, viralLoadResultEverCohort, viralLoadResultWithSampleCollectionCohort, patientsWithSampleCollectionDateCohort;
 		endDateTime = new DateTime(new Date());
 		startDateTime = endDateTime.minusMonths(12);
