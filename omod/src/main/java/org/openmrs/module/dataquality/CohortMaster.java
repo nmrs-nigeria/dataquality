@@ -1389,8 +1389,10 @@ public class CohortMaster {
 		          -- Everybody with viral Load Result and has Sample Collection Date
 		 */
 		Set<Integer> eligibleWithSampleCollectionDateCohort, viralLoadResultEverCohort, viralLoadResultWithSampleCollectionCohort, patientsWithSampleCollectionDateCohort;
-		viralLoadResultEverCohort = buildCohortByObs(VIRAL_LOAD_CONCEPT);
-		patientsWithSampleCollectionDateCohort = buildCohortByObs(DATE_SAMPLE_COLLECTED_CONCEPT);
+		endDateTime=new DateTime(new Date());
+                startDateTime=endDateTime.minusMonths(12);
+                viralLoadResultEverCohort = buildCohortByObsDate(VIRAL_LOAD_CONCEPT, startDateTime.toDate(), endDateTime.toDate());
+		patientsWithSampleCollectionDateCohort = buildCohortByObsDate(DATE_SAMPLE_COLLECTED_CONCEPT,startDateTime.toDate(), endDateTime.toDate());
 		viralLoadResultWithSampleCollectionCohort = interset(viralLoadEligiblePatients,
 		    patientsWithSampleCollectionDateCohort);
 		eligibleWithSampleCollectionDateCohort = interset(viralLoadResultWithSampleCollectionCohort,
