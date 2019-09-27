@@ -1305,9 +1305,9 @@ public class CohortMaster {
 		cohortDictionary.put(PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS, pediatricClinicVisitLast6Months);
 		cohortDictionary.put(PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC, pediatricMUACLast6Months);
 		
-                //CohortService csohort=Context.getConceptService();
-                //csohort.s
-                
+		//CohortService csohort=Context.getConceptService();
+		//csohort.s
+		
 		//Proportion of patients with a clinic visit in the last 6 months that had documented WHO clinical stage
 		//Clinic Visit Last 6 Months
 		//Documented WHO Last Clinic Visit
@@ -1354,7 +1354,7 @@ public class CohortMaster {
 		//Patients with ARV Pickup Last Visit
 		//Patients with ARV Pickup Last Visit Having Documented Regimen
 		Set<Integer> arvPickupLastVisitDocumentedRegimen;
-		Integer[] targetVariables = {164506, 164513, 165702, 164507, 164514, 165703};
+		Integer[] targetVariables = { 164506, 164513, 165702, 164507, 164514, 165703 };
 		arvPickupLastVisitDocumentedRegimen = buildCohortOfPatientsWithARVPickupWithConcept(targetVariables);
 		cohortDictionary.put(LAST_ARV_PHARMACY_PICKUP_WITH_REGIMEN, arvPickupLastVisitDocumentedRegimen);
 		
