@@ -1305,6 +1305,9 @@ public class CohortMaster {
 		cohortDictionary.put(PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS, pediatricClinicVisitLast6Months);
 		cohortDictionary.put(PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC, pediatricMUACLast6Months);
 		
+                //CohortService csohort=Context.getConceptService();
+                //csohort.s
+                
 		//Proportion of patients with a clinic visit in the last 6 months that had documented WHO clinical stage
 		//Clinic Visit Last 6 Months
 		//Documented WHO Last Clinic Visit
