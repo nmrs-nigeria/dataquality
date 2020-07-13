@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 /**
  * Contains module's config.
  */
-@Component("dataquality.DataqualityConfig")
 public class DataqualityConfig {
 	
 	public final static String MODULE_PRIVILEGE = "Dataquality Privilege";
