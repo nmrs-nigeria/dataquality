@@ -18,9 +18,9 @@
 	<url>https://wiki.openmrs.org/x/FQ4z</url>
 
 	<scm>
-		<connection>scm:git:git@github.com:nmrs-nigeria/dataquality.git</connection>
-		<developerConnection>scm:git:git@github.com:nmrs-nigeria/dataquality.git</developerConnection>
-		<url>scm:git:git@github.com:nmrs-nigeria/dataquality.git</url>
+		<connection>scm:git:https://github.com/nmrs-nigeria/dataquality.git</connection>
+		<developerConnection>scm:git:https://github.com/nmrs-nigeria/dataquality.git</developerConnection>
+		<url>scm:git:https://github.com/nmrs-nigeria/dataquality.git</url>
 	</scm>
 	<build>
 		<plugins>
