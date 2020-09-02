@@ -14,6 +14,13 @@
             <ref bean="dbSessionFactory" />
         </property>
     </bean>
+    <bean id="dataquality.DataqualityErrorDao" class="org.openmrs.module.dataquality.api.dao.DataqualityErrorDao">
+        <property name="sessionFactory">
+            <ref bean="dbSessionFactory" />
+        </property>
+    </bean>
+    
+   
 
     <!-- Wraps DataqualityService methods in DB transactions and OpenMRS interceptors,
     which set audit info like dateCreated, changedBy, etc.-->
@@ -25,6 +32,8 @@
         <property name="target">
             <bean class="org.openmrs.module.dataquality.api.impl.DataqualityServiceImpl">
                 <property name="dao" ref="dataquality.DataqualityDao" />
+                <property name="errorDao" ref="dataquality.DataqualityErrorDao" />
+                
             </bean>
         </property>
         <property name="preInterceptors">

@@ -28,20 +28,36 @@ import javax.servlet.http.HttpServletRequest;
 //import liquibase.util.csv.opencsv.CSVWriter;
 import com.opencsv.CSVWriter;
 import java.util.ArrayList;
-import static org.openmrs.module.dataquality.CohortMaster.PICKED_UP_ARV_DRUG_LAST_6MONTHS_COHORT;
-import static org.openmrs.module.dataquality.CohortMaster.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.joda.time.DateTime;
+import org.openmrs.Encounter;
+import org.openmrs.api.EncounterService;
+import org.openmrs.ui.framework.SimpleObject;
+import org.openmrs.ui.framework.UiUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
+import org.openmrs.module.dataquality.Constants;
+import org.openmrs.module.dataquality.api.CohortBuilder;
+import org.openmrs.module.dataquality.api.DataqualityService;
 
 public class UsersFragmentController {
 	
+        Map <String, Integer> dataCache = new HashMap<>();
+        Map <String, DateTime> lastUpdated = new HashMap<>();
+        DataqualityService dataQualityService = Context.getService(DataqualityService.class);
 	public void controller(FragmentModel model, @SpringBean("userService") UserService service) {
 		
 		//DbConnection connection = new DbConnection();
 		//FactoryUtils factoryUtils = new FactoryUtils();
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		/*Map<String, Integer> map = new HashMap<String, Integer>();
 		//List<SummaryDashboard> summaryDashboardList = factoryUtils.getEncounters();
 		CohortMaster cohortMaster = new CohortMaster();
 		
@@ -128,7 +144,7 @@ public class UsersFragmentController {
 		  --Patient with registered Address/LGA
 		  --Patient newly started on ART 6 Months with documented Address/LGA
 		*/
-		numerator = cohortMaster.countCohort(CohortMaster.NEWLY_STARTED_ON_ART_WITH_DOCUMENTED_LGA);
+		/*numerator = cohortMaster.countCohort(CohortMaster.NEWLY_STARTED_ON_ART_WITH_DOCUMENTED_LGA);
 		denominator = cohortMaster.countCohort(CohortMaster.STARTED_ART_LAST_6MONTHS_COHORT);
 		//map.put("startedartlast6monthscount",(int)denominator);
 		map.put("startedartlast6monthswithdocumentedlga", (int) numerator);
@@ -266,9 +282,375 @@ public class UsersFragmentController {
 		
 		map.put("inactiveccohort", (int) denominator);
 		map.put("documentedexitreasoninactive", (int) numerator);
-		map.put("percentageinactivedocumentedexitreason", (int) cohortMaster.getPercentage(numerator, denominator));
+		map.put("percentageinactivedocumentedexitreason", (int) cohortMaster.getPercentage(numerator, denominator));*/
 		
-		model.mergeAttributes(map);
+		//model.mergeAttributes(map);
+		//Constants c = new Constants();
+		
+		model.addAttribute("constants", Constants.class);
 		
 	}
+	
+    public String getCohortCounts(HttpServletRequest request) {
+        int type = Integer.parseInt(request.getParameter("type"));
+        DateTime endDateTime = new DateTime(new Date());
+	DateTime startDateTime = endDateTime.minusMonths(10006);
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        CohortBuilder builder = new CohortBuilder();
+        
+         
+        if(type == Constants.ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT)
+        {
+            System.out.println("1");
+            Map<String, String>dataMap = new HashMap<>();
+           
+            int totalActiveWithDocEducationalStatus = dataQualityService.getActivePatientsWithDocumentedEducationalStatus();//CohortBuilder.getActivePatientsWithDocumentedEducationalStatus();
+           // int totalActivePts = CohortBuilder.getActivePatientCount();
+           int totalActivePts =dataQualityService.getActivePatientCount();//this.getTotalActivePts();
+           
+           System.out.println("done fetching");
+            float percent = (totalActiveWithDocEducationalStatus * 100/ totalActivePts);
+            dataMap.put("numerator", totalActiveWithDocEducationalStatus+"");
+            dataMap.put("denominator", totalActivePts+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+            //return totalActiveWithDocEducationalStatus+"";
+        }
+        else if(type == Constants.ACTIVE_DOCUMENTED_MARITAL_STATUS_COHORT)
+        {
+            System.out.println("2");
+            Map<String, String>dataMap = new HashMap<>();
+            int numerator = dataQualityService.getActivePatientsWithDocumentedMaritalStatus();//CohortBuilder.getActivePatientsWithDocumentedMaritalStatus();
+            int denominator = dataQualityService.getActivePatientCount();//CohortBuilder.getActivePatientCount();
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        }
+        else if(type == Constants.ACTIVE_DOCUMENTED_OCCUPATIONAL_STATUS_COHORT)
+        {
+            System.out.println("3");
+            Map<String, String>dataMap = new HashMap<>();
+            int numerator = dataQualityService.getActivePatientsWithDocumentedOccupationalStatus();//CohortBuilder.getActivePatientsWithDocumentedOccupationalStatus();
+            int denominator = dataQualityService.getActivePatientCount();//CohortBuilder.getActivePatientCount();
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        }
+        else if(type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DOB)
+        {
+            System.out.println("4");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPatientsWithDocumentedDobCount(startDate, endDate);//CohortBuilder.getPatientsWithDocumentedDobCount(startDate, endDate);
+            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        }   
+        else if(type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_SEX)
+        {
+            System.out.println("5");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPatientsWithDocumentedGenderCount(startDate, endDate);//CohortBuilder.getPatientsWithDocumentedGenderCount(startDate, endDate);
+            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        }
+        else if(type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DATECONFIRMED_POSITIVE)
+        {
+            System.out.println("6");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPatientsWithDocumentedPostiveDateCount(startDate, endDate);//CohortBuilder.getPatientsWithDocumentedPostiveDateCount(startDate, endDate);
+            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        }
+        else if(type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_HIVENROLLMENT)
+        {
+            System.out.println("7");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPatientsWithDocumentedHIVEnrollmentCount(startDate, endDate);//CohortBuilder.getPatientsWithDocumentedHIVEnrollmentCount(startDate, endDate);
+            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        }
+
+        else if(type == Constants.DOCUMENTED_ART_START_DATE_ARV_PICKUP_COHORT)
+        {
+            System.out.println("8");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPatientsWhoPickARVCount(startDate, endDate);//CohortBuilder.getPatientsWhoPickARVCount(startDate, endDate);
+            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        }        
+        
+        else if(type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_CD4_COUNT)
+        {
+            System.out.println("9");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPatientsWithDocCd4CntCount(startDate, endDate);//CohortBuilder.getPatientsWithDocCd4CntCount(startDate, endDate);
+            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        }  
+        else if(type == Constants.NEWLY_STARTED_ON_ART_WITH_DOCUMENTED_LGA)
+        {
+            System.out.println("10");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPatientsWithDocumentedAddress(startDate, endDate);
+            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        }  
+        else if(type == Constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WEIGH)
+        {
+            System.out.println("11");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPtsWithClinicalVisitDocWeightCount(startDate, endDate);//CohortBuilder.getPtsWithClinicalVisitDocWeightCount(startDate, endDate);
+            int denominator = dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);//CohortBuilder.getPtsWithClinicalVisitCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        }  
+        else if(type == Constants.PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC)
+        {
+            System.out.println("12");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPtsWithClinicalVisitDocMUACCount(startDate, endDate);//CohortBuilder.getPtsWithClinicalVisitDocMUACCount(startDate, endDate);
+            int denominator = dataQualityService.getPedPtsWithClinicalVisitCount(startDate, endDate);//CohortBuilder.getPtsWithClinicalVisitCount(startDate, endDate);//check and confirm. But this should be for pediatrics alone and not total clinic visit
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        } 
+
+        else if(type == Constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WHO)
+        {
+            System.out.println("13");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPtsWithClinicalVisitDocWHOCount(startDate, endDate);//CohortBuilder.getPtsWithClinicalVisitDocWHOCount(startDate, endDate);
+            int denominator = dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        } 
+        
+        else if(type == Constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_TB_STATUS)
+        {
+            System.out.println("14");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPtsWithClinicalVisitDocTBStatusCount(startDate, endDate);//CohortBuilder.getPtsWithClinicalVisitDocTBStatusCount(startDate, endDate);
+            int denominator = dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        } 
+        else if(type == Constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION)
+        {
+            System.out.println("15");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPtsWithDocLastARVPickupWithDurationCount();//CohortBuilder.getPtsWithDocLastARVPickupWithDurationCount();
+            int denominator = dataQualityService.getPtsWithDocLastARVPickupCount();//CohortBuilder.getPtsWithDocLastARVPickupCount();
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        } 
+        else if(type == Constants.LAST_ARV_PHARMACY_PICKUP_WITH_QUANTITY)
+        {
+            System.out.println("16");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPtsWithDocLastARVPickupWithQtyCount();//CohortBuilder.getPtsWithDocLastARVPickupWithQtyCount();
+            int denominator = dataQualityService.getPtsWithDocLastARVPickupCount();//CohortBuilder.getPtsWithDocLastARVPickupCount();
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        } 
+        else if(type == Constants.LAST_ARV_PHARMACY_PICKUP_WITH_REGIMEN)
+        {
+            System.out.println("17");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPtsWithDocLastARVPickupWithRegiminCount();//CohortBuilder.getPtsWithDocLastARVPickupWithRegiminCount();
+            int denominator = dataQualityService.getPtsWithDocLastARVPickupCount();//CohortBuilder.getPtsWithDocLastARVPickupCount();
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        } 
+        else if(type == Constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION_MORETHAN180DAYS)
+        {
+            System.out.println("18");
+            Map<String, String>dataMap = new HashMap<>();
+            
+            int numerator = dataQualityService.getPtsWithDocLastARVPickupWithDurationMoreThan180Count();//CohortBuilder.getPtsWithDocLastARVPickupWithDurationMoreThan180Count();
+            int denominator = dataQualityService.getPtsWithDocLastARVPickupCount();//CohortBuilder.getPtsWithDocLastARVPickupCount();
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        } 
+        
+        else if(type == Constants.VIRAL_LOAD_ELIGIBLE_WITH_DOCUMENTED_RESULT)
+        {
+            System.out.println("19");
+            Map<String, String>dataMap = new HashMap<>();
+            int numerator = dataQualityService.getPtsEligibleForVLWithResultCount();//CohortBuilder.getPtsEligibleForVLWithResultCount();
+            int denominator = dataQualityService.getPtsEligibleForVLCount();
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        } 
+        
+        else if(type == Constants.VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE)
+        {
+            System.out.println("20");
+            Map<String, String>dataMap = new HashMap<>();
+            int numerator = dataQualityService.getPtsEligibleForVLWithSampleCollectionCount();
+            int denominator = dataQualityService.getPtsEligibleForVLCount();
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        } 
+        else if(type == Constants.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR)
+        {
+            System.out.println("21");
+            Map<String, String>dataMap = new HashMap<>();
+            int numerator = dataQualityService.getPtsEligibleForVLWithSampleReceivedCount();
+            int denominator = dataQualityService.getPtsEligibleForVLCount();
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        } 
+        else if(type == Constants.CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS)
+        {
+            System.out.println("22");
+            Map<String, String>dataMap = new HashMap<>();
+            int numerator = dataQualityService.getPtsWithClinicalVisitFunctionalStatusCount(startDate, endDate);
+            int denominator = dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        } 
+        
+        else if(type == Constants.STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN)
+        {
+            System.out.println("23");
+            Map<String, String>dataMap = new HashMap<>();
+            int numerator = dataQualityService.getPtsOnArtWithInitialRegimen(startDate, endDate);//CohortBuilder.getPtsOnArtWithInitialRegimen(startDate, endDate);
+            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        } 
+        
+        else if(type == Constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE)
+        {
+            System.out.println("24");
+            Map<String, String>dataMap = new HashMap<>();
+            int numerator = dataQualityService.getPtsWithClinicalVisitNextAppDateCount(startDate, endDate);
+            int denominator = dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        }
+        
+        else if(type == Constants.DOCUMENTED_EXIT_REASON_INACTIVE_COHORT)
+        {
+            System.out.println("25");
+            Map<String, String>dataMap = new HashMap<>();
+            int numerator = dataQualityService.getInactivePtsWithReasonCount();
+            int denominator = dataQualityService.getInactivePtsCount();
+            float percent = (numerator * 100 / denominator);
+            dataMap.put("numerator", numerator+"");
+            dataMap.put("denominator", denominator+"");
+            dataMap.put("percent", percent+"");
+            return new JSONObject(dataMap).toString();
+        }
+        
+        return "hi";
+        
+    }
+        
+    private int getTotalActivePts()
+    {
+        int totalActivePts = 0;
+        DateTime now = new DateTime();
+        System.out.println(dataCache.get("totalActivePts"));
+        if(dataCache.containsKey("totalActivePts") && lastUpdated.containsKey("totalActivePts") && lastUpdated.get("totalActivePts").isAfter(now.minusMinutes(1)))
+        {
+           System.out.println("from cacheee");
+           totalActivePts = dataCache.get("totalActivePts");//dataQualityService.getActivePatientCount();//builder.getActivePatientCount(); 
+        }else
+        {
+            totalActivePts = dataQualityService.getActivePatientCount();//builder.getActivePatientCount(); 
+            dataCache.put("totalActivePts", totalActivePts);
+            lastUpdated.put("totalActivePts", now);
+            System.out.println("from dss");
+        }
+        
+        return totalActivePts;
+    }
 }
