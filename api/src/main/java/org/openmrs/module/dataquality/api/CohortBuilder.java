@@ -92,34 +92,46 @@ public class CohortBuilder {
 	}
 	
 	public int getActivePatientCount() {
+		
 		Database.initConnection();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		Connection con = null;
 		
-		Database.initConnection();
-		DbSession session = sessionFactory.getCurrentSession();
-		SQLQuery sqlQuery = session.createSQLQuery("SELECT COUNT(person_id) AS count FROM person ");
-		List<Object[]> rows = sqlQuery.list();
-		//return Integer.parseInt(rows.get(0)[0].toString());
-		return 1;
+		StringBuilder queryString = new StringBuilder(
+		        " SELECT DISTINCT patient.patient_id, MAX(encounter.encounter_datetime) AS last_encounter FROM patient ");
+		queryString
+		        .append("JOIN encounter ON encounter.patient_id=patient.patient_id AND encounter.form_id=? AND encounter.encounter_datetime=(SELECT MAX(encounter_datetime) FROM encounter e WHERE e.form_id="
+		                + Constants.PHARMACY_FORM_ID
+		                + " AND e.patient_id=encounter.patient_id)  "
+		                + " JOIN obs obsgroup ON obsgroup.person_id=patient.patient_id AND obsgroup.concept_id=? AND obsgroup.encounter_id=encounter.encounter_id "
+		                + " JOIN obs durationobs ON durationobs.encounter_id=encounter.encounter_id AND durationobs.obs_group_id=obsgroup.obs_id AND durationobs.concept_id=?  "
+		                + " WHERE DATE_ADD(encounter.encounter_datetime,  INTERVAL (durationobs.value_numeric+28) DAY) > ? AND patient.voided=0 "
+		                + " AND durationobs.value_numeric IS NOT NULL group by patient.patient_id");
 		
-		/*StringBuilder query = new StringBuilder("SELECT COUNT(person_id) AS count FROM person ");
-		query.append("");
-		query.append("WHERE voided=0");
 		//query.append(" changed_by, date_changed, voided_by, voided, date_voided,  voided_reason, deathdate_estimated, datim_id, message_uuid)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?, ?, ?, ?, ?, ?)");
 		try {
 			con = Database.connectionPool.getConnection();
-			stmt = con.prepareStatement(query.toString(), Statement.RETURN_GENERATED_KEYS);
+			stmt = con.prepareStatement(queryString.toString(), Statement.RETURN_GENERATED_KEYS);
 			
-			int i = 1;getActivePatientsWithDocumentedEducationalStatus
-			// stmt.setString(i++, patientDemo.getPatientUuid());
-			
+			int i = 1;
+			DateTime now = new DateTime(new Date());
+			//now = now.minusDays(28);
+			//now = now.minusDays(28);
+			String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+			stmt.setInt(i++, Constants.PHARMACY_FORM_ID);
+			stmt.setInt(i++, Constants.ARV_GROUPING_CONCEPT);
+			stmt.setInt(i++, Constants.ARV_REGIMEN_DURATION);
+			stmt.setString(i++, nowString);
 			rs = stmt.executeQuery();
-			rs.next();
+			rs.last();
+			int totalRows = rs.getRow();
+			System.out.println(" Total active: " + totalRows);
 			
-			return rs.getInt("count");
+			return totalRows;
+			//rs.next();
 			
+			//return rs.getInt("count");
 		}
 		catch (SQLException ex) {
 			//screen.updateStatus(ex.getMessage());
@@ -128,7 +140,7 @@ public class CohortBuilder {
 		}
 		finally {
 			Database.finallyBlock(rs, stmt, con);
-		}*/
+		}
 	}
 	
 	public static int getActivePatientsWithDocumentedEducationalStatus() {

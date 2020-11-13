@@ -26,7 +26,7 @@ def id = config.id
                 <th>Numerator</th>
                 <th>Denominator</th>
                 <th>Performance</th>
-                <th>Export </th>
+                <th>Action </th>
             </tr>
 
         </thead>
@@ -37,7 +37,7 @@ def id = config.id
                 <td id="activePtsWithDocEduStat" ><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td class="activePtsCount"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td id="percentEduStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT)}" class="button" title="Export records with issues">View Issues</a></td>
+                <td><a href="dataqualityview.page?type=${ui.format(constants.ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>II</td>
@@ -97,7 +97,7 @@ def id = config.id
             </tr>
             <tr>
                 <td>IX</td>
-                <td> Number of All patients Newly started on ART in the last 6months with a documented HIV ART Start Date</td>
+                <td> Number of All patients Newly started on ART in the last 6months with a documented Drug pickup</td>
                 <td id="newlyArtWithDocDrugPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td class="newlyStartedOnART"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td id="percentNewlyArtDocDrugPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
@@ -109,7 +109,7 @@ def id = config.id
                 <td id="newlyArtWithDocCd4"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td class="newlyStartedOnART"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td id="percentNewlyArtDocCd4"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_CD4_COUNT)}" class="button" title="Export records with issues">View Issues</a></td>
+                <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_CD4_COUNT)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XI</td>
@@ -192,7 +192,7 @@ def id = config.id
                 <th>Numerator</th>
                 <th>Denominator</th>
                 <th>Performance</th>
-                <th>Export</th>
+                <th>Action</th>
             </tr>
             <tr>
                 <td>I</td> 
@@ -236,7 +236,7 @@ def id = config.id
                 <th>Numerator</th>
                 <th>Denominator</th>
                 <th>Performance</th>
-                <th>Export</th>
+                <th>Action</th>
             </tr>
             <tr>
                 <td>I</td>
@@ -250,18 +250,18 @@ def id = config.id
                 <td>II</td>
                 <td>Proportion of patients with Viral Load result that had documented specimen collection date </td>
                 <td id="totalResultWithCollection"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="totalEligible"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td class="totalWithResult"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td id="percentEligibleWithSampleCollected"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE)}" class="button" title="Export records with issues">Export</a></td>       
+                <td><a href="dataqualityview.page?type=${ui.format(constants.VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE)}" class="button" title="View records with issues">View Issues</a></td>       
             </tr>
             
             <tr>
                 <td>III</td> 
                 <td>Proportion of patients with Viral load results with a documented date sample was received at the PCR lab</td>
                 <td id="totalEligibleWithReceivedAtLab"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="totalEligible"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td class="totalWithResult"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td id="percentEligibleWithReceivedAtLab"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR)}" class="button" title="Export records with issues">Export</a></td>       
+                <td><a href="dataqualityview.page?type=${ui.format(constants.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR)}" class="button" title="View records with issues">View Issues</a></td>       
             </tr>
 
 
@@ -347,234 +347,366 @@ def id = config.id
     }
 
     #myTable_paginate li a{
-    color:white;
+        color:white;
     } 
 </style>
 <script type="text/javascript">
     jq = jQuery;
     var cohortAjaxUrl = '${ ui.actionLink("getCohortCounts") }';
+    var totalActivePatients = 0;
+    var totalARTPatients = 0;
+    var totalPatientsClinicVisit = 0;
+    var totalPtsWithDocARVPickup = 0;
+    var totalPtsEligibleForVl = 0;
+    var totalPtsWithVl = 0;
    // getCohorts(cohortAjaxUrl);
    //educational status
-   //setTimeout(function(){
+   
+   
+     getCohorts2("${ui.format(constants.TOTAL_ACTIVE_PATIENTS)}", cohortAjaxUrl).then(function(response){
+            var data = JSON.parse(response);
+            totalActivePatients = data["totalActivePatients"];
+            console.log("total active", totalActivePatients);
+            getCohortRelatedToActivePatients();
+            
+            return getCohorts2("${ui.format(constants.STARTED_ART_LAST_6_MONTHS)}", cohortAjaxUrl); 
+            
+       })
+       .then(function(response){
+            var data = JSON.parse(response);
+            totalARTPatients = data["totalPatientsStartedARTLast6Months"];
+            
+            getCohortRelatedToARTPatients();
+            return getCohorts2("${ui.format(constants.HAD_CLINIC_VISIT_6_MONTHS)}", cohortAjaxUrl);
+        
+       })
+       .then(function(response){
+            var data = JSON.parse(response);
+            totalPatientsClinicVisit = data["totalPatientsClinicVisit"];
+            getCohortRelatedToClinicVisits();
+            
+            return  getCohorts2("${ui.format(constants.HAD_DOC_LAST_PICKUP)}", cohortAjaxUrl);
+       })
+       .then(function(response){
+       
+             console.log(response);
+            var data = JSON.parse(response);
+            totalPtsWithDocARVPickup = data["totalPtsWithDocARVPickup"];
+            console.log(totalPtsWithDocARVPickup);
+            getCohortRelatedToARVPickup();
+            
+            return getCohorts2("${ui.format(constants.ELIGIBLE_FOR_VIRAL_LOAD)}", cohortAjaxUrl);
+       })
+       .then(function(response){
+            console.log(response);
+            var data = JSON.parse(response);
+            totalPtsEligibleForVl = data["totalPtsEligibleForVl"];
+            console.log(totalPtsWithDocARVPickup);
+            getCohortRelatedToVl();
+       })
+       .catch(function(error){
+          console.log(error);
+       })
+       
+      /*getCohorts("${ui.format(constants.STARTED_ART_LAST_6_MONTHS)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
+            totalARTPatients = data["totalPatientsStartedARTLast6Months"];
+            
+            getCohortRelatedToARTPatients();
+       })
+       
+       getCohorts("${ui.format(constants.HAD_CLINIC_VISIT_6_MONTHS)}", cohortAjaxUrl, function(response){
+            
+            var data = JSON.parse(response);
+            totalPatientsClinicVisit = data["totalPatientsClinicVisit"];
+           
+            getCohortRelatedToClinicVisits();
+       })
+       
+     getCohorts("${ui.format(constants.HAD_DOC_LAST_PICKUP)}", cohortAjaxUrl, function(response){
+            console.log(response);
+            var data = JSON.parse(response);
+            totalPtsWithDocARVPickup = data["totalPtsWithDocARVPickup"];
+            console.log(totalPtsWithDocARVPickup);
+            getCohortRelatedToARVPickup();
+       })
+      getCohorts("${ui.format(constants.ELIGIBLE_FOR_VIRAL_LOAD)}", cohortAjaxUrl, function(response){
+            console.log(response);
+            var data = JSON.parse(response);
+            totalPtsEligibleForVl = data["totalPtsEligibleForVl"];
+            console.log(totalPtsWithDocARVPickup);
+            getCohortRelatedToVl();
+       })
+       getCohorts("${ui.format(constants.PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
+
+            jq("#recentClinicPediatricVisitDocMuac").html(data["numerator"]);
+            var denominator = data["denominator"];
+            var percent = data["percent"];
+            jq(".recentClinicPediatricVisit").html(denominator);
+           // var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
+            jq("#percentRecentClinicVisitDocMuac").html(percent+"%");   
+       })*/
+       
+       
+     function getCohortRelatedToActivePatients()
+     {
+     console.log("11");
         getCohorts("${ui.format(constants.ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT)}", cohortAjaxUrl, function(response){
             var data = JSON.parse(response);
             jq("#activePtsWithDocEduStat").html(data["numerator"]);
-            jq(".activePtsCount").html(data["denominator"]);
-            jq("#percentEduStatus").html(data["percent"]+"%");   
-       })
-   //}, 1);
-   
-   
-   //marital status status
-  
-   //setTimeout(function(){
-        getCohorts("${ui.format(constants.ACTIVE_DOCUMENTED_MARITAL_STATUS_COHORT)}", cohortAjaxUrl, function(response){
+            jq(".activePtsCount").html(totalActivePatients);
+            var percent = ((data["numerator"] / totalActivePatients) * 100).toFixed(1);
+            jq("#percentEduStatus").html(percent+"%");   
+       });
+       console.log("12");
+       
+       getCohorts("${ui.format(constants.ACTIVE_DOCUMENTED_MARITAL_STATUS_COHORT)}", cohortAjaxUrl, function(response){
             var data = JSON.parse(response);
 
             jq("#activePtsWithDocMarStat").html(data["numerator"]);
-            jq(".activePtsCount").html(data["denominator"]);
-            jq("#percentMarStatus").html(data["percent"]+"%");   
-       })
-   //}, 1);
-   
-   
-   //setTimeout(function(){
-         //active patients with documented occupational status
-        getCohorts("${ui.format(constants.ACTIVE_DOCUMENTED_OCCUPATIONAL_STATUS_COHORT)}", cohortAjaxUrl, function(response){
+            jq(".activePtsCount").html(totalActivePatients);
+             var percent = ((data["numerator"] / totalActivePatients) * 100).toFixed(1);
+            jq("#percentMarStatus").html(percent+"%");   
+       });
+       
+       console.log("13");
+       getCohorts("${ui.format(constants.ACTIVE_DOCUMENTED_OCCUPATIONAL_STATUS_COHORT)}", cohortAjaxUrl, function(response){
             var data = JSON.parse(response);
-            console.log(data);
+           
             jq("#activePtsWithDocOccuStatus").html(data["numerator"]);
-            jq(".activePtsCount").html(data["denominator"]);
-            jq("#percentOccuStatus").html(data["percent"]+"%");   
+            jq(".activePtsCount").html(totalActivePatients);
+            var percent = ((data["numerator"] / totalActivePatients) * 100).toFixed(1);
+            jq("#percentOccuStatus").html(percent+"%");   
        })
-   //}, 1);
-   
-   
+       
+       
+       
+     }
+     
+     
+     function getCohortRelatedToARTPatients()
+     {
+        console.log("1");
+        getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DOB)}", cohortAjaxUrl, function(response){
+            
+        var data = JSON.parse(response);
+
+            jq("#newlyArtWithDocDob").html(data["numerator"]);
+            jq(".newlyStartedOnART").html(totalARTPatients);
+             var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
+            jq("#percentNewlyArtDocDob").html(percent+"%");  
+       });
+       console.log("2");
+       getCohorts("${ui.format(constants.NEWLY_STARTED_ON_ART_WITH_DOCUMENTED_LGA)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
+            jq("#newlyArtWithDocAddress").html(data["numerator"]);
+             var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
+            jq(".newlyStartedOnART").html(totalARTPatients);
+            jq("#percentNewlyArtDocAddress").html(percent+"%");   
+       })
+       console.log("3");
+         getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_SEX)}", cohortAjaxUrl, function(response){
+             var data = JSON.parse(response);
+             jq("#newlyArtWithDocGender").html(data["numerator"]);
+             jq(".newlyStartedOnART").html(totalARTPatients);
+             var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
+             jq("#percentNewlyArtDocGender").html(percent+"%");   
+        })
+        
+        console.log("4");
+        getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DATECONFIRMED_POSITIVE)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
+
+            jq("#newlyArtWithDocDiagnosis").html(data["numerator"]);
+            jq(".newlyStartedOnART").html(totalARTPatients);
+            var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
+            jq("#percentNewlyArtDocDiagnosis").html(percent+"%");   
+       })
+       
+       console.log("5");
+       
+         getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_HIVENROLLMENT)}", cohortAjaxUrl, function(response){
+             var data = JSON.parse(response);
+
+             jq("#newlyArtWithDocEnrollmentDate").html(data["numerator"]);
+             jq(".newlyStartedOnART").html(totalARTPatients);
+             var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
+             jq("#percentNewlyArtDocEnrollmentDate").html(percent+"%");   
+        })
+        
+        console.log("6");
+        getCohorts("${ui.format(constants.DOCUMENTED_ART_START_DATE_ARV_PICKUP_COHORT)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
+
+            jq("#newlyArtWithDocDrugPickup").html(data["numerator"]);
+            jq(".newlyStartedOnART").html(totalARTPatients);
+            var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
+            jq("#percentNewlyArtDocDrugPickup").html(percent+"%");   
+       })
+       
+       console.log("7");
+            getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_CD4_COUNT)}", cohortAjaxUrl, function(response){
+                var data = JSON.parse(response);
+
+                jq("#newlyArtWithDocCd4").html(data["numerator"]);
+                jq(".newlyStartedOnART").html(totalARTPatients);
+                var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
+                jq("#percentNewlyArtDocCd4").html(percent+"%");   
+          })
+          console.log("8");
+            getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN)}", cohortAjaxUrl, function(response){
+                var data = JSON.parse(response);
+
+                jq("#newlyArtInitialRegimen").html(data["numerator"]);
+                jq(".newlyStartedOnART").html(totalARTPatients);
+                var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
+                jq("#perccentNewlyArtInitialRegimen").html(percent+"%");   
+           })
   
-   
+     }
+     
+     function getCohortRelatedToClinicVisits()
+     {
+        getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WEIGH)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
 
-   //started art in the last 6 months with documented dob
-   getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DOB)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
+            jq("#recentClVisitDocWt").html(data["numerator"]);
+            jq(".recentClinicVisit").html(totalPatientsClinicVisit);
+            var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
+            jq("#percentClVisitDocWt").html(percent+"%");   
+       })
        
-        jq("#newlyArtWithDocDob").html(data["numerator"]);
-        jq(".newlyStartedOnART").html(data["denominator"]);
-        jq("#percentNewlyArtDocDob").html(data["percent"]+"%");   
-   })
-   
-    //started art in the last 6 months with documented dob
-   getCohorts("${ui.format(constants.NEWLY_STARTED_ON_ART_WITH_DOCUMENTED_LGA)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
        
-        jq("#newlyArtWithDocAddress").html(data["numerator"]);
-        jq(".newlyStartedOnART").html(data["denominator"]);
-        jq("#percentNewlyArtDocAddress").html(data["percent"]+"%");   
-   })
-   
-   
-    //started art in the last 6 months with documented gender
-   getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_SEX)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
        
-        jq("#newlyArtWithDocGender").html(data["numerator"]);
-        jq(".newlyStartedOnART").html(data["denominator"]);
-        jq("#percentNewlyArtDocGender").html(data["percent"]+"%");   
-   })
-   //started art in the last 6 months with documented date confirmed positive
-   getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DATECONFIRMED_POSITIVE)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#newlyArtWithDocDiagnosis").html(data["numerator"]);
-        jq(".newlyStartedOnART").html(data["denominator"]);
-        jq("#percentNewlyArtDocDiagnosis").html(data["percent"]+"%");   
-   })
+       getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WHO)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
 
-   //started art in the last 6 months with documented date hiv enrollment date
-   getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_HIVENROLLMENT)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#newlyArtWithDocEnrollmentDate").html(data["numerator"]);
-        jq(".newlyStartedOnART").html(data["denominator"]);
-        jq("#percentNewlyArtDocEnrollmentDate").html(data["percent"]+"%");   
-   })
+            jq("#recentClVisitDocWHO").html(data["numerator"]);
+            jq(".recentClinicVisit").html(totalPatientsClinicVisit);
+            var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
+            jq("#percentClVisitDocWHO").html(percent+"%");   
+       })
+            getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_TB_STATUS)}", cohortAjaxUrl, function(response){
+                var data = JSON.parse(response);
+
+                jq("#recentClVisitDocTBStatus").html(data["numerator"]);
+                jq(".recentClinicVisit").html(totalPatientsClinicVisit);
+                var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
+                jq("#percentClVisitDocTBStatus").html(percent+"%");   
+           })
+           getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS)}", cohortAjaxUrl, function(response){
+                var data = JSON.parse(response);
+
+                jq("#recentClVisitDocFunctionalStatus").html(data["numerator"]);
+                jq(".recentClinicVisit").html(totalPatientsClinicVisit);
+                var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
+                jq("#percentClVisitDocFunctionalStatus").html(percent+"%");   
+           })
+           
+           getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE)}", cohortAjaxUrl, function(response){
+                var data = JSON.parse(response);
+
+                jq("#recentClVisitWithNextAppDate").html(data["numerator"]);
+                jq(".recentClinicVisit").html(totalPatientsClinicVisit);
+                var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
+                jq("#percentClVisitWithNextAppDate").html(percent+"%");   
+           })
+
+     }
+     
+     function getCohortRelatedToARVPickup()
+     {
+        getCohorts("${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_QUANTITY)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
+
+            jq("#totalArvWithQty").html(data["numerator"]);
+            var percent = ((data["numerator"] / totalPtsWithDocARVPickup) * 100).toFixed(1);
+            jq(".lastArvPickup").html(totalPtsWithDocARVPickup);
+            jq("#percentTotalArvWithQty").html(percent+"%");   
+       })
+       getCohorts("${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
+
+            jq("#totalArvWithDuration").html(data["numerator"]);
+             var percent = ((data["numerator"] / totalPtsWithDocARVPickup) * 100).toFixed(1);
+            jq(".lastArvPickup").html(totalPtsWithDocARVPickup);
+            jq("#percentTotalArvWithDuration").html(percent+"%");   
+       })
+        getCohorts("${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_REGIMEN)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
+            var percent = ((data["numerator"] / totalPtsWithDocARVPickup) * 100).toFixed(1);
+            jq("#totalArvWithArtRegimen").html(data["numerator"]);
+            jq(".lastArvPickup").html(totalPtsWithDocARVPickup);
+            jq("#percentArvWithArtRegimen").html(percent+"%");   
+       })
+       getCohorts("${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION_MORETHAN180DAYS)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
+            
+            var percent = ((data["numerator"] / totalPtsWithDocARVPickup) * 100).toFixed(1);    
+            jq("#totalPtsWithMoreThan180").html(data["numerator"]);
+            jq(".lastArvPickupWithDuration").html(totalPtsWithDocARVPickup);
+            jq("#percentPtsWithMoreThan180").html(percent+"%");   
+       })
    
-   //started art in the last 6 months with arv pickup
-   getCohorts("${ui.format(constants.DOCUMENTED_ART_START_DATE_ARV_PICKUP_COHORT)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#newlyArtWithDocDrugPickup").html(data["numerator"]);
-        jq(".newlyStartedOnART").html(data["denominator"]);
-        jq("#percentNewlyArtDocDrugPickup").html(data["percent"]+"%");   
-   })
    
-   getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_CD4_COUNT)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#newlyArtWithDocCd4").html(data["numerator"]);
-        jq(".newlyStartedOnART").html(data["denominator"]);
-        jq("#percentNewlyArtDocCd4").html(data["percent"]+"%");   
-   })
+     }
+     
+     getCohorts("${ui.format(constants.DOCUMENTED_EXIT_REASON_INACTIVE_COHORT)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
+
+            jq("#totalInactiveDocReason").html(data["numerator"]);
+            jq(".totalInactive").html(data["denominator"]);
+            jq("#percentInactiveDocReason").html(data["percent"]+"%");   
+       })
+       getCohorts("${ui.format(constants.PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC)}", cohortAjaxUrl, function(response){
+            var data = JSON.parse(response);
+
+            jq("#recentClinicPediatricVisitDocMuac").html(data["numerator"]);
+            var denominator = data["denominator"];
+            var percent = data["percent"];
+            jq(".recentClinicPediatricVisit").html(denominator);
+           // var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
+            jq("#percentRecentClinicVisitDocMuac").html(percent+"%");   
+       })
   
-   
-   getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WEIGH)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#recentClVisitDocWt").html(data["numerator"]);
-        jq(".recentClinicVisit").html(data["denominator"]);
-        jq("#percentClVisitDocWt").html(data["percent"]+"%");   
-   })
-   
-   getCohorts("${ui.format(constants.PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#recentClinicPediatricVisitDocMuac").html(data["numerator"]);
-        jq(".recentClinicPediatricVisit").html(data["denominator"]);
-        jq("#percentRecentClinicVisitDocMuac").html(data["percent"]+"%");   
-   })
-   
-   getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WHO)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#recentClVisitDocWHO").html(data["numerator"]);
-        jq(".recentClinicVisit").html(data["denominator"]);
-        jq("#percentClVisitDocWHO").html(data["percent"]+"%");   
-   })
-   
-   getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_TB_STATUS)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#recentClVisitDocTBStatus").html(data["numerator"]);
-        jq(".recentClinicVisit").html(data["denominator"]);
-        jq("#percentClVisitDocTBStatus").html(data["percent"]+"%");   
-   })
-   
-   getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#recentClVisitDocFunctionalStatus").html(data["numerator"]);
-        jq(".recentClinicVisit").html(data["denominator"]);
-        jq("#percentClVisitDocFunctionalStatus").html(data["percent"]+"%");   
-   })
-   
-  getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#newlyArtInitialRegimen").html(data["numerator"]);
-        jq(".newlyStartedOnART").html(data["denominator"]);
-        jq("#perccentNewlyArtInitialRegimen").html(data["percent"]+"%");   
-   })
-   
-   getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#recentClVisitWithNextAppDate").html(data["numerator"]);
-        jq(".recentClinicVisit").html(data["denominator"]);
-        jq("#percentClVisitWithNextAppDate").html(data["percent"]+"%");   
-   })
+  
+       function getCohortRelatedToVl()
+       {
+           getCohorts("${ui.format(constants.VIRAL_LOAD_ELIGIBLE_WITH_DOCUMENTED_RESULT)}", cohortAjaxUrl, function(response){
+                var data = JSON.parse(response);
 
-   getCohorts("${ui.format(constants.DOCUMENTED_EXIT_REASON_INACTIVE_COHORT)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#totalInactiveDocReason").html(data["numerator"]);
-        jq(".totalInactive").html(data["denominator"]);
-        jq("#percentInactiveDocReason").html(data["percent"]+"%");   
-   })
+                var percent = ((data["numerator"] / totalPtsEligibleForVl) * 100).toFixed(1); 
+                jq("#totalEligibleWithResult").html(data["numerator"]);
+                jq(".totalEligible").html(totalPtsEligibleForVl);
+                jq("#percentEligibleWithResult").html(percent+"%");  
+                
+                
+                 
+           })
+           getCohorts("${ui.format(constants.VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE)}", cohortAjaxUrl, function(response){
+                var data = JSON.parse(response);
+                totalPtsWithVl = data["denominator"];
+                var percent = ((data["numerator"] / data["denominator"]) * 100).toFixed(1); 
+                jq("#totalResultWithCollection").html(data["numerator"]);
+                jq(".totalWithResult").html(totalPtsWithVl);
+                jq("#percentEligibleWithSampleCollected").html(percent+"%");   
+
+
+                getCohorts("${ui.format(constants.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR)}", cohortAjaxUrl, function(response){
+                    var data = JSON.parse(response);
+                     var percent = ((data["numerator"] / totalPtsWithVl) * 100).toFixed(1); 
+                    jq("#totalEligibleWithReceivedAtLab").html(data["numerator"]);
+
+                    jq("#percentEligibleWithReceivedAtLab").html(percent+"%");   
+               })
+
+           })
+
+                
+          
+       }
    
-   
-   getCohorts("${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_QUANTITY)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#totalArvWithQty").html(data["numerator"]);
-        jq(".lastArvPickup").html(data["denominator"]);
-        jq("#percentTotalArvWithQty").html(data["percent"]+"%");   
-   })
-   
-   getCohorts("${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#totalArvWithDuration").html(data["numerator"]);
-        jq(".lastArvPickup").html(data["denominator"]);
-        jq("#percentTotalArvWithDuration").html(data["percent"]+"%");   
-   })
-   getCohorts("${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_REGIMEN)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#totalArvWithArtRegimen").html(data["numerator"]);
-        jq(".lastArvPickup").html(data["denominator"]);
-        jq("#percentArvWithArtRegimen").html(data["percent"]+"%");   
-   })
-   
-   getCohorts("${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION_MORETHAN180DAYS)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#totalPtsWithMoreThan180").html(data["numerator"]);
-        jq(".lastArvPickup").html(data["denominator"]);
-        jq("#percentPtsWithMoreThan180").html(data["percent"]+"%");   
-   })
-   
-   getCohorts("${ui.format(constants.VIRAL_LOAD_ELIGIBLE_WITH_DOCUMENTED_RESULT)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#totalEligibleWithResult").html(data["numerator"]);
-        jq(".totalEligible").html(data["denominator"]);
-        jq("#percentEligibleWithResult").html(data["percent"]+"%");   
-   })
-   
-   getCohorts("${ui.format(constants.VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#totalResultWithCollection").html(data["numerator"]);
-        jq(".totalEligible").html(data["denominator"]);
-        jq("#percentEligibleWithSampleCollected").html(data["percent"]+"%");   
-   })
-   
-   getCohorts("${ui.format(constants.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR)}", cohortAjaxUrl, function(response){
-        var data = JSON.parse(response);
-       
-        jq("#totalEligibleWithReceivedAtLab").html(data["numerator"]);
-        jq(".totalEligible").html(data["denominator"]);
-        jq("#percentEligibleWithReceivedAtLab").html(data["percent"]+"%");   
-   })
 </script>
 
 

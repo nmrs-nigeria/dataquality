@@ -164,7 +164,7 @@ public class Constants {
 	
 	public final static int ARV_REGIMEN_DURATION = 159368;
 	
-	public final static int ARV_REGIMEN_QUANTITY = 160856;
+	public final static int ARV_REGIMEN_QUANTITY = 1443;//160856;
 	
 	public final static int ARV_COMMENCEMENT_FORM = 53;
 	
@@ -173,5 +173,15 @@ public class Constants {
 	public final static int DATE_RECEIVED_AT_PCR_LAB = 165716;
 	
 	public final static int FUNCTIONAL_STATUS_CONCEPT = 165039;
+	
+	public final static int TOTAL_ACTIVE_PATIENTS = 11211212;
+	
+	public final static int STARTED_ART_LAST_6_MONTHS = 11211213;
+	
+	public final static int HAD_CLINIC_VISIT_6_MONTHS = 11211214;
+	
+	public final static int HAD_DOC_LAST_PICKUP = 11211215;
+	
+	public final static int ELIGIBLE_FOR_VIRAL_LOAD = 11211216;
 	
 }

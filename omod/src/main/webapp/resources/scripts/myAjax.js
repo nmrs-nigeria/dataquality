@@ -31,3 +31,29 @@ function getCohorts(type, cohortAjaxUrl, callback)
 }
 
 
+function getCohorts2(type, cohortAjaxUrl)
+{
+    let myPromise = new Promise(function(resolve, reject) {
+    // "Producing Code" (May take some time)
+
+      jq = jQuery;
+   
+        jq.getJSON(cohortAjaxUrl,
+            {
+              type: type,
+             
+            }, function(data){
+                resolve(data)
+            }, function(xhr, status, error){
+                console.log(error);
+                reject(error)
+         })
+         
+    });
+    
+    return myPromise;
+    
+        
+}
+
+

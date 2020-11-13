@@ -279,6 +279,14 @@ public interface DataqualityService extends OpenmrsService {
 	
 	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
 	@Transactional
+	int getPtsEligibleForVLResult() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithVLResult() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
 	List<Object> getPtsEligibleForVLWithoutSampleCollection() throws APIException;
 	
 	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)

@@ -12,7 +12,6 @@ package org.openmrs.module.dataquality.fragment.controller;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dataquality.api.dao.DbConnection;
-import org.openmrs.module.dataquality.util.FactoryUtils;
 import org.openmrs.module.dataquality.util.Model.PatientLineList;
 import org.openmrs.module.dataquality.util.Model.SummaryDashboard;
 import org.openmrs.ui.framework.annotation.SpringBean;
@@ -47,14 +46,18 @@ import org.supercsv.prefs.CsvPreference;
 import org.openmrs.module.dataquality.Constants;
 import org.openmrs.module.dataquality.api.CohortBuilder;
 import org.openmrs.module.dataquality.api.DataqualityService;
+import org.openmrs.module.dataquality.api.dao.Database;
+import org.openmrs.module.dataquality.util.PatientUtil;
 
 public class UsersFragmentController {
 	
         Map <String, Integer> dataCache = new HashMap<>();
         Map <String, DateTime> lastUpdated = new HashMap<>();
         DataqualityService dataQualityService = Context.getService(DataqualityService.class);
+        CohortBuilder cohortBuilder = new CohortBuilder();
+        
 	public void controller(FragmentModel model, @SpringBean("userService") UserService service) {
-		
+	    // Database.initConnection();
 		//DbConnection connection = new DbConnection();
 		//FactoryUtils factoryUtils = new FactoryUtils();
 		/*Map<String, Integer> map = new HashMap<String, Integer>();
@@ -289,27 +292,93 @@ public class UsersFragmentController {
 		
 		model.addAttribute("constants", Constants.class);
 		
-	}
+    }
 	
+    
+    private int getTotalActivePatients()
+    {
+        CohortBuilder builder = new CohortBuilder();
+        int totalCount = 0;
+        if(PatientUtil.globalCache.containsKey("activePatients"))
+        {
+            //check if the value was set just below 1m ago
+            DateTime timeSet = PatientUtil.globalCacheTime.get("activePatients");
+            if(timeSet.plusMinutes(2).isBeforeNow())
+            {
+                totalCount = dataQualityService.getActivePatientCount();
+                PatientUtil.globalCache.put("activePatients", totalCount);
+                PatientUtil.globalCacheTime.put("activePatients", new DateTime());
+                
+            }else{
+                totalCount = PatientUtil.globalCache.get("activePatients");
+            }
+        }else{//lets go to the database
+            
+            totalCount = dataQualityService.getActivePatientCount();
+            PatientUtil.globalCache.put("activePatients", totalCount);
+            PatientUtil.globalCacheTime.put("activePatients", new DateTime());
+        }
+        return totalCount;
+    }
+    
     public String getCohortCounts(HttpServletRequest request) {
         int type = Integer.parseInt(request.getParameter("type"));
         DateTime endDateTime = new DateTime(new Date());
-	DateTime startDateTime = endDateTime.minusMonths(10006);
+	DateTime startDateTime = endDateTime.minusMonths(6);
         String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
         String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
         CohortBuilder builder = new CohortBuilder();
         
-         
+        
+        if(type == Constants.TOTAL_ACTIVE_PATIENTS)
+        {
+            Map<String, String> dataMap = new HashMap<>();
+            int totalActivePts = this.getTotalActivePatients();
+            dataMap.put("totalActivePatients", totalActivePts+"");
+            return new JSONObject(dataMap).toString();
+        }
+        else if( type ==  Constants.STARTED_ART_LAST_6_MONTHS)
+        {
+            Map<String, String> dataMap = new HashMap<>();
+            int totalActivePts = dataQualityService.getPatientsOnARTCount(startDate, endDate);
+            dataMap.put("totalPatientsStartedARTLast6Months",  totalActivePts+"");
+            return new JSONObject(dataMap).toString();
+        }
+        else if(type == Constants.HAD_CLINIC_VISIT_6_MONTHS)
+        {
+            Map<String, String> dataMap = new HashMap<>();
+            int totalPtsWithClinicVisit = dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
+            dataMap.put("totalPatientsClinicVisit",  totalPtsWithClinicVisit+"");
+            return new JSONObject(dataMap).toString();
+            
+        }
+        else if(type == Constants.HAD_DOC_LAST_PICKUP)//
+        {
+            Map<String, String> dataMap = new HashMap<>();
+            int totalPtsWithDocARVPickup = dataQualityService.getPtsWithDocLastARVPickupCount();
+            dataMap.put("totalPtsWithDocARVPickup",  totalPtsWithDocARVPickup+"");
+            return new JSONObject(dataMap).toString();
+        }else if(type == Constants.ELIGIBLE_FOR_VIRAL_LOAD )
+        {
+            Map<String, String> dataMap = new HashMap<>();
+            int totalPtsEligibleForVl = dataQualityService.getPtsEligibleForVLResult();//dataQualityService.getPtsEligibleForVLCount();
+            dataMap.put("totalPtsEligibleForVl",  totalPtsEligibleForVl+"");
+            return new JSONObject(dataMap).toString();
+            
+        }
+        
         if(type == Constants.ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT)
         {
             System.out.println("1");
             Map<String, String>dataMap = new HashMap<>();
+            
            
             int totalActiveWithDocEducationalStatus = dataQualityService.getActivePatientsWithDocumentedEducationalStatus();//CohortBuilder.getActivePatientsWithDocumentedEducationalStatus();
            // int totalActivePts = CohortBuilder.getActivePatientCount();
-           int totalActivePts =dataQualityService.getActivePatientCount();//this.getTotalActivePts();
+           int totalActivePts = 10;//this.getTotalActivePatients();
            
-           System.out.println("done fetching");
+         
+           System.out.println("done fetching educational");
             float percent = (totalActiveWithDocEducationalStatus * 100/ totalActivePts);
             dataMap.put("numerator", totalActiveWithDocEducationalStatus+"");
             dataMap.put("denominator", totalActivePts+"");
@@ -319,11 +388,13 @@ public class UsersFragmentController {
         }
         else if(type == Constants.ACTIVE_DOCUMENTED_MARITAL_STATUS_COHORT)
         {
-            System.out.println("2");
+            
             Map<String, String>dataMap = new HashMap<>();
             int numerator = dataQualityService.getActivePatientsWithDocumentedMaritalStatus();//CohortBuilder.getActivePatientsWithDocumentedMaritalStatus();
-            int denominator = dataQualityService.getActivePatientCount();//CohortBuilder.getActivePatientCount();
+            int denominator = 10; //this.getTotalActivePatients();
             float percent = (numerator * 100 / denominator);
+            ;
+            System.out.println("done fetching marital");
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
             dataMap.put("percent", percent+"");
@@ -334,7 +405,7 @@ public class UsersFragmentController {
             System.out.println("3");
             Map<String, String>dataMap = new HashMap<>();
             int numerator = dataQualityService.getActivePatientsWithDocumentedOccupationalStatus();//CohortBuilder.getActivePatientsWithDocumentedOccupationalStatus();
-            int denominator = dataQualityService.getActivePatientCount();//CohortBuilder.getActivePatientCount();
+            int denominator = 10;//this.getTotalActivePatients();
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -347,7 +418,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPatientsWithDocumentedDobCount(startDate, endDate);//CohortBuilder.getPatientsWithDocumentedDobCount(startDate, endDate);
-            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            int denominator = 1;//dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -360,7 +431,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPatientsWithDocumentedGenderCount(startDate, endDate);//CohortBuilder.getPatientsWithDocumentedGenderCount(startDate, endDate);
-            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            int denominator = 1;//dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -373,7 +444,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPatientsWithDocumentedPostiveDateCount(startDate, endDate);//CohortBuilder.getPatientsWithDocumentedPostiveDateCount(startDate, endDate);
-            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            int denominator = 1;//dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -386,7 +457,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPatientsWithDocumentedHIVEnrollmentCount(startDate, endDate);//CohortBuilder.getPatientsWithDocumentedHIVEnrollmentCount(startDate, endDate);
-            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            int denominator = 1;//dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -400,7 +471,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPatientsWhoPickARVCount(startDate, endDate);//CohortBuilder.getPatientsWhoPickARVCount(startDate, endDate);
-            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            int denominator = 1;//dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -414,7 +485,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPatientsWithDocCd4CntCount(startDate, endDate);//CohortBuilder.getPatientsWithDocCd4CntCount(startDate, endDate);
-            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            int denominator = 1;//dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -427,7 +498,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPatientsWithDocumentedAddress(startDate, endDate);
-            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            int denominator = 1;//dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -440,7 +511,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPtsWithClinicalVisitDocWeightCount(startDate, endDate);//CohortBuilder.getPtsWithClinicalVisitDocWeightCount(startDate, endDate);
-            int denominator = dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);//CohortBuilder.getPtsWithClinicalVisitCount(startDate, endDate);
+            int denominator = 10;//dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);//CohortBuilder.getPtsWithClinicalVisitCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -467,7 +538,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPtsWithClinicalVisitDocWHOCount(startDate, endDate);//CohortBuilder.getPtsWithClinicalVisitDocWHOCount(startDate, endDate);
-            int denominator = dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
+            int denominator = 10;//dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -481,7 +552,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPtsWithClinicalVisitDocTBStatusCount(startDate, endDate);//CohortBuilder.getPtsWithClinicalVisitDocTBStatusCount(startDate, endDate);
-            int denominator = dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
+            int denominator = 10;//dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -494,7 +565,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPtsWithDocLastARVPickupWithDurationCount();//CohortBuilder.getPtsWithDocLastARVPickupWithDurationCount();
-            int denominator = dataQualityService.getPtsWithDocLastARVPickupCount();//CohortBuilder.getPtsWithDocLastARVPickupCount();
+            int denominator = 10;//dataQualityService.getPtsWithDocLastARVPickupCount();//CohortBuilder.getPtsWithDocLastARVPickupCount();
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -507,7 +578,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPtsWithDocLastARVPickupWithQtyCount();//CohortBuilder.getPtsWithDocLastARVPickupWithQtyCount();
-            int denominator = dataQualityService.getPtsWithDocLastARVPickupCount();//CohortBuilder.getPtsWithDocLastARVPickupCount();
+            int denominator = 10;//dataQualityService.getPtsWithDocLastARVPickupCount();//CohortBuilder.getPtsWithDocLastARVPickupCount();
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -520,7 +591,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPtsWithDocLastARVPickupWithRegiminCount();//CohortBuilder.getPtsWithDocLastARVPickupWithRegiminCount();
-            int denominator = dataQualityService.getPtsWithDocLastARVPickupCount();//CohortBuilder.getPtsWithDocLastARVPickupCount();
+            int denominator = 10;//dataQualityService.getPtsWithDocLastARVPickupCount();//CohortBuilder.getPtsWithDocLastARVPickupCount();
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -533,7 +604,7 @@ public class UsersFragmentController {
             Map<String, String>dataMap = new HashMap<>();
             
             int numerator = dataQualityService.getPtsWithDocLastARVPickupWithDurationMoreThan180Count();//CohortBuilder.getPtsWithDocLastARVPickupWithDurationMoreThan180Count();
-            int denominator = dataQualityService.getPtsWithDocLastARVPickupCount();//CohortBuilder.getPtsWithDocLastARVPickupCount();
+            int denominator = dataQualityService.getPtsWithDocLastARVPickupWithDurationCount();//CohortBuilder.getPtsWithDocLastARVPickupCount();
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -546,7 +617,7 @@ public class UsersFragmentController {
             System.out.println("19");
             Map<String, String>dataMap = new HashMap<>();
             int numerator = dataQualityService.getPtsEligibleForVLWithResultCount();//CohortBuilder.getPtsEligibleForVLWithResultCount();
-            int denominator = dataQualityService.getPtsEligibleForVLCount();
+            int denominator = 10;//dataQualityService.getPtsEligibleForVLCount();
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -559,7 +630,7 @@ public class UsersFragmentController {
             System.out.println("20");
             Map<String, String>dataMap = new HashMap<>();
             int numerator = dataQualityService.getPtsEligibleForVLWithSampleCollectionCount();
-            int denominator = dataQualityService.getPtsEligibleForVLCount();
+            int denominator = dataQualityService.getPtsWithVLResult();
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -571,7 +642,7 @@ public class UsersFragmentController {
             System.out.println("21");
             Map<String, String>dataMap = new HashMap<>();
             int numerator = dataQualityService.getPtsEligibleForVLWithSampleReceivedCount();
-            int denominator = dataQualityService.getPtsEligibleForVLCount();
+            int denominator = 10;//dataQualityService.getPtsEligibleForVLWithResultCount();
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -583,7 +654,7 @@ public class UsersFragmentController {
             System.out.println("22");
             Map<String, String>dataMap = new HashMap<>();
             int numerator = dataQualityService.getPtsWithClinicalVisitFunctionalStatusCount(startDate, endDate);
-            int denominator = dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
+            int denominator = 10;//dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -596,7 +667,7 @@ public class UsersFragmentController {
             System.out.println("23");
             Map<String, String>dataMap = new HashMap<>();
             int numerator = dataQualityService.getPtsOnArtWithInitialRegimen(startDate, endDate);//CohortBuilder.getPtsOnArtWithInitialRegimen(startDate, endDate);
-            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
+            int denominator = 10;//dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");
@@ -609,7 +680,7 @@ public class UsersFragmentController {
             System.out.println("24");
             Map<String, String>dataMap = new HashMap<>();
             int numerator = dataQualityService.getPtsWithClinicalVisitNextAppDateCount(startDate, endDate);
-            int denominator = dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
+            int denominator = 10;//dataQualityService.getPtsWithClinicalVisitCount(startDate, endDate);
             float percent = (numerator * 100 / denominator);
             dataMap.put("numerator", numerator+"");
             dataMap.put("denominator", denominator+"");

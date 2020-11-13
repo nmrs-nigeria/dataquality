@@ -17,9 +17,11 @@ package org.openmrs.module.dataquality.api.dao;
 
 import java.sql.DriverManager;
 import java.sql.*;
+import java.util.Properties;
 import java.util.logging.Level;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
+import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -36,38 +38,43 @@ public class Database {
 	
 	public static ConnectionPool connectionPool;
 	
-	/*public static void initConnection(DBConnection openmrsConn) {
-	        try {
-
-	                if (openmrsConn != null) {
-	                        System.out.println("not null");
-	                        System.out.println(openmrsConn.getPassword());
-	                        connectionPool = new ConnectionPool("com.mysql.jdbc.Driver", openmrsConn.getUrl(),
-	                                openmrsConn.getUsername(), openmrsConn.getPassword(), 5, 10, true);
-	                        //conn = DriverManager.getConnection(openmrsConn.getUrl() + "?useCursorFetch=true", openmrsConn.getUsername(),
-	                        // openmrsConn.getPassword());
-
-	                } else {
-	                        Class.forName("com.mysql.jdbc.Driver");
-	                        connectionPool = new ConnectionPool("com.mysql.jdbc.Driver", "jdbc:mysql://192.168.167.142:3317/openmrs",
-	                                "openmrs", "@37~maa5RyqR", 50, 100, true);
-
-	                        //conn = DriverManager.getConnection("jdbc:mysql://192.168.167.138:3317/openmrs?useCursorFetch=true",   "openmrs", "@37~maa5RyqR");
-	                }
-
-	                //conn = DriverManager.getConnection("jdbc:mysql://192.168.167.138:3317/openmrs?useCursorFetch=true", "openmrs",
-	                //"@37~maa5RyqR");
-	                //conn = DriverManager.getConnection("jdbc:mysql://192.168.43.230:3317/openmrs", "openmrs", "@37~maa5RyqR");
-	        }
-	        catch (Exception ex) {
-	                ex.printStackTrace();
-	        }
-		
-	}*/
-	
 	public static void initConnection() {
 		try {
 			
+			Properties props = OpenmrsUtil.getRuntimeProperties("openmrs");
+			if (props == null)
+				props = OpenmrsUtil.getRuntimeProperties("openmrs-standalone");
+			if (props != null) {
+				System.out.println("not null");
+				Class.forName("com.mysql.jdbc.Driver");
+				System.out.println(props.getProperty("connection.url"));
+				connectionPool = new ConnectionPool("com.mysql.jdbc.Driver", props.getProperty("connection.url"),
+				        props.getProperty("connection.username"), props.getProperty("connection.password"), 5, 10, true);
+				//conn = DriverManager.getConnection(openmrsConn.getUrl() + "?useCursorFetch=true", openmrsConn.getUsername(),
+				// openmrsConn.getPassword());
+				
+			} else {
+				Class.forName("com.mysql.jdbc.Driver");
+				connectionPool = new ConnectionPool("com.mysql.jdbc.Driver", "jdbc:mysql://192.168.167.142:3317/openmrs",
+				        "openmrs", "@37~maa5RyqR", 50, 100, true);
+				
+				//conn = DriverManager.getConnection("jdbc:mysql://192.168.167.138:3317/openmrs?useCursorFetch=true",   "openmrs", "@37~maa5RyqR");
+			}
+			
+			//conn = DriverManager.getConnection("jdbc:mysql://192.168.167.138:3317/openmrs?useCursorFetch=true", "openmrs",
+			//"@37~maa5RyqR");
+			//conn = DriverManager.getConnection("jdbc:mysql://192.168.43.230:3317/openmrs", "openmrs", "@37~maa5RyqR");
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+	}
+	
+	/*public static void initConnection() {
+		try {
+	                
+			DbConnection openmrsConn2 = null;
 			String className = "com.mysql.jdbc.Driver";
 			String connString = "jdbc:mysql://localhost:3306/openmrs";
 			String username = "root";
@@ -82,7 +89,7 @@ public class Database {
 		}
 		
 	}
-	
+	*/
 	public static boolean testConnection(String className, String connString, String username, String password) {
 		try {
 			

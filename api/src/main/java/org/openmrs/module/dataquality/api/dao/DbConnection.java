@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.util.Properties;
 
 import org.openmrs.module.dataquality.NmrsConnection;
-import org.openmrs.module.dataquality.util.OptionsUtils;
 import org.openmrs.util.OpenmrsUtil;
 
 public class DbConnection {

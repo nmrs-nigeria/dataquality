@@ -355,4 +355,14 @@ public class DataqualityServiceImpl extends BaseOpenmrsService implements Dataqu
 		return errorDao.getPtsEligibleForVLWithoutSampleReceived();
 	}
 	
+	@Override
+	public int getPtsEligibleForVLResult() throws APIException {
+		return dao.getPtsEligibleForVLCount();
+	}
+	
+	@Override
+	public int getPtsWithVLResult() throws APIException {
+		return dao.getPtsWithVLResult();
+	}
+	
 }

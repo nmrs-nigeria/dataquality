@@ -12,7 +12,6 @@ package org.openmrs.module.dataquality.fragment.controller;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dataquality.api.dao.DbConnection;
-import org.openmrs.module.dataquality.util.FactoryUtils;
 import org.openmrs.module.dataquality.util.Model.PatientLineList;
 import org.openmrs.module.dataquality.util.Model.SummaryDashboard;
 import org.openmrs.ui.framework.annotation.SpringBean;
@@ -56,7 +55,7 @@ public class PatientsFragmentController {
 		
         int type = Integer.parseInt(request.getParameter("type"));
         DateTime endDateTime = new DateTime(new Date());
-	DateTime startDateTime = endDateTime.minusMonths(10006);
+	DateTime startDateTime = endDateTime.minusMonths(6);
         String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
         String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
         CohortBuilder builder = new CohortBuilder();
@@ -212,7 +211,7 @@ public class PatientsFragmentController {
         else if(type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_SEX)
         {
             System.out.println("5");
-            List<Object> data = dataQualityService.getPatientsWithoutDocumentedDob(startDate, endDate);
+            List<Object> data = dataQualityService.getPatientsWithoutDocumentedGender(startDate, endDate);
            
            List<Map<String, String>> patientData = new ArrayList<>();
            
@@ -763,10 +762,10 @@ public class PatientsFragmentController {
                //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
                Object[] dataObject = (Object[]) data.get(i);
                String patientId = dataObject[0].toString();
-               int encounterId = 0;//Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[1].toString();
-               String firstName = dataObject[2].toString();
-               String lastName = dataObject[3].toString();
+               int encounterId = Integer.parseInt(dataObject[1].toString());
+               String patientIdentifier = dataObject[2].toString();
+               String firstName = dataObject[3].toString();
+               String lastName = dataObject[4].toString();
                Map<String, String> tempData = new HashMap<>();
                tempData.put("patientId", patientId);
                tempData.put("encounterId", encounterId+"");
