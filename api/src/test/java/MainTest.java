@@ -1,6 +1,6 @@
 import java.util.Date;
-import org.openmrs.module.dataquality.api.CohortBuilder;
-import org.openmrs.module.dataquality.api.dao.Database;
+//import org.openmrs.module.dataquality.api.CohortBuilder;
+//import org.openmrs.module.dataquality.api.dao.Database;
 import org.joda.time.DateTime;
 
 /*
@@ -21,7 +21,7 @@ public class MainTest {
 		
 		//System.out.println(CohortBuilder.getPtsWithClinicalVisitDocWeightCount(
 		//startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm"), endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm")));
-		System.out.println(CohortBuilder.getActivePatientDocumentedEducationStatusCount());
+		//System.out.println(CohortBuilder.getActivePatientDocumentedEducationStatusCount());
 		
 	}
 	

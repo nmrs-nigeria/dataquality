@@ -5,9 +5,6 @@ import org.apache.log4j.Priority;
 import org.openmrs.*;
 import org.openmrs.annotation.Logging;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.dataquality.util.Model.Address;
-import org.openmrs.module.dataquality.util.Model.Identifier;
-import org.openmrs.module.dataquality.util.Model.Migration;
 import sun.rmi.runtime.Log;
 
 import java.text.SimpleDateFormat;

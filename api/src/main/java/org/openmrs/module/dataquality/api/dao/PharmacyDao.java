@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.openmrs.module.dataquality.util.Model;
+package org.openmrs.module.dataquality.api.dao;
 
 /**
- * @author The Bright
+ * @author lordmaul
  */
-public class TestClass {
+public class PharmacyDao {
 	
 }

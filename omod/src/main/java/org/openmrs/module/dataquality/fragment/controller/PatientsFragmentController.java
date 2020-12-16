@@ -11,40 +11,22 @@ package org.openmrs.module.dataquality.fragment.controller;
 
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.dataquality.api.dao.DbConnection;
-import org.openmrs.module.dataquality.util.Model.PatientLineList;
-import org.openmrs.module.dataquality.util.Model.SummaryDashboard;
 import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletResponse;
-import org.openmrs.module.dataquality.CohortMaster;
-import org.openmrs.module.dataquality.HITTCohort;
-import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 //import liquibase.util.csv.opencsv.CSVWriter;
 import com.opencsv.CSVWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
-import org.openmrs.Encounter;
-import org.openmrs.api.EncounterService;
-import org.openmrs.ui.framework.SimpleObject;
-import org.openmrs.ui.framework.UiUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.supercsv.io.CsvBeanWriter;
-import org.supercsv.io.ICsvBeanWriter;
-import org.supercsv.prefs.CsvPreference;
 import org.openmrs.module.dataquality.Constants;
-import org.openmrs.module.dataquality.api.CohortBuilder;
+//import org.openmrs.module.dataquality.api.CohortBuilder;
 import org.openmrs.module.dataquality.api.DataqualityService;
 
 public class PatientsFragmentController {
@@ -58,7 +40,6 @@ public class PatientsFragmentController {
 	DateTime startDateTime = endDateTime.minusMonths(6);
         String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
         String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-        CohortBuilder builder = new CohortBuilder();
         
          
         if(type == Constants.ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT)

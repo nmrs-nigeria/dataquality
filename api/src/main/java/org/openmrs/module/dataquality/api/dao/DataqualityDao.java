@@ -15,6 +15,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.dataquality.Constants;
@@ -55,6 +56,7 @@ public class DataqualityDao {
 	
 	public Item saveItem(Item item) {
 		getSession().saveOrUpdate(item);
+		
 		return item;
 	}
 	

@@ -184,4 +184,6 @@ public class Constants {
 	
 	public final static int ELIGIBLE_FOR_VIRAL_LOAD = 11211216;
 	
+	//public static Map<String, String> requestTypes = new HashMap<>();
+	
 }
