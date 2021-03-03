@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.dataquality.api;
 
+import java.util.List;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
@@ -45,4 +46,250 @@ public interface DataqualityService extends OpenmrsService {
 	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
 	@Transactional
 	Item saveItem(Item item) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getActivePatientCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getActivePatientsWithDocumentedEducationalStatus() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getActivePatientsWithDocumentedMaritalStatus() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getActivePatientsWithDocumentedOccupationalStatus() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPatientsOnARTCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsOnArtWithInitialRegimen(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPatientsWithDocumentedDobCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPatientsWithDocumentedAddress(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPatientsWithDocumentedGenderCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPatientsWithDocumentedPostiveDateCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPatientsWithDocumentedHIVEnrollmentCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPatientsWhoPickARVCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPatientsWithDocCd4CntCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithClinicalVisitCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithClinicalVisitDocWeightCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithClinicalVisitFunctionalStatusCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithClinicalVisitNextAppDateCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getInactivePtsCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getInactivePtsWithReasonCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithClinicalVisitDocMUACCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPedPtsWithClinicalVisitCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithClinicalVisitDocWHOCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithClinicalVisitDocTBStatusCount(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithDocLastARVPickupCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithDocLastARVPickupWithRegiminCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithDocLastARVPickupWithDurationCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithDocLastARVPickupWithDurationMoreThan180Count() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsEligibleForVLWithoutResultCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsEligibleForVLWithResultCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsEligibleForVLWithSampleCollectionCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsEligibleForVLWithSampleSentCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsEligibleForVLWithSampleReceivedCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithDocLastARVPickupWithQtyCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsEligibleForVLCount() throws APIException;
+	
+	//views for data quality issues
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getActivePatientsWithoutDocumentedEducationalStatus() throws APIException;
+	
+	//views for data quality issues
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getActivePatientsWithoutDocumentedMaritalStatus() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getActivePatientsWithoutDocumentedOccupationalStatus() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPatientsWithoutDocumentedDob(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPatientsWithoutDocumentedGender(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPatientsWithoutDocumentedAddress(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsWithClinicalVisitNoDocWeight(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPatientsWithoutDocumentedPostiveDate(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPatientsWithoutDocumentedHIVEnrollment(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPatientsWithoutDocCd4Cnt(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsWithClinicalVisitDocNoWeight(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsWithClinicalVisitNoDocMUAC(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsWithClinicalVisitNoDocWHO(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsWithClinicalVisitNoDocTBStatus(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsWithClinicalVisitNoFunctionalStatus(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsOnArtWithNoInitialRegimen(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsWithClinicalVisitNoNextAppDate(String startDate, String endDate) throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getInactivePtsWithoutReasonCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsWithDocLastARVPickupWithoutQtyCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsWithDocLastARVPickupWithoutDurationCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsWithDocLastARVPickupWithoutRegiminCount() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsWithDocLastARVPickupWithDurationMoreThan180() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsEligibleForVLWithoutResult() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsEligibleForVLResult() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	int getPtsWithVLResult() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsEligibleForVLWithoutSampleCollection() throws APIException;
+	
+	@Authorized(DataqualityConfig.MODULE_PRIVILEGE)
+	@Transactional
+	List<Object> getPtsEligibleForVLWithoutSampleReceived() throws APIException;
 }

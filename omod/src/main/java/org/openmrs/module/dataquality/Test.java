@@ -9,9 +9,6 @@ import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.Months;
 
-/**
- * @author The Bright
- */
 public class Test {
 	
 	public static void main(String[] arg) {

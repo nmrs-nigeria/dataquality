@@ -2,5 +2,6 @@
 
 <% ui.includeJavascript("dataquality", "myAjax.js") %>
 
-${ ui.includeFragment("dataquality", "users") }
+
+${ ui.includeFragment("dataquality", "patients") }
 
