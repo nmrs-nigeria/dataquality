@@ -20,6 +20,12 @@
         </property>
     </bean>
     
+    <bean id="dataquality.HTSDao" class="org.openmrs.module.dataquality.api.dao.HTSDao">
+        <property name="sessionFactory">
+            <ref bean="dbSessionFactory" />
+        </property>
+    </bean>
+    
    
 
     <!-- Wraps DataqualityService methods in DB transactions and OpenMRS interceptors,
@@ -35,6 +41,7 @@
                 <property name="errorDao" ref="dataquality.DataqualityErrorDao" />
                 
             </bean>
+            
         </property>
         <property name="preInterceptors">
             <ref bean="serviceInterceptors" />
@@ -43,6 +50,25 @@
             <ref bean="transactionAttributeSource" />
         </property>
     </bean>
+    
+    <!--<bean id="dataquality.HTSService"
+            class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager" />
+        </property>
+        <property name="target">
+            <bean class="org.openmrs.module.dataquality.api.impl.HTSServiceImpl">
+                <property name="dao" ref="dataquality.HTSDao" />
+            </bean>
+            
+        </property>
+        <property name="preInterceptors">
+            <ref bean="serviceInterceptors" />
+        </property>
+        <property name="transactionAttributeSource">
+            <ref bean="transactionAttributeSource" />
+        </property>
+    </bean>-->
 
     <!-- Adds DataqualityService to OpenMRS context so it can be accessed
     calling Context.getService(DataqualityService.class) -->
@@ -54,4 +80,12 @@
             </list>
         </property>
     </bean>
+    <!--<bean parent="serviceContext">
+        <property name="moduleService">
+            <list>
+                <value>org.openmrs.module.dataquality.api.HTSService</value>
+                <ref bean="dataquality.HTSService" />
+            </list>
+        </property>
+    </bean>-->
 </beans>

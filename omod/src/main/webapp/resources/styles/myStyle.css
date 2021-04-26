@@ -1,0 +1,83 @@
+.container{
+    padding-left:5px !important;
+    padding-right:5px !important;
+}
+.btn-info{
+    color: #fff;
+    background: #138496;
+    border-color: #117a8b
+}
+.btn-secondary{
+    background:#6c757d;
+}
+
+.niceDarkHr{
+    width:100%;
+    margin-left:10px;
+    margin-right:10px;
+    border-bottom: 1px solid #eaeaea !important;
+}
+#myTable_paginate li a{
+        color:white;
+} 
+#resultArea{
+    margin-top:20px;
+}
+    
+.center{
+    text-align:center;
+}
+#descriptionModal .modal-dialog
+{
+    max-width:800px !important;
+    text-align:left !important;
+}
+legend{
+    width:100px !important;
+    padding:10px !important;
+}
+
+.dropdown{
+    background:#ffffff !important;
+    top:0px !important;
+}
+.hidden-dropdown{
+    display:none !important;
+}
+
+.row
+{
+    width:100% !important;
+}
+.dataTables_filter{
+    width:100% !important;
+}
+#DataTables_Table_0_filter .input-sm
+{
+    height:30px !important;
+}
+#DataTables_Table_0_length
+{
+    width:40% !important;
+    float:left;
+}
+#DataTables_Table_0_length label{
+    width:50% !important;
+}
+#DataTables_Table_0_filter{
+    width:50% !important;
+    float:right !important;
+}
+.buttons-html5, .buttons-print
+{
+    cursor:pointer !important;
+}
+@(max-width: 600px){
+    #descriptionModal .modal-dialog
+    {
+        max-width:90% !important;
+        text-align:left !important;
+    }
+}
+
+

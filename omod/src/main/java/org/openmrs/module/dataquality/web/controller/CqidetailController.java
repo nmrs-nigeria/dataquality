@@ -1,3 +1,14 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.openmrs.module.dataquality.web.controller;
+
+/**
+ *
+ * @author lordmaul
+ */
 /**
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -7,9 +18,9 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.dataquality.web.controller;
 
 import java.sql.Connection;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -38,9 +49,9 @@ import org.springframework.web.servlet.ModelAndView;
  * This class configured as controller using annotation and mapped with the URL of
  * 'module/dataquality/dataqualityLink.form'.
  */
-@Controller("${rootrootArtifactId}.DataqualityController")
-@RequestMapping(value = "module/dataquality/dataquality.form")
-public class DataqualityController {
+@Controller("${rootrootArtifactId}.CQIDetailController")
+@RequestMapping(value = "module/dataquality/cqidetail.form")
+public class CqidetailController {
 	
 	/** Logger for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());
@@ -49,7 +60,7 @@ public class DataqualityController {
 	UserService userService;
 	
 	/** Success form view name */
-	private final String VIEW = "/module/dataquality/dataquality";
+	private final String VIEW = "/module/dataquality/cqidetail";
 	
 	/**
 	 * Initially called after the getUsers method to get the landing form name
@@ -59,7 +70,7 @@ public class DataqualityController {
 	 */
 	//@RequestMapping(method = RequestMethod.GET)
 	//public String onGet( PageModel model) {
-	@RequestMapping(value = { "/module/dataquality/dataquality" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/module/dataquality/cqidetail" }, method = RequestMethod.GET)
 	public PageModel onGet(PageModel model) {
 		
 		//initialize the database here

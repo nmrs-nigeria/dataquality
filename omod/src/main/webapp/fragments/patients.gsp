@@ -1,24 +1,25 @@
-<%
+<% 
 ui.includeJavascript("dataquality", "jquery-3.3.1.js")
 ui.includeJavascript("dataquality", "jquery.dataTables.min.js")
 ui.includeJavascript("dataquality", "datatables.min.js")
 ui.includeJavascript("dataquality", "buttons.flash.min.js")
+ui.includeJavascript("dataquality", "jquery-ui.js")
 ui.includeJavascript("dataquality", "jszip.min.js")
 ui.includeJavascript("dataquality", "pdfmake.min.js")
 ui.includeJavascript("dataquality", "vfs_fonts.js")
+ui.includeCss("dataquality", "bootstrap.min.css")
 ui.includeJavascript("dataquality", "buttons.html5.min.js")
 ui.includeJavascript("dataquality", "buttons.print.min.js")
+ui.includeJavascript("dataquality", "datatable.button.min.js")
 ui.includeCss("dataquality", "buttons.dataTables.min.css")
 ui.includeCss("dataquality", "jquery.dataTables.min.css")
-
-def id = config.id
+ui.includeCss("dataquality", "myStyle.css")
 %>
 <%=ui.resourceLinks()%>
 <div class="container">
-    <table id="myTable" class="display">
-        <thead>
-            <tr><th colspan='6' style='text-align: left; font-size: 16px;'>${ui.format(title)}</th></tr>
-        </thead>
+    <h3>${ui.format(title)}</h3>
+    <table id="myTable" class="display dataTable">
+       
         <thead style="font-size: 13px;">
             <tr>
                 <th>S/N</th>
@@ -53,12 +54,53 @@ def id = config.id
     jq = jQuery;
 
     jq(document).ready(function() {
-    jq('#myTable').DataTable( {
-    dom: 'Bfrtip',
-    buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print'
-    ]
-    } );
+          jq(".dataTable").DataTable({
+             pageLength: 100,
+             "lengthMenu": [[50, 100, 250, 500, -1], [50, 100, 250, 500, "All"]],
+             "columnDefs": [
+                { "searchable": false, "targets": [0] }  // Disable search on first and last columns
+              ],
+              dom: 'lfBrtip',
+                buttons: [
+                    'copy', 
+                   // 'csv', 
+                    {
+                        extend: 'csv',
+                        title:'<%= title; %>',
+                        exportOptions: {
+                            columns: [0,1,2,3]
+                        }
+                        //messageTop: '<%= title; %>'
+                    },
+                    {
+                        extend: 'excel',
+                        title:'<%= title; %>',
+                        exportOptions: {
+                            columns: [0,1,2,3]
+                        }
+                        //messageTop: '<%= title; %>'
+                    },
+                    {
+                        extend: 'pdf',
+                        title:'<%= title; %>',
+                        exportOptions: {
+                            columns: [0,1,2,3]
+                        }
+                        //messageTop: '<%= title; %>'
+                    },
+                    {
+                        extend: 'print',
+                        title:'<%= title; %>',
+                        exportOptions: {
+                            columns: [0,1,2,3]
+                        }
+                        //messageTop: '<%= title; %>'
+                    },
+                    //'pdf', 
+                    //'print'
+                ]
+
+                });
     } );
 </script>
 <style>
@@ -68,9 +110,14 @@ def id = config.id
     #apps{
     margin-bottom: 60px;
     }
+    #myTable_filter{
+        width:50% !important;
+    }#myTable_filter input {
+        height:30px !important;
+    }
     #myTable {
-    width: 90%;
-    margin-left: 5%;
+    width: 100%;
+    margin-left: 0%;
     }
     .buttons-html5{
     text-decoration: none;
@@ -129,6 +176,8 @@ def id = config.id
 <script type="text/javascript">
     jq = jQuery;
     var cohortAjaxUrl = '${ ui.actionLink("getCohortCounts") }';
+    
+     
    
 </script>
 

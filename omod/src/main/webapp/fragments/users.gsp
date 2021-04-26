@@ -7,6 +7,8 @@ ui.includeJavascript("dataquality", "jszip.min.js")
 ui.includeJavascript("dataquality", "pdfmake.min.js")
 ui.includeJavascript("dataquality", "vfs_fonts.js")
 ui.includeJavascript("dataquality", "buttons.html5.min.js")
+ui.includeJavascript("dataquality", "jquery-ui.js")
+ui.includeCss("dataquality", "jquery-ui.css")
 ui.includeJavascript("dataquality", "buttons.print.min.js")
 ui.includeCss("dataquality", "buttons.dataTables.min.css")
 ui.includeCss("dataquality", "jquery.dataTables.min.css")
@@ -15,6 +17,26 @@ def id = config.id
 %>
 <%=ui.resourceLinks()%>
 <div class="container">
+    
+    <fieldset>
+        <legend>Filters</legend>
+        <div class="row">
+           <label class="col-sm-6 col-md-2 " ><strong>Start Date</strong></label>
+            <div class="col-sm-6 col-md-3" style="position:relative">
+               <input type="text" class="form-control date" id="startDate" name="startDate"/>
+            </div>
+            
+            <label class="col-sm-6 col-md-2 "><strong>Start Date</strong></label>
+            <div class="col-sm-6 col-md-3" style="position:relative">
+               <input type="text" class="form-control date" id="endDate" name="endDate"/>
+            </div>
+            
+            
+            <div class="col-sm-6 col-md-2">
+                <button class="button" id="filterCQI">Filter</button>
+            </div>
+        </div>
+    </fieldset>
     <table id="myTable" class="display">
         <thead>
             <tr><th colspan='6' style='text-align: left; font-size: 16px;'>Clinical</th></tr>
@@ -35,7 +57,7 @@ def id = config.id
                 <td>I</td>
                 <td>Proportion of all active patients with a documented educational status </td>
                 <td id="activePtsWithDocEduStat" ><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="activePtsCount"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalActivePatientsEdu"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td id="percentEduStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
@@ -43,7 +65,7 @@ def id = config.id
                 <td>II</td>
                 <td>Proportion of all active patients with a documented marital status </td>
                 <td id="activePtsWithDocMarStat"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="activePtsCount"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalActivePatientsMar"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td id="percentMarStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.ACTIVE_DOCUMENTED_MARITAL_STATUS_COHORT)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
@@ -51,72 +73,98 @@ def id = config.id
                 <td>III</td>
                 <td>Proportion of all active patients with a documented occupational status </td>
                 <td id="activePtsWithDocOccuStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="activePtsCount"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalActivePatientsOccu"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td id="percentOccuStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.ACTIVE_DOCUMENTED_OCCUPATIONAL_STATUS_COHORT)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>IV</td>
-                <td>Proportion of patients newly started on ART in the last 6 months with documented age and/or Date of Birth</td>
-                <td id="newlyArtWithDocDob"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="newlyStartedOnART"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentNewlyArtDocDob"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td>
+                   <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with documented age and/or Date of Birth</span>
+                   <span class="withDate hidden">Proportion of patients started on ART between <strong class="startDate"></strong> and <strong class="endDate"></strong> with documented age and/or Date of Birth</span>
+                </td>
+                <td id="startedOnArtWithDob"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtDob"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtDob"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DOB)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>V</td>
-                <td>Proportion of patients newly started on ART in the last 6 months with documented Sex</td>
-                <td id="newlyArtWithDocGender"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="newlyStartedOnART"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentNewlyArtDocGender"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td>
+                    <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with documented Sex </span>
+                    <span class="withDate hidden">Proportion of patients  started on ART between <strong class="startDate"></strong> and <strong class="endDate"></strong> with documented Sex </span>
+                </td>
+                <td id="startedOnArtWithGender"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtGender"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtGender"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_SEX)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>VI</td>
-                <td>Proportion of patients newly started on ART in the last 6 months with registered address/LGA of residence </td>
-                <td id="newlyArtWithDocAddress"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="newlyStartedOnART"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentNewlyArtDocAddress"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td>
+                    <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with registered address/LGA of residence</span>
+                    <span class="withDate hidden">Proportion of patients  started on ART between <strong class="startDate"></strong> and <strong class="endDate"></strong> with registered address/LGA of residence</span>
+                </td>
+                <td id="startedOnArtWithAddress"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtAddress"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtAddress"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.NEWLY_STARTED_ON_ART_WITH_DOCUMENTED_LGA)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>VII</td>
-                <td>Proportion of patients newly started on ART in the last 6 months with documented date of HIV diagnosis</td>
-                <td id="newlyArtWithDocDiagnosis"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="newlyStartedOnART"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentNewlyArtDocDiagnosis"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td>
+                    <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with documented date of HIV diagnosis</span>
+                    <span class="withDate hidden">Proportion of patients  started on ART between <strong class="startDate"></strong> and <strong class="endDate"></strong> with documented date of HIV diagnosis</span>
+                </td>
+                <td id="startedOnArtWithDiagnosisDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtDiagnosisDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtDiagnosisDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DATECONFIRMED_POSITIVE)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>VIII</td>
-                <td>Proportion of patients newly started on ART in the last 6 months with documented HIV enrollment date</td>
-                <td id="newlyArtWithDocEnrollmentDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="newlyStartedOnART"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentNewlyArtDocEnrollmentDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td>
+                    <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with documented HIV enrollment date</span>
+                    <span class="withDate hidden">Proportion of patients  started on ART between <strong class="startDate"></strong> and <strong class="endDate"></strong> months with documented HIV enrollment date</span>
+
+                </td>
+                <td id="startedOnArtWithEnrollmentDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtEnrollmentDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtEnrollmentDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_HIVENROLLMENT)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>IX</td>
-                <td> Number of All patients Newly started on ART in the last 6months with a documented Drug pickup</td>
-                <td id="newlyArtWithDocDrugPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="newlyStartedOnART"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentNewlyArtDocDrugPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td> 
+                    <span class="withNoDate">Number of All patients Newly started on ART in the last 6 months with a documented Drug pickup</span>
+                    <span class="withDate hidden">Number of All patients started between <strong class="startDate"></strong> and <strong class="endDate"></strong> with a documented Drug pickup</span>
+                </td>
+                <td id="startedOnArtWithDrugPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtDrugPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtDrugPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="#" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>X</td>
-                <td>Proportion of patients newly started on ART in the last 6 months with documented CD4 result </td>
-                <td id="newlyArtWithDocCd4"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="newlyStartedOnART"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentNewlyArtDocCd4"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td>
+                     <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with documented CD4 result </span>
+                     <span class="withDate hidden">Proportion of patients started on ART between <strong class="startDate"></strong> and <strong class="endDate"></strong> with documented CD4 result </span>
+                </td>
+                <td id="startedOnArtWithCd4"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtCd4"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtCd4"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_CD4_COUNT)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XI</td>
-                <td>Proportion of patients with a clinic visit in the last 6 months that had documented weight</td>
-                <td id="recentClVisitDocWt"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="recentClinicVisit"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentClVisitDocWt"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td>
+                    <span class="withNoDate">Proportion of patients with a clinic visit in the last 6 months that had documented weight</span>
+                    <span class="withDate hidden">Proportion of patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate"></strong> that had documented weight</span>
+                
+                </td>
+                <td id="clinicVisitWithWeight"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalClinicVisitWeight"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentClinicVisitWeight"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WEIGH)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <!--
@@ -128,57 +176,80 @@ def id = config.id
             -->
             <tr>
                 <td>XII</td>
-                <td>Proportion of pediatric patients with a clinic visit in the last 6 months that had documented MUAC </td>
-                <td id="recentClinicPediatricVisitDocMuac"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="recentClinicPediatricVisit"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentRecentClinicVisitDocMuac"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td>
+                    <span class="withNoDate">Proportion of pediatric patients with a clinic visit in the last 6 months that had documented MUAC </span>
+                    <span class="withDate hidden">Proportion of pediatric patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate"></strong> that had documented MUAC </span>
+                </td>
+                <td id="clinicVisitWithMuac"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalClinicVisitMuac"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentClinicVisitMuac"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XIII</td>
-                <td>Proportion of patients with a clinic visit in the last 6 months that had documented WHO clinical stage</td>
-                <td id="recentClVisitDocWHO"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="recentClinicVisit"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentClVisitDocWHO"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td>
+                    <span class="withNoDate">Proportion of patients with a clinic visit in the last 6 months that had documented WHO clinical stage</span>
+                    <span class="withDate hidden">Proportion of patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate"></strong> that had documented WHO clinical stage</span>
+                    
+                </td>
+                <td id="clinicVisitWithWho"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalClinicVisitWho"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentClinicVisitWho"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WHO)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XIV</td>
-                <td>Proportion of patients with a clinic visit in the last 6 months that had documented TB status</td>
-                <td id="recentClVisitDocTBStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="recentClinicVisit"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentClVisitDocTBStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td>
+                    <span class="withNoDate">Proportion of patients with a clinic visit in the last 6 months that had documented TB status</span>
+                    <span class="withDate hidden">Proportion of patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate"></strong> that had documented TB status</span>
+                </td>
+                <td id="clinicVisitWithTBStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalClinicVisitTBStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentClinicVisitTBStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_TB_STATUS)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XV</td>
-                <td>Proportion of patients with a clinic visit in the last 6 months that had documented functional status</td>
-                <td id="recentClVisitDocFunctionalStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="recentClinicVisit"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentClVisitDocFunctionalStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td>
+                    <span class="withNoDate">Proportion of patients with a clinic visit in the last 6 months that had documented functional status</span>
+                    <span class="withDate hidden">Proportion of patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate"></strong> that had documented functional status</span>
+                </td>
+                <td id="clinicVisitWithFunctionalStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalClinicVisitFunctionalStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentClinicVisitFunctionalStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XVI</td>
-                <td >Proportion of patients newly started on ART in the last 6 months with initial ART regimen</td>
-                <td id="newlyArtInitialRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="newlyStartedOnART"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="perccentNewlyArtInitialRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td >
+                    <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with initial ART regimen</span>
+                    <span class="withDate hidden">Proportion of patients  started on ART <strong class="startDate"></strong> and <strong class="endDate"></strong> with initial ART regimen</span>
+                </td>
+                <td id="startedOnArtWithInitialRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtInitialRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtInitialRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XVII</td>
-                <td>Proportion of all patients with a clinic visit in the last 6 months that have documented next scheduled appointment date</td>
-                <td id="recentClVisitWithNextAppDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="recentClinicVisit"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentClVisitWithNextAppDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td>
+                    <span class="withNoDate">Proportion of all patients with a clinic visit in the last 6 months that have documented next scheduled appointment date</span>
+                    <span class="withDate hidden">Proportion of all patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate"></strong> that have documented next scheduled appointment date</span>
+                    
+                </td>
+                <td id="clinicVisitWithNextAppDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalClinicVisitNextAppDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentClinicVisitNextAppDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XVIII</td>
-                <td>Proportion of all inactive patients with a documented exit reason</td>
+                <td>
+                    <span class="withNoDate">Proportion of all inactive patients with a documented exit reason</span>
+                    <span class="withDate hidden">Proportion of all inactive patients as at <strong class="endDate"></strong> with a documented exit reason</span>
+                </td>
                 <td id="totalInactiveDocReason"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="totalInactive"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalInactive"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td id="percentInactiveDocReason"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.DOCUMENTED_EXIT_REASON_INACTIVE_COHORT)}" class="button" title="View records with issues">View Issues</a></td>
             </tr>
@@ -197,33 +268,33 @@ def id = config.id
             <tr>
                 <td>I</td> 
                 <td>Proportion of patients with a documented ART regimen quantity in the last drug refill visit</td>
-                <td id="totalArvWithQty"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="lastArvPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentTotalArvWithQty"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalPickupWithQty"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalPickupQty"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentagePickupQty"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_QUANTITY)}" class="button" title="View records with issues">View issues</a></td>    
             </tr>
             <tr>
                 <td>II</td>
                 <td>Proportion of patients with a documented ART regimen duration in the last drug refill visit</td>
-                <td id="totalArvWithDuration"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="lastArvPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentTotalArvWithDuration"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalPickupWithDuration"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalPickupDuration"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentagePickupDuration"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION)}" class="button" title="View records with issues">View issues</a></td>    
             </tr>
             <tr>
                 <td>III</td> 
                 <td>Proportion of patients with documented ART regimen in the last drug refill visit</td>
-                <td id="totalArvWithArtRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="lastArvPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentArvWithArtRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalPickupWithRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalPickupRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentagePickupRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION)}" class="button" title="View records with issues">View issues</a></td>    
             </tr>
             <tr>
                 <td>IV</td> 
                 <td>Proportion of patients with ART regimen duration not more than six(6) months  in the last drug refill visit</td>
-                <td id="totalPtsWithMoreThan180"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="lastArvPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentPtsWithMoreThan180"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalPickupWithQty180"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalPickupQty180"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentagePickupQty180"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION_MORETHAN180DAYS)}" class="button" title="View records with issues">View issues</a></td>    
             </tr>
 
@@ -242,25 +313,25 @@ def id = config.id
                 <td>I</td>
                 <td>Proportion of eligible patients with documented Viral Load results done in the last one year</td>
                 <td id="totalEligibleWithResult"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="totalEligible"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentEligibleWithResult"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalEligibleResult"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentEligibleResult"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.VIRAL_LOAD_ELIGIBLE_WITH_DOCUMENTED_RESULT)}" class="button" title="View records with issues">View issues</a></td>       
             </tr>
             <tr>
                 <td>II</td>
                 <td>Proportion of patients with Viral Load result that had documented specimen collection date </td>
-                <td id="totalResultWithCollection"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="totalWithResult"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentEligibleWithSampleCollected"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalResultWithResultCollection"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalResultCollection"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentResultCollection"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE)}" class="button" title="View records with issues">View Issues</a></td>       
             </tr>
             
             <tr>
                 <td>III</td> 
                 <td>Proportion of patients with Viral load results with a documented date sample was received at the PCR lab</td>
-                <td id="totalEligibleWithReceivedAtLab"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td class="totalWithResult"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentEligibleWithReceivedAtLab"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalResultWithResultSent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalResultSent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentResultSent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
                 <td><a href="dataqualityview.page?type=${ui.format(constants.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR)}" class="button" title="View records with issues">View Issues</a></td>       
             </tr>
 
@@ -273,18 +344,6 @@ def id = config.id
 
 
 
-<script>
-    jq = jQuery;
-
-    jq(document).ready(function() {
-    jq('#myTable').DataTable( {
-    dom: 'Bfrtip',
-    buttons: [
-    'copy', 'csv', 'excel', 'pdf', 'print'
-    ]
-    } );
-    } );
-</script>
 <style>
     .dt-buttons{
     float: right;
@@ -362,359 +421,399 @@ def id = config.id
    // getCohorts(cohortAjaxUrl);
    //educational status
    
-   
-     getCohorts2("${ui.format(constants.TOTAL_ACTIVE_PATIENTS)}", cohortAjaxUrl).then(function(response){
-            var data = JSON.parse(response);
-            totalActivePatients = data["totalActivePatients"];
-            console.log("total active", totalActivePatients);
-            getCohortRelatedToActivePatients();
-            
-            return getCohorts2("${ui.format(constants.STARTED_ART_LAST_6_MONTHS)}", cohortAjaxUrl); 
-            
-       })
-       .then(function(response){
-            var data = JSON.parse(response);
-            totalARTPatients = data["totalPatientsStartedARTLast6Months"];
-            
-            getCohortRelatedToARTPatients();
-            return getCohorts2("${ui.format(constants.HAD_CLINIC_VISIT_6_MONTHS)}", cohortAjaxUrl);
+   jq('.date').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeYear: true,
+            changeMonth:true,
+            yearRange: "-30:+0",
+            autoclose: true
+        });
         
-       })
-       .then(function(response){
-            var data = JSON.parse(response);
-            totalPatientsClinicVisit = data["totalPatientsClinicVisit"];
-            getCohortRelatedToClinicVisits();
-            
-            return  getCohorts2("${ui.format(constants.HAD_DOC_LAST_PICKUP)}", cohortAjaxUrl);
-       })
-       .then(function(response){
-       
-             console.log(response);
-            var data = JSON.parse(response);
-            totalPtsWithDocARVPickup = data["totalPtsWithDocARVPickup"];
-            console.log(totalPtsWithDocARVPickup);
-            getCohortRelatedToARVPickup();
-            
-            return getCohorts2("${ui.format(constants.ELIGIBLE_FOR_VIRAL_LOAD)}", cohortAjaxUrl);
-       })
-       .then(function(response){
-            console.log(response);
-            var data = JSON.parse(response);
-            totalPtsEligibleForVl = data["totalPtsEligibleForVl"];
-            console.log(totalPtsWithDocARVPickup);
-            getCohortRelatedToVl();
-       })
-       .catch(function(error){
-          console.log(error);
-       })
-       
-      /*getCohorts("${ui.format(constants.STARTED_ART_LAST_6_MONTHS)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-            totalARTPatients = data["totalPatientsStartedARTLast6Months"];
-            
-            getCohortRelatedToARTPatients();
-       })
-       
-       getCohorts("${ui.format(constants.HAD_CLINIC_VISIT_6_MONTHS)}", cohortAjaxUrl, function(response){
-            
-            var data = JSON.parse(response);
-            totalPatientsClinicVisit = data["totalPatientsClinicVisit"];
-           
-            getCohortRelatedToClinicVisits();
-       })
-       
-     getCohorts("${ui.format(constants.HAD_DOC_LAST_PICKUP)}", cohortAjaxUrl, function(response){
-            console.log(response);
-            var data = JSON.parse(response);
-            totalPtsWithDocARVPickup = data["totalPtsWithDocARVPickup"];
-            console.log(totalPtsWithDocARVPickup);
-            getCohortRelatedToARVPickup();
-       })
-      getCohorts("${ui.format(constants.ELIGIBLE_FOR_VIRAL_LOAD)}", cohortAjaxUrl, function(response){
-            console.log(response);
-            var data = JSON.parse(response);
-            totalPtsEligibleForVl = data["totalPtsEligibleForVl"];
-            console.log(totalPtsWithDocARVPickup);
-            getCohortRelatedToVl();
-       })
-       getCohorts("${ui.format(constants.PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
+   jq("#filterCQI").click(function(){
+        
+        var startDate = jq("#startDate").val();
+        var endDate = jq("#endDate").val();
+        if(startDate == "" || endDate == "")
+        {
+            alert("Please select start and end date");
+        }else{
+             jq(".startDate").html(startDate)
+             jq(".endDate").html(endDate);
+             jq(".withDate").removeClass("hidden");
+             jq(".withNoDate").addClass("hidden");
+             filterRecords();
+             
+        }
+        
+        
+        
+        
+   });
+        
+        
+  filterRecords();
+        
+   function filterRecords()
+   {    
+   
+          var startDate = jq("#startDate").val();
+            var endDate = jq("#endDate").val();
+   
+        myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getActivePatientsWithDocumentEducationalStaus") }').then(function(response){
 
-            jq("#recentClinicPediatricVisitDocMuac").html(data["numerator"]);
-            var denominator = data["denominator"];
-            var percent = data["percent"];
-            jq(".recentClinicPediatricVisit").html(denominator);
-           // var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
-            jq("#percentRecentClinicVisitDocMuac").html(percent+"%");   
-       })*/
-       
-       
-     function getCohortRelatedToActivePatients()
-     {
-     console.log("11");
-        getCohorts("${ui.format(constants.ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-            jq("#activePtsWithDocEduStat").html(data["numerator"]);
-            jq(".activePtsCount").html(totalActivePatients);
-            var percent = ((data["numerator"] / totalActivePatients) * 100).toFixed(1);
-            jq("#percentEduStatus").html(percent+"%");   
-       });
-       console.log("12");
-       
-       getCohorts("${ui.format(constants.ACTIVE_DOCUMENTED_MARITAL_STATUS_COHORT)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-
-            jq("#activePtsWithDocMarStat").html(data["numerator"]);
-            jq(".activePtsCount").html(totalActivePatients);
-             var percent = ((data["numerator"] / totalActivePatients) * 100).toFixed(1);
-            jq("#percentMarStatus").html(percent+"%");   
-       });
-       
-       console.log("13");
-       getCohorts("${ui.format(constants.ACTIVE_DOCUMENTED_OCCUPATIONAL_STATUS_COHORT)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-           
-            jq("#activePtsWithDocOccuStatus").html(data["numerator"]);
-            jq(".activePtsCount").html(totalActivePatients);
-            var percent = ((data["numerator"] / totalActivePatients) * 100).toFixed(1);
-            jq("#percentOccuStatus").html(percent+"%");   
-       })
-       
-       
-       
-     }
-     
-     
-     function getCohortRelatedToARTPatients()
-     {
-        console.log("1");
-        getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DOB)}", cohortAjaxUrl, function(response){
             
-        var data = JSON.parse(response);
-
-            jq("#newlyArtWithDocDob").html(data["numerator"]);
-            jq(".newlyStartedOnART").html(totalARTPatients);
-             var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
-            jq("#percentNewlyArtDocDob").html(percent+"%");  
-       });
-       console.log("2");
-       getCohorts("${ui.format(constants.NEWLY_STARTED_ON_ART_WITH_DOCUMENTED_LGA)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-            jq("#newlyArtWithDocAddress").html(data["numerator"]);
-             var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
-            jq(".newlyStartedOnART").html(totalARTPatients);
-            jq("#percentNewlyArtDocAddress").html(percent+"%");   
-       })
-       console.log("3");
-         getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_SEX)}", cohortAjaxUrl, function(response){
              var data = JSON.parse(response);
-             jq("#newlyArtWithDocGender").html(data["numerator"]);
-             jq(".newlyStartedOnART").html(totalARTPatients);
-             var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
-             jq("#percentNewlyArtDocGender").html(percent+"%");   
-        })
-        
-        console.log("4");
-        getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DATECONFIRMED_POSITIVE)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
+             var totalPtsWithEducationalStatus = data["totalPtsWithEducationalStatus"];
+             var totalActivePatients = data["totalActivePatients"];
+             var percent = ( totalPtsWithEducationalStatus/totalActivePatients * 100).toFixed(1);
 
-            jq("#newlyArtWithDocDiagnosis").html(data["numerator"]);
-            jq(".newlyStartedOnART").html(totalARTPatients);
-            var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
-            jq("#percentNewlyArtDocDiagnosis").html(percent+"%");   
-       })
-       
-       console.log("5");
-       
-         getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_HIVENROLLMENT)}", cohortAjaxUrl, function(response){
-             var data = JSON.parse(response);
-
-             jq("#newlyArtWithDocEnrollmentDate").html(data["numerator"]);
-             jq(".newlyStartedOnART").html(totalARTPatients);
-             var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
-             jq("#percentNewlyArtDocEnrollmentDate").html(percent+"%");   
-        })
-        
-        console.log("6");
-        getCohorts("${ui.format(constants.DOCUMENTED_ART_START_DATE_ARV_PICKUP_COHORT)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-
-            jq("#newlyArtWithDocDrugPickup").html(data["numerator"]);
-            jq(".newlyStartedOnART").html(totalARTPatients);
-            var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
-            jq("#percentNewlyArtDocDrugPickup").html(percent+"%");   
-       })
-       
-       console.log("7");
-            getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_CD4_COUNT)}", cohortAjaxUrl, function(response){
-                var data = JSON.parse(response);
-
-                jq("#newlyArtWithDocCd4").html(data["numerator"]);
-                jq(".newlyStartedOnART").html(totalARTPatients);
-                var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
-                jq("#percentNewlyArtDocCd4").html(percent+"%");   
-          })
-          console.log("8");
-            getCohorts("${ui.format(constants.STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN)}", cohortAjaxUrl, function(response){
-                var data = JSON.parse(response);
-
-                jq("#newlyArtInitialRegimen").html(data["numerator"]);
-                jq(".newlyStartedOnART").html(totalARTPatients);
-                var percent = ((data["numerator"] / totalARTPatients) * 100).toFixed(1);
-                jq("#perccentNewlyArtInitialRegimen").html(percent+"%");   
-           })
-  
-     }
-     
-     function getCohortRelatedToClinicVisits()
-     {
-        getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WEIGH)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-
-            jq("#recentClVisitDocWt").html(data["numerator"]);
-            jq(".recentClinicVisit").html(totalPatientsClinicVisit);
-            var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
-            jq("#percentClVisitDocWt").html(percent+"%");   
-       })
-       
-       
-       
-       getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WHO)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-
-            jq("#recentClVisitDocWHO").html(data["numerator"]);
-            jq(".recentClinicVisit").html(totalPatientsClinicVisit);
-            var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
-            jq("#percentClVisitDocWHO").html(percent+"%");   
-       })
-            getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_TB_STATUS)}", cohortAjaxUrl, function(response){
-                var data = JSON.parse(response);
-
-                jq("#recentClVisitDocTBStatus").html(data["numerator"]);
-                jq(".recentClinicVisit").html(totalPatientsClinicVisit);
-                var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
-                jq("#percentClVisitDocTBStatus").html(percent+"%");   
-           })
-           getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS)}", cohortAjaxUrl, function(response){
-                var data = JSON.parse(response);
-
-                jq("#recentClVisitDocFunctionalStatus").html(data["numerator"]);
-                jq(".recentClinicVisit").html(totalPatientsClinicVisit);
-                var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
-                jq("#percentClVisitDocFunctionalStatus").html(percent+"%");   
-           })
-           
-           getCohorts("${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE)}", cohortAjaxUrl, function(response){
-                var data = JSON.parse(response);
-
-                jq("#recentClVisitWithNextAppDate").html(data["numerator"]);
-                jq(".recentClinicVisit").html(totalPatientsClinicVisit);
-                var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
-                jq("#percentClVisitWithNextAppDate").html(percent+"%");   
-           })
-
-     }
-     
-     function getCohortRelatedToARVPickup()
-     {
-        getCohorts("${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_QUANTITY)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-
-            jq("#totalArvWithQty").html(data["numerator"]);
-            var percent = ((data["numerator"] / totalPtsWithDocARVPickup) * 100).toFixed(1);
-            jq(".lastArvPickup").html(totalPtsWithDocARVPickup);
-            jq("#percentTotalArvWithQty").html(percent+"%");   
-       })
-       getCohorts("${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-
-            jq("#totalArvWithDuration").html(data["numerator"]);
-             var percent = ((data["numerator"] / totalPtsWithDocARVPickup) * 100).toFixed(1);
-            jq(".lastArvPickup").html(totalPtsWithDocARVPickup);
-            jq("#percentTotalArvWithDuration").html(percent+"%");   
-       })
-        getCohorts("${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_REGIMEN)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-            var percent = ((data["numerator"] / totalPtsWithDocARVPickup) * 100).toFixed(1);
-            jq("#totalArvWithArtRegimen").html(data["numerator"]);
-            jq(".lastArvPickup").html(totalPtsWithDocARVPickup);
-            jq("#percentArvWithArtRegimen").html(percent+"%");   
-       })
-       getCohorts("${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION_MORETHAN180DAYS)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
+             jq("#activePtsWithDocEduStat").html(totalPtsWithEducationalStatus);
+             jq("#totalActivePatientsEdu").html(totalActivePatients);
+             jq("#percentEduStatus").html(percent+"%");
             
-            var percent = ((data["numerator"] / totalPtsWithDocARVPickup) * 100).toFixed(1);    
-            jq("#totalPtsWithMoreThan180").html(data["numerator"]);
-            jq(".lastArvPickupWithDuration").html(totalPtsWithDocARVPickup);
-            jq("#percentPtsWithMoreThan180").html(percent+"%");   
-       })
+
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getActivePatientsWithDocumentMaritalStaus") }');
+         }).then(function(response){
+
+           
+             var data = JSON.parse(response);
+             var totalPtsWithMaritalStatus = data["totalPtsWithMaritalStatus"];
+             var totalActivePatients = data["totalActivePatients"];
+             var percent = ( totalPtsWithMaritalStatus/totalActivePatients * 100).toFixed(1);
+
+             jq("#activePtsWithDocMarStat").html(totalPtsWithMaritalStatus);
+             jq("#totalActivePatientsMar").html(totalActivePatients);
+             jq("#percentMarStatus").html(percent+"%");
+            
+
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getActivePatientsWithDocumentOccupationalStaus") }');
+         })
+         
+         .then(function(response){
+
+             var data = JSON.parse(response);
+             var totalPtsWithOccupationalStatus = data["totalPtsWithOccupationalStatus"];
+             var totalActivePatients = data["totalActivePatients"];
+             var percent = ( totalPtsWithOccupationalStatus/totalActivePatients * 100).toFixed(1);
+
+             jq("#activePtsWithDocOccuStatus").html(totalPtsWithOccupationalStatus);
+             jq("#totalActivePatientsOccu").html(totalActivePatients);
+             jq("#percentOccuStatus").html(percent+"%");
+
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocDob") }');
+         })
+         .then(function(response){
+
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsStartedOnArtWithDob = data["totalPtsStartedOnArtWithDob"];
+             var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
+             var percent = ( totalPtsStartedOnArtWithDob/totalPtsStartedOnArt * 100).toFixed(1);
+
+             jq("#startedOnArtWithDob").html(totalPtsStartedOnArtWithDob);
+             jq("#totalStartedOnArtDob").html(totalPtsStartedOnArt);
+             jq("#percentStartedArtDob").html(percent+"%");
+            
+
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocGender") }');
+         })
+         
+          .then(function(response){
+
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsStartedOnArtWithGender = data["totalPtsStartedOnArtWithGender"];
+             var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
+             var percent = ( totalPtsStartedOnArtWithGender/totalPtsStartedOnArt * 100).toFixed(1);
+
+             jq("#startedOnArtWithGender").html(totalPtsStartedOnArtWithGender);
+             jq("#totalStartedOnArtGender").html(totalPtsStartedOnArt);
+             jq("#percentStartedArtGender").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocAddress") }');
+         })
+         .then(function(response){
+
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsStartedOnArtWithAddress = data["totalPtsStartedOnArtWithAddress"];
+             var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
+             var percent = ( totalPtsStartedOnArtWithAddress/totalPtsStartedOnArt * 100).toFixed(1);
+
+             jq("#startedOnArtWithAddress").html(totalPtsStartedOnArtWithAddress);
+             jq("#totalStartedOnArtAddress").html(totalPtsStartedOnArt);
+             jq("#percentStartedArtAddress").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocHivDiagnosisDate") }');
+         })
+         
+         .then(function(response){
+
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsStartedOnArtWithHivDiagnosisDate = data["totalPtsStartedOnArtWithHivDiagnosisDate"];
+             var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
+             var percent = ( totalPtsStartedOnArtWithHivDiagnosisDate/totalPtsStartedOnArt * 100).toFixed(1);
+
+             jq("#startedOnArtWithDiagnosisDate").html(totalPtsStartedOnArtWithHivDiagnosisDate);
+             jq("#totalStartedOnArtDiagnosisDate").html(totalPtsStartedOnArt);
+             jq("#percentStartedArtDiagnosisDate").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocHivEnrollmentDate") }');
+         })
+         .then(function(response){
+
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsStartedOnArtWithHivEnrollmentDate = data["totalPtsStartedOnArtWithHivEnrollmentDate"];
+             var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
+             var percent = ( totalPtsStartedOnArtWithHivEnrollmentDate/totalPtsStartedOnArt * 100).toFixed(1);
+
+             jq("#startedOnArtWithEnrollmentDate").html(totalPtsStartedOnArtWithHivEnrollmentDate);
+             jq("#totalStartedOnArtEnrollmentDate").html(totalPtsStartedOnArt);
+             jq("#percentStartedArtEnrollmentDate").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocDrugPickup") }');
+         })
+         
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsStartedOnArtWithDrugPickup = data["totalPtsStartedOnArtWithDrugPickup"];
+             var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
+             var percent = ( totalPtsStartedOnArtWithDrugPickup/totalPtsStartedOnArt * 100).toFixed(1);
+
+             jq("#startedOnArtWithDrugPickup").html(totalPtsStartedOnArtWithDrugPickup);
+             jq("#totalStartedOnArtDrugPickup").html(totalPtsStartedOnArt);
+             jq("#percentStartedArtDrugPickup").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocCd4") }');
+         })
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsStartedOnArtWithCd4 = data["totalPtsStartedOnArtWithCd4"];
+             var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
+             var percent = ( totalPtsStartedOnArtWithCd4/totalPtsStartedOnArt * 100).toFixed(1);
+
+             jq("#startedOnArtWithCd4").html(totalPtsStartedOnArtWithCd4);
+             jq("#totalStartedOnArtCd4").html(totalPtsStartedOnArt);
+             jq("#percentStartedArtCd4").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsClinicVisitDocWeight") }');
+         })
+         
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsClinicVisitDocWeight = data["totalPtsClinicVisitDocWeight"];
+             var totalPtsClinicVisit = data["totalPtsClinicVisit"];
+             var percent = ( totalPtsClinicVisitDocWeight/totalPtsClinicVisit * 100).toFixed(1);
+
+             jq("#clinicVisitWithWeight").html(totalPtsClinicVisitDocWeight);
+             jq("#totalClinicVisitWeight").html(totalPtsClinicVisit);
+             jq("#percentClinicVisitWeight").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsClinicVisitDocMuac") }');
+         })
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsClinicVisitDocMuac = data["totalPtsClinicVisitDocMuac"];
+             var totalPtsClinicVisit = data["totalPtsClinicVisit"];
+             var percent = ( totalPtsClinicVisitDocMuac/totalPtsClinicVisit * 100).toFixed(1);
+
+             jq("#clinicVisitWithMuac").html(totalPtsClinicVisitDocMuac);
+             jq("#totalClinicVisitMuac").html(totalPtsClinicVisit);
+             jq("#percentClinicVisitMuac").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsClinicVisitDocWhoStage") }');
+         })
+         
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsClinicVisitDocWhoStage = data["totalPtsClinicVisitDocWhoStage"];
+             var totalPtsClinicVisit = data["totalPtsClinicVisit"];
+             var percent = ( totalPtsClinicVisitDocWhoStage/totalPtsClinicVisit * 100).toFixed(1);
+
+             jq("#clinicVisitWithWho").html(totalPtsClinicVisitDocWhoStage);
+             jq("#totalClinicVisitWho").html(totalPtsClinicVisit);
+             jq("#percentClinicVisitWho").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsClinicVisitDocTBStatus") }');
+         })
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsClinicVisitDocTBStatus = data["totalPtsClinicVisitDocTBStatus"];
+             var totalPtsClinicVisit = data["totalPtsClinicVisit"];
+             var percent = ( totalPtsClinicVisitDocTBStatus/totalPtsClinicVisit * 100).toFixed(1);
+
+             jq("#clinicVisitWithTBStatus").html(totalPtsClinicVisitDocTBStatus);
+             jq("#totalClinicVisitTBStatus").html(totalPtsClinicVisit);
+             jq("#percentClinicVisitTBStatus").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsClinicVisitDocFunctionalStatus") }');
+         })
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsClinicVisitDocFunctionalStatus = data["totalPtsClinicVisitDocFunctionalStatus"];
+             var totalPtsClinicVisit = data["totalPtsClinicVisit"];
+             var percent = ( totalPtsClinicVisitDocFunctionalStatus/totalPtsClinicVisit * 100).toFixed(1);
+
+             jq("#clinicVisitWithFunctionalStatus").html(totalPtsClinicVisitDocFunctionalStatus);
+             jq("#totalClinicVisitFunctionalStatus").html(totalPtsClinicVisit);
+             jq("#percentClinicVisitFunctionalStatus").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithInitialRegimen") }');
+         })
+         .then(function(response){
+
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsStartedOnArtWithInitialRegimen = data["totalPtsStartedOnArtWithInitialRegimen"];
+             var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
+             var percent = ( totalPtsStartedOnArtWithInitialRegimen/totalPtsStartedOnArt * 100).toFixed(1);
+
+             jq("#startedOnArtWithInitialRegimen").html(totalPtsStartedOnArtWithInitialRegimen);
+             jq("#totalStartedOnArtInitialRegimen").html(totalPtsStartedOnArt);
+             jq("#percentStartedArtInitialRegimen").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsClinicVisitDocNextAppDate") }');
+         })
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsClinicVisitDocNextAppDate = data["totalPtsClinicVisitDocNextAppDate"];
+             var totalPtsClinicVisit = data["totalPtsClinicVisit"];
+             var percent = ( totalPtsClinicVisitDocNextAppDate/totalPtsClinicVisit * 100).toFixed(1);
+
+             jq("#clinicVisitWithNextAppDate").html(totalPtsClinicVisitDocNextAppDate);
+             jq("#totalClinicVisitNextAppDate").html(totalPtsClinicVisit);
+             jq("#percentClinicVisitNextAppDate").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getInactivePtsWithDocReason") }');
+         })
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalInactivePtsWithReason = data["totalInactivePtsWithReason"];
+             var totalInactivePts = data["totalInactivePts"];
+             var percent = ( totalInactivePtsWithReason/totalInactivePts * 100).toFixed(1);
+
+             jq("#totalInactiveDocReason").html(totalInactivePtsWithReason);
+             jq("#totalInactive").html(totalInactivePts);
+             jq("#percentInactiveDocReason").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsWithDrugQuantity") }');
+         })
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPickupWithQuantity = data["totalPickupWithQuantity"];
+             var totalPickup = data["totalPickup"];
+             var percent = ( totalPickupWithQuantity/totalPickup * 100).toFixed(1);
+             jq("#totalPickupWithQty").html(totalPickupWithQuantity);
+             jq("#totalPickupQty").html(totalPickup);
+             jq("#percentagePickupQty").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsWithDrugDuration") }');
+         }).then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPickupWithDuration = data["totalPickupWithDuration"];
+             var totalPickup = data["totalPickup"];
+             var percent = ( totalPickupWithDuration/totalPickup * 100).toFixed(1);
+             jq("#totalPickupWithDuration").html(totalPickupWithDuration);
+             jq("#totalPickupDuration").html(totalPickup);
+             jq("#percentagePickupDuration").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsWithDrugRegimen") }');
+         })
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPickupWithRegimen = data["totalPickupWithRegimen"];
+             var totalPickup = data["totalPickup"];
+             var percent = ( totalPickupWithRegimen/totalPickup * 100).toFixed(1);
+             jq("#totalPickupWithRegimen").html(totalPickupWithRegimen);
+             jq("#totalPickupRegimen").html(totalPickup);
+             jq("#percentagePickupRegimen").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsWithDrugPickupQtyLessThan180") }');
+         })
+         
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPickupWithQtyLessThan180 = data["totalPickupWithQtyLessThan180"];
+             var totalPickup = data["totalPickup"];
+             var percent = ( totalPickupWithQtyLessThan180/totalPickup * 100).toFixed(1);
+             jq("#totalPickupWithQty180").html(totalPickupWithQtyLessThan180);
+             jq("#totalPickupQty180").html(totalPickup);
+             jq("#percentagePickupQty180").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsEligibleForVLWithResult") }');
+         })
+         
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsEligibleForVlWithResult = data["totalPtsEligibleForVlWithResult"];
+             var totalPtsEligibleForVl = data["totalPtsEligibleForVl"];
+             var percent = ( totalPtsEligibleForVlWithResult/totalPtsEligibleForVl * 100).toFixed(1);
+             jq("#totalEligibleWithResult").html(totalPtsEligibleForVlWithResult);
+             jq("#totalEligibleResult").html(totalPtsEligibleForVl);
+             jq("#percentEligibleResult").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsWithResultAndSampleCollectionDate") }');
+         })
+         
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsWithVlResultAndSampleCollectionDate = data["totalPtsWithVlResultAndSampleCollectionDate"];
+             var totalPtsWithResult = data["totalPtsWithResult"];
+             var percent = ( totalPtsWithVlResultAndSampleCollectionDate/totalPtsWithResult * 100).toFixed(1);
+             jq("#totalResultWithResultCollection").html(totalPtsWithVlResultAndSampleCollectionDate);
+             jq("#totalResultCollection").html(totalPtsWithResult);
+             jq("#percentResultCollection").html(percent+"%");
+             
+             return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsWithResultAndSampleReceivedDate") }');
+         })
+         .then(function(response){
+             console.log("response", response);
+             var data = JSON.parse(response);
+             var totalPtsWithVlResultAndReceivedDate = data["totalPtsWithVlResultAndReceivedDate"];
+             var totalPtsWithResult = data["totalPtsWithResult"];
+             var percent = ( totalPtsWithVlResultAndReceivedDate/totalPtsWithResult * 100).toFixed(1);
+             jq("#totalResultWithResultSent").html(totalPtsWithVlResultAndReceivedDate);
+             jq("#totalResultSent").html(totalPtsWithResult);
+             jq("#percentResultSent").html(percent+"%");
+             
+             //return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithInitialRegimen") }');
+         })
+         
+      }
    
-   
-     }
+       
+    
+       
+       
      
-     getCohorts("${ui.format(constants.DOCUMENTED_EXIT_REASON_INACTIVE_COHORT)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-
-            jq("#totalInactiveDocReason").html(data["numerator"]);
-            jq(".totalInactive").html(data["denominator"]);
-            jq("#percentInactiveDocReason").html(data["percent"]+"%");   
-       })
-       getCohorts("${ui.format(constants.PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC)}", cohortAjaxUrl, function(response){
-            var data = JSON.parse(response);
-
-            jq("#recentClinicPediatricVisitDocMuac").html(data["numerator"]);
-            var denominator = data["denominator"];
-            var percent = data["percent"];
-            jq(".recentClinicPediatricVisit").html(denominator);
-           // var percent = ((data["numerator"] / totalPatientsClinicVisit) * 100).toFixed(1);
-            jq("#percentRecentClinicVisitDocMuac").html(percent+"%");   
-       })
+     
   
+     
+    
+    
+     
+    
   
-       function getCohortRelatedToVl()
-       {
-           getCohorts("${ui.format(constants.VIRAL_LOAD_ELIGIBLE_WITH_DOCUMENTED_RESULT)}", cohortAjaxUrl, function(response){
-                var data = JSON.parse(response);
-
-                var percent = ((data["numerator"] / totalPtsEligibleForVl) * 100).toFixed(1); 
-                jq("#totalEligibleWithResult").html(data["numerator"]);
-                jq(".totalEligible").html(totalPtsEligibleForVl);
-                jq("#percentEligibleWithResult").html(percent+"%");  
-                
-                
-                 
-           })
-           getCohorts("${ui.format(constants.VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE)}", cohortAjaxUrl, function(response){
-                var data = JSON.parse(response);
-                totalPtsWithVl = data["denominator"];
-                var percent = ((data["numerator"] / data["denominator"]) * 100).toFixed(1); 
-                jq("#totalResultWithCollection").html(data["numerator"]);
-                jq(".totalWithResult").html(totalPtsWithVl);
-                jq("#percentEligibleWithSampleCollected").html(percent+"%");   
-
-
-                getCohorts("${ui.format(constants.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR)}", cohortAjaxUrl, function(response){
-                    var data = JSON.parse(response);
-                     var percent = ((data["numerator"] / totalPtsWithVl) * 100).toFixed(1); 
-                    jq("#totalEligibleWithReceivedAtLab").html(data["numerator"]);
-
-                    jq("#percentEligibleWithReceivedAtLab").html(percent+"%");   
-               })
-
-           })
-
-                
-          
-       }
+       
    
 </script>
-
-
-
-
-
-
-
 
 
 

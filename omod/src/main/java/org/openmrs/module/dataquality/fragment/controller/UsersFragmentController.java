@@ -27,6 +27,9 @@ import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
 import org.openmrs.module.dataquality.Constants;
 import org.openmrs.module.dataquality.api.DataqualityService;
+import org.openmrs.module.dataquality.api.dao.ClinicalDao;
+import org.openmrs.module.dataquality.api.dao.LabDao;
+import org.openmrs.module.dataquality.api.dao.PharmacyDao;
 import org.openmrs.module.dataquality.util.PatientUtil;
 
 public class UsersFragmentController {
@@ -36,11 +39,12 @@ public class UsersFragmentController {
         DataqualityService dataQualityService = Context.getService(DataqualityService.class);
         //CohortBuilder cohortBuilder = new CohortBuilder();
         
-	public void controller(FragmentModel model, @SpringBean("userService") UserService service) {
-	   
-		
-		model.addAttribute("constants", Constants.class);
-		
+     ClinicalDao clinicalDao = new ClinicalDao();
+     PharmacyDao pharmacyDao = new PharmacyDao();
+     LabDao labDao = new LabDao();
+        
+    public void controller(FragmentModel model, @SpringBean("userService") UserService service) {
+        model.addAttribute("constants", Constants.class);	
     }
 	
     
@@ -68,6 +72,682 @@ public class UsersFragmentController {
         }
         return totalCount;
     }
+    
+    public String getActivePatientsWithDocumentEducationalStaus(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            startDateTime = new DateTime("1990-01-01");
+            endDateTime = new DateTime(new Date());
+        }
+        
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsWithEducationalStatus = clinicalDao.getNoActivePtsWithWithEducationalStatus(startDate, endDate);
+        int totalActivePatients = clinicalDao.getNoActivePts(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsWithEducationalStatus",  totalPtsWithEducationalStatus+"");
+        dataMap.put("totalActivePatients",  totalActivePatients+"");
+        //dataMap.put("totalPedPtsWithAppointment",  totalPedPtsWithAppointment+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getActivePatientsWithDocumentMaritalStaus(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            startDateTime = new DateTime("1990-01-01");
+            endDateTime = new DateTime(new Date());
+        }
+        
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsWithMaritalStatus = clinicalDao.getNoActivePtsWithWithMaritalStatus(startDate, endDate);
+        int totalActivePatients = clinicalDao.getNoActivePts(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsWithMaritalStatus",  totalPtsWithMaritalStatus+"");
+        dataMap.put("totalActivePatients",  totalActivePatients+"");
+        //dataMap.put("totalPedPtsWithAppointment",  totalPedPtsWithAppointment+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    
+    public String getActivePatientsWithDocumentOccupationalStaus(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            startDateTime = new DateTime("1990-01-01");
+            endDateTime = new DateTime(new Date());
+        }
+        
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsWithOccupationalStatus = clinicalDao.getNoActivePtsWithWithOccupationalStatus(startDate, endDate);
+        int totalActivePatients = clinicalDao.getNoActivePts(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsWithOccupationalStatus",  totalPtsWithOccupationalStatus+"");
+        dataMap.put("totalActivePatients",  totalActivePatients+"");
+        //dataMap.put("totalPedPtsWithAppointment",  totalPedPtsWithAppointment+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsStartedOnARTWithDocDob(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsStartedOnArtWithDob = clinicalDao.getPtsStartedOnARTWithDocDob(startDate, endDate);
+        int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsStartedOnArtWithDob",  totalPtsStartedOnArtWithDob+"");
+        dataMap.put("totalPtsStartedOnArt",  totalPtsStartedOnArt+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsStartedOnARTWithDocGender(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsStartedOnArtWithGender = clinicalDao.getPtsStartedOnARTWithDocGender(startDate, endDate);
+        int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsStartedOnArtWithGender",  totalPtsStartedOnArtWithGender+"");
+        dataMap.put("totalPtsStartedOnArt",  totalPtsStartedOnArt+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsStartedOnARTWithDocAddress(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsStartedOnArtWithAddress = clinicalDao.getPtsStartedOnARTWithDocAddress(startDate, endDate);
+        int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsStartedOnArtWithAddress",  totalPtsStartedOnArtWithAddress+"");
+        dataMap.put("totalPtsStartedOnArt",  totalPtsStartedOnArt+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsStartedOnARTWithDocHivDiagnosisDate(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsStartedOnArtWithHivDiagnosisDate = clinicalDao.getPtsStartedOnARTWithDocHIVDiagnosisDate(startDate, endDate);
+        int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsStartedOnArtWithHivDiagnosisDate",  totalPtsStartedOnArtWithHivDiagnosisDate+"");
+        dataMap.put("totalPtsStartedOnArt",  totalPtsStartedOnArt+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    public String getPtsStartedOnARTWithDocHivEnrollmentDate(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsStartedOnArtWithHivEnrollmentDate = clinicalDao.getPtsStartedOnARTWithDocHIVEnrollmentDate(startDate, endDate);
+        int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsStartedOnArtWithHivEnrollmentDate",  totalPtsStartedOnArtWithHivEnrollmentDate+"");
+        dataMap.put("totalPtsStartedOnArt",  totalPtsStartedOnArt+"");
+        return new JSONObject(dataMap).toString();	
+    }
+
+
+    public String getPtsStartedOnARTWithDocDrugPickup(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsStartedOnArtWithDrugPickup = clinicalDao.getPtsStartedOnARTWithDocDrugPickup(startDate, endDate);
+        int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsStartedOnArtWithDrugPickup",  totalPtsStartedOnArtWithDrugPickup+"");
+        dataMap.put("totalPtsStartedOnArt",  totalPtsStartedOnArt+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsStartedOnARTWithDocCd4(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsStartedOnArtWithCd4 = clinicalDao.getPtsStartedOnARTWithDocCd4(startDate, endDate);
+        int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsStartedOnArtWithCd4",  totalPtsStartedOnArtWithCd4+"");
+        dataMap.put("totalPtsStartedOnArt",  totalPtsStartedOnArt+"");
+        return new JSONObject(dataMap).toString();	
+    }
+
+
+    public String getPtsClinicVisitDocWeight(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsClinicVisitDocWeight = clinicalDao.getPtsWithClinicVisitDocWeight(startDate, endDate);
+        int totalPtsClinicVisit = clinicalDao.getPtsWithClinicVisit(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsClinicVisitDocWeight",  totalPtsClinicVisitDocWeight+"");
+        dataMap.put("totalPtsClinicVisit",  totalPtsClinicVisit+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsClinicVisitDocMuac(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsClinicVisitDocMuac = clinicalDao.getPtsWithClinicVisitDocMuac(startDate, endDate);
+        int totalPtsClinicVisit = clinicalDao.getPedPtsWithClinicVisit(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsClinicVisitDocMuac",  totalPtsClinicVisitDocMuac+"");
+        dataMap.put("totalPtsClinicVisit",  totalPtsClinicVisit+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsClinicVisitDocWhoStage(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsClinicVisitDocWhoStage = clinicalDao.getPtsWithClinicVisitDocWhoStage(startDate, endDate);
+        int totalPtsClinicVisit = clinicalDao.getPtsWithClinicVisit(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsClinicVisitDocWhoStage",  totalPtsClinicVisitDocWhoStage+"");
+        dataMap.put("totalPtsClinicVisit",  totalPtsClinicVisit+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsClinicVisitDocTBStatus(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsClinicVisitDocTBStatus = clinicalDao.getPtsWithClinicVisitDocTBStatus(startDate, endDate);
+        int totalPtsClinicVisit = clinicalDao.getPtsWithClinicVisit(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsClinicVisitDocTBStatus",  totalPtsClinicVisitDocTBStatus+"");
+        dataMap.put("totalPtsClinicVisit",  totalPtsClinicVisit+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsClinicVisitDocFunctionalStatus(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsClinicVisitDocFunctionalStatus = clinicalDao.getPtsWithClinicVisitDocFunctionalStatusStatus(startDate, endDate);
+        int totalPtsClinicVisit = clinicalDao.getPtsWithClinicVisit(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsClinicVisitDocFunctionalStatus",  totalPtsClinicVisitDocFunctionalStatus+"");
+        dataMap.put("totalPtsClinicVisit",  totalPtsClinicVisit+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsStartedOnARTWithInitialRegimen(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsStartedOnArtWithInitialRegimen = clinicalDao.getPtsStartedOnARTWithInitialRegimen(startDate, endDate);
+        int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsStartedOnArtWithInitialRegimen",  totalPtsStartedOnArtWithInitialRegimen+"");
+        dataMap.put("totalPtsStartedOnArt",  totalPtsStartedOnArt+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    public String getPtsClinicVisitDocNextAppDate(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsClinicVisitDocNextAppDate = clinicalDao.getPtsWithClinicVisitDocNextAppDate(startDate, endDate);
+        int totalPtsClinicVisit = clinicalDao.getPtsWithClinicVisit(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsClinicVisitDocNextAppDate",  totalPtsClinicVisitDocNextAppDate+"");
+        dataMap.put("totalPtsClinicVisit",  totalPtsClinicVisit+"");
+        return new JSONObject(dataMap).toString();	
+    }
+
+    public String getInactivePtsWithDocReason(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalInactivePtsWithReason = clinicalDao.getInactiveActivePtsWithDocReason(startDate, endDate);
+        int totalInactivePts = clinicalDao.getInactiveActivePts(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalInactivePtsWithReason",  totalInactivePtsWithReason+"");
+        dataMap.put("totalInactivePts",  totalInactivePts+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsWithDrugQuantity(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPickupWithQuantity = pharmacyDao.getTotalPtsWithLastPickupQuantity(startDate, endDate);
+        int totalPickup = pharmacyDao.getTotalPtsWithLastPick(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPickupWithQuantity",  totalPickupWithQuantity+"");
+        dataMap.put("totalPickup",  totalPickup+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsWithDrugDuration(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPickupWithDuration = pharmacyDao.getTotalPtsWithLastPickupDuration(startDate, endDate);
+        int totalPickup = pharmacyDao.getTotalPtsWithLastPick(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPickupWithDuration",  totalPickupWithDuration+"");
+        dataMap.put("totalPickup",  totalPickup+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    public String getPtsWithDrugRegimen(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPickupWithRegimen = pharmacyDao.getTotalPtsWithLastPickupRegimen(startDate, endDate);
+        int totalPickup = pharmacyDao.getTotalPtsWithLastPick(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPickupWithRegimen",  totalPickupWithRegimen+"");
+        dataMap.put("totalPickup",  totalPickup+"");
+        return new JSONObject(dataMap).toString();	
+    }
+
+
+    public String getPtsWithDrugPickupQtyLessThan180(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(6);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPickupWithQtyLessThan180 = pharmacyDao.getTotalPtsWithLastPickupQtyLessThan180(startDate, endDate);
+        int totalPickup = pharmacyDao.getTotalPtsWithLastPick(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPickupWithQtyLessThan180",  totalPickupWithQtyLessThan180+"");
+        dataMap.put("totalPickup",  totalPickup+"");
+        return new JSONObject(dataMap).toString();	
+    }
+
+    public String getPtsEligibleForVLWithResult(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(12);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsEligibleForVlWithResult = labDao.getTotalPtsEligibleForVLWithResult(startDate, endDate);
+        int totalPtsEligibleForVl = labDao.getTotalPtsEligibleForVL(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsEligibleForVlWithResult",  totalPtsEligibleForVlWithResult+"");
+        dataMap.put("totalPtsEligibleForVl",  totalPtsEligibleForVl+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsWithResultAndSampleCollectionDate(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(12);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsWithVlResultAndSampleCollectionDate = labDao.getTotalPtsWithVlResultAndCollectionDate(startDate, endDate);
+        int totalPtsWithResult = labDao.getTotalPtsWithVlResult(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsWithVlResultAndSampleCollectionDate",  totalPtsWithVlResultAndSampleCollectionDate+"");
+        dataMap.put("totalPtsWithResult",  totalPtsWithResult+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
+    public String getPtsWithResultAndSampleReceivedDate(HttpServletRequest request)
+    {
+       
+        DateTime startDateTime;
+        DateTime endDateTime;
+        if(!request.getParameter("startDate").equalsIgnoreCase(""))
+        {
+            startDateTime = new DateTime(request.getParameter("startDate"));
+            endDateTime = new DateTime(request.getParameter("endDate"));
+        }else{
+            endDateTime = new DateTime();
+            startDateTime = endDateTime.minusMonths(12);
+        }
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        
+        int totalPtsWithVlResultAndReceivedDate = labDao.getTotalPtsWithVlResultAndSampleSentDate(startDate, endDate);
+        int totalPtsWithResult = labDao.getTotalPtsWithVlResult(startDate, endDate);
+        
+        Map<String, String> dataMap = new HashMap<>();
+        
+        dataMap.put("totalPtsWithVlResultAndReceivedDate",  totalPtsWithVlResultAndReceivedDate+"");
+        dataMap.put("totalPtsWithResult",  totalPtsWithResult+"");
+        return new JSONObject(dataMap).toString();	
+    }
+    
     
     public String getCohortCounts(HttpServletRequest request) {
         int type = Integer.parseInt(request.getParameter("type"));

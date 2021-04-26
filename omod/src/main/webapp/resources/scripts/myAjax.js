@@ -4,6 +4,21 @@
  * and open the template in the editor.
  */
 
+
+
+//for some reason, the date picker does not appear directly below the input box. 
+//This function will reposition it.
+function setupDatePickerPositioner()
+{
+    /*jq(".date").unbind("click");
+    jq(".date").click(function(e){
+        var leftPosition = jq(this).offset().left;
+        jq(".datepicker-dropdown").css("left", leftPosition+"px");
+    })*/
+   
+}
+
+
 function getCohorts(type, cohortAjaxUrl, callback)
 {
     jq = jQuery;
@@ -31,6 +46,8 @@ function getCohorts(type, cohortAjaxUrl, callback)
 }
 
 
+
+
 function getCohorts2(type, cohortAjaxUrl)
 {
     let myPromise = new Promise(function(resolve, reject) {
@@ -52,8 +69,29 @@ function getCohorts2(type, cohortAjaxUrl)
     });
     
     return myPromise;
+          
+}
+
+function myAjax(data, cohortAjaxUrl)
+{
+    let myPromise = new Promise(function(resolve, reject) {
+    // "Producing Code" (May take some time)
+
+      jq = jQuery;
+   
+        jq.getJSON(cohortAjaxUrl,
+            
+        data, function(data){
+                resolve(data)
+            }, function(xhr, status, error){
+                console.log(error);
+                reject(error)
+         })
+         
+    });
     
-        
+    return myPromise;
+          
 }
 
 

@@ -35,6 +35,8 @@ public class Constants {
 	
 	public final static int DOCUMENTED_ADDRESS_COHORT = 10;
 	
+	public final static int CLIENT_INTAKE_FORM = 10;
+	
 	public final static int ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT = 11;
 	
 	public final static int ACTIVE_DOCUMENTED_MARITAL_STATUS_COHORT = 12;
@@ -126,13 +128,21 @@ public class Constants {
 	
 	public final static int ART_START_DATE_CONCEPT = 159599;
 	
+	public final static int TERMINATION_CONCEPT = 165586;
+	
+	public final static int YES_CONCEPT = 1065;
+	
 	public final static int DATE_CONFIRMED_POSITIVE = 160554;
 	
 	public final static int HIV_ENROLLMENT_FORM = 23;
 	
 	public final static int PHARMACY_FORM_ID = 27;
 	
+	public final static int FINAL_HIV_RESULT = 165843;
+	
 	public final static int HIV_PROGRAM_ID = 1;
+	
+	public final static int RESULT_POSITIVE = 703;
 	
 	public final static int ART_COMMENCEMENT_FORM_ID = 53;
 	
@@ -159,6 +169,8 @@ public class Constants {
 	public final static int VIRAL_LOAD_RESULT_DATE_CONCEPT = 165987;
 	
 	public final static int DATE_SAMPLE_COLLECTED_CONCEPT = 159951;
+	
+	public final static int OFFERED_INDEX_TESTING_CONCEPT = 165794;
 	
 	public final static int ARV_GROUPING_CONCEPT = 162240;
 	

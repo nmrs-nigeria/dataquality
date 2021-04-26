@@ -9,22 +9,62 @@
  */
 package org.openmrs.module.dataquality;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
+import org.openmrs.module.dataquality.api.dao.ClinicalDao;
+import org.openmrs.module.dataquality.api.dao.Database;
+import org.openmrs.module.dataquality.api.dao.HTSDao;
+import org.openmrs.module.dataquality.api.dao.LabDao;
+import org.openmrs.module.dataquality.api.dao.PatientDao;
+import org.openmrs.module.dataquality.api.dao.PharmacyDao;
 
 /**
  * This class contains the logic that is run every time this module is either started or shutdown
  */
+
 public class DataqualityActivator extends BaseModuleActivator {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	
+	ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+	
+        private List<Map<String, String>> allPatientMetas = new ArrayList<>();
+        private List<Map<String, String>> allClinicalEncounters = new ArrayList<>();
+        private List<Map<String, String>> allLabEncounters = new ArrayList<>();
+        private List<Map<String, String>> allPharmacyEncounters = new ArrayList<>();
+        private List<Map<String, String>> allClientIntakeEncounters = new ArrayList<>();
+        private List<Map<String, String>> allIPTEncounters = new ArrayList<>();
+        
+        
+	PatientDao dao = new PatientDao();
+        ClinicalDao clinicalDao = new ClinicalDao();
+	LabDao labDao = new LabDao();
+        PharmacyDao pharmacyDao = new PharmacyDao();
+        HTSDao htsDao = new HTSDao();
+	private String lastAnalysisDate = "";
+	
 	/**
 	 * @see #started()
 	 */
+	
 	public void started() {
+		Database.initConnection();
+		System.out.println("started data quality module");
+		
 		log.info("Started Dataquality");
+		this.startAnalyticsTask();
+		
 	}
 	
 	/**
@@ -32,6 +72,68 @@ public class DataqualityActivator extends BaseModuleActivator {
 	 */
 	public void shutdown() {
 		log.info("Shutdown Dataquality");
+	}
+	
+	private void startAnalyticsTask() {
+		Timer t = new Timer();
+		TimerTask tt = new TimerTask() {
+			
+                    @Override
+                    public void run() {
+                            //get the last date that the analysis was done. The very first analysis will take some time, but subsequent onces should not take long
+                            lastAnalysisDate = Context.getAdministrationService().getGlobalProperty("last_analysis_date");
+                            if(lastAnalysisDate == null)
+                            {
+                                lastAnalysisDate = "1990-01-01";
+                            }
+                            System.out.println("Last analysis Date" + lastAnalysisDate);
+                            System.out.println("Task Timer on Fixed Rate");
+                            //get patient count
+                            int totalPatients = dao.getTotalPatients();
+                            System.out.println("total patient count" + totalPatients);
+                            int limit = 1000;
+                            int totalPages = totalPatients / limit;
+
+                            //get patients in fragments of 1000.
+                            for (int i = 0; i < totalPages; i++) {
+                                    //for each fragment, perform analysis
+                                    int offset = i * limit;
+                                    List<Map<String,String>> allPatients = dao.getAllPatients(limit, offset, lastAnalysisDate);
+
+                                    //loop through the patients and save encounters in flat tables
+                                    for(int j=0; j<allPatients.size(); j++)
+                                    {
+                                        int patientId = Integer.parseInt(allPatients.get(j).get("patient_id"));
+                                        
+                                        allPatientMetas.addAll(dao.getPatientMeta(patientId));
+                                        allClinicalEncounters.addAll(clinicalDao.getClinicalEncounters(patientId));
+                                        allLabEncounters.addAll(labDao.getLabEncounters(patientId));
+                                        allPharmacyEncounters.addAll(pharmacyDao.getPharmacyEncounters(patientId));
+                                        allClientIntakeEncounters.addAll(htsDao.getClientIntakeEncounters(patientId));
+                                        allIPTEncounters.addAll(labDao.getIPTEncounters(patientId));
+                                    }
+                                    //save the encounters, clear the data structures and start again
+                                    dao.savePatientMeta(allPatientMetas);
+                                    clinicalDao.saveClinicalEncounters(allClinicalEncounters);
+                                    labDao.saveLabEncounters(allLabEncounters);
+                                    pharmacyDao.savePharmacyEncounters(allPharmacyEncounters);
+                                    htsDao.saveClientEncounters(allClientIntakeEncounters);
+                                    labDao.saveIPTEncounters(allIPTEncounters);
+
+                                    //clear all datastructures
+                                    allPatientMetas.clear();
+                                    allClinicalEncounters.clear();
+                                    allLabEncounters.clear();
+                                    allPharmacyEncounters.clear();
+                                    allClientIntakeEncounters.clear();
+                                    allIPTEncounters.clear();
+                                    System.out.println("completed cycle " + i + "out of" + (totalPages - 1));
+                            }
+                            System.out.println("completed");
+                    };
+		};
+		t.scheduleAtFixedRate(tt, 10000, 60000);
+		
 	}
 	
 }
