@@ -10,6 +10,7 @@
 package org.openmrs.module.dataquality;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -20,7 +21,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import java.util.UUID;
+import org.openmrs.GlobalProperty;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.context.UserContext;
 import org.openmrs.module.BaseModuleActivator;
 import org.openmrs.module.dataquality.api.dao.ClinicalDao;
 import org.openmrs.module.dataquality.api.dao.Database;
@@ -80,12 +85,27 @@ public class DataqualityActivator extends BaseModuleActivator {
 			
                     @Override
                     public void run() {
+                        PatientDao patientDao = new PatientDao();
+                        Context.openSession();
+                          UserContext userContext =  Context.getUserContext();
+                            
+                            
+                            /*if (userContext != null) {
+                                    Context.setUserContext(userContext);
+                            } else {
+                                    Context.setUserContext(Context.getUserContext());
+                            }*/
                             //get the last date that the analysis was done. The very first analysis will take some time, but subsequent onces should not take long
-                            lastAnalysisDate = Context.getAdministrationService().getGlobalProperty("last_analysis_date");
+                            lastAnalysisDate = Context.getAdministrationService().getGlobalProperty("dqr_last_analysis_date");
                             if(lastAnalysisDate == null)
                             {
                                 lastAnalysisDate = "1990-01-01";
+                                UUID uuid = UUID.randomUUID();
+                                String uuidAsString = uuid.toString();
+                                patientDao.saveGlobalProperty("dqr_last_analysis_date", lastAnalysisDate, "Last time DQR Analysis was run", uuidAsString);
+                                
                             }
+                            lastAnalysisDate = "1990-01-01";
                             System.out.println("Last analysis Date" + lastAnalysisDate);
                             System.out.println("Task Timer on Fixed Rate");
                             //get patient count
@@ -130,9 +150,16 @@ public class DataqualityActivator extends BaseModuleActivator {
                                     System.out.println("completed cycle " + i + "out of" + (totalPages - 1));
                             }
                             System.out.println("completed");
+                            
+                          
+                            ///once complete, lets save last run date
+                            DateTime today = new DateTime(new Date());
+                            String now = today.toString("yyyy'-'MM'-'dd");
+                            Context.getAdministrationService().updateGlobalProperty("dqr_last_analysis_date", now);
+                            Context.closeSession();
                     };
 		};
-		t.scheduleAtFixedRate(tt, 10000, 60000);
+		t.scheduleAtFixedRate(tt, 5000, 10000);
 		
 	}
 	

@@ -33,7 +33,7 @@ def id = config.id
                <input type="text" class="form-control date" id="startDate" name="startDate"/>
             </div>
             
-            <label class="col-sm-6 col-md-2 "><strong>Start Date</strong></label>
+            <label class="col-sm-6 col-md-2 "><strong>End Date</strong></label>
             <div class="col-sm-6 col-md-3" style="position:relative">
                <input type="text" class="form-control date" id="endDate" name="endDate"/>
             </div>
@@ -90,10 +90,13 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="adult_plhiv"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="1">Details</a>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="1" data-type="1">View Numerator</a>
 
                                     </li>
-                                   
+
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="1" data-type="2">View others</a>
+
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -119,7 +122,10 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="ped_plhiv"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="2">Details</a>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="2" data-type="1">View Numerator</a>
+
+                                    </li>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="2" data-type="2">View others</a>
 
                                     </li>
                                    
@@ -146,7 +152,10 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="adult_pos"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="3">Details</a>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="3" data-type="1">View Numerator</a>
+
+                                    </li>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="3" data-type="2">View others</a>
 
                                     </li>
                                    
@@ -173,7 +182,10 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="ped_pos"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="4">Details</a>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="4" data-type="1">View Numerator</a>
+
+                                    </li>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="4" data-type="2">View others</a>
 
                                     </li>
                                    
@@ -202,7 +214,7 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="adult_art"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="5">Details</a>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="5" data-type="1">View Numerator</a>
 
                                     </li>
                                    
@@ -230,7 +242,7 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="ped_art" data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="6">Details</a>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="6" data-type="1">View Numerator</a>
 
                                     </li>
                                    
@@ -258,7 +270,7 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="adult_child_art" data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="7">Details</a></li>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="7" data-type="1" data-type="1">View Numerator</a></li>
                                    
                                 </ul>
                             </div>
@@ -283,7 +295,10 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="new_vl_request_6" data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="8">Details</a>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="8" data-type="1">View Numerator</a>
+
+                                    </li>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="8" data-type="2">View others</a>
 
                                     </li>
                                    
@@ -310,7 +325,10 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="new_vl_request_7" data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="9">Details</a>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="9" data-type="1">View Numerator</a>
+
+                                    </li>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="9" data-type="2">View others</a>
 
                                     </li>
                                    
@@ -338,7 +356,10 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="new_art_vl_supp"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10" data-type="1">View Numerator</a>
+
+                                    </li>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10" data-type="2">View others</a>
 
                                     </li>
                                    
@@ -364,7 +385,10 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="new_ped_art_vl_supp"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="11">Details</a>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="11" data-type="1">View Numerator</a>
+
+                                    </li>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="11" data-type="2">View others</a>
 
                                     </li>
                                    
@@ -393,9 +417,10 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="missed_app"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="12">Details</a>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="12" data-type="1">View Numerator</a>
 
                                     </li>
+                                    
                                    
                                 </ul>
                             </div>
@@ -420,7 +445,7 @@ def id = config.id
                                     <li><a class="dropdown-item getInformation" href="#" data-key="missed_app_ped"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
 
                                     </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="13">Details</a>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="13" data-type="1">View Numerator</a>
 
                                     </li>
                                    
@@ -588,8 +613,11 @@ def id = config.id
       //ensure that the toggle button is closed
         
         jq(".cqidetails").click(function(e){
+            startDate = jq("#startDate").val();
+             endDate = jq("#endDate").val();
             var subSet = jq(this).attr("data-subset");
-            window.location = "cqidetail.page?subset="+subSet+"&startDate="+startDate+"&endDate="+endDate;
+            var type = jq(this).attr("data-type");
+            window.open("cqidetail.page?type="+type+"&subset="+subSet+"&startDate="+startDate+"&endDate="+endDate, "_blank");
         })
       
       

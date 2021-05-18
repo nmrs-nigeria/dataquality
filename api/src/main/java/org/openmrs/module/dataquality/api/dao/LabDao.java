@@ -35,13 +35,14 @@ public class LabDao {
                     //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 
                     String query = " SELECT encounter.encounter_id, vlobs.value_coded AS vl_ordered, " +
-                                    "vlresultobs.value_numeric AS vlresult, samplecollectionobs.value_datetime AS sample_collection_date, " +
+                                    "vlresultobs.value_numeric AS vlresult, samplecollectionobs.value_datetime AS sample_collection_date, date_receivedobs.value_datetime AS date_received, " +
                                     "date_sent_obs.value_datetime AS datesent " +
                                     " from encounter " +
                                     " LEFT JOIN obs vlobs ON vlobs.encounter_id=encounter.encounter_id AND vlobs.concept_id=165765 AND vlobs.voided=0 " +
                                     " LEFT JOIN obs vlresultobs ON vlresultobs.encounter_id=encounter.encounter_id AND vlresultobs.concept_id=856 AND vlresultobs.voided=0 " +
                                     " LEFT JOIN obs samplecollectionobs ON samplecollectionobs.encounter_id=encounter.encounter_id AND samplecollectionobs.concept_id=159951 AND samplecollectionobs.voided=0 " +
                                     " LEFT JOIN obs date_sent_obs ON date_sent_obs.encounter_id=encounter.encounter_id AND date_sent_obs.concept_id=165988 AND date_sent_obs.voided=0  " +
+                                     " LEFT JOIN obs date_receivedobs ON date_receivedobs.encounter_id=encounter.encounter_id AND date_receivedobs.concept_id=165716 AND date_receivedobs.voided=0  " +
                                     " WHERE encounter.encounter_type=11  AND encounter.patient_id=? AND encounter.voided=0 " +
                                     " GROUP BY encounter.encounter_id  ";
                     int i = 1;
@@ -59,8 +60,8 @@ public class LabDao {
                         tempMap.put("vl_ordered",Misc.isVLOrdered(rs.getInt("vl_ordered")));
                         tempMap.put("vlresult", rs.getString("vlresult"));
                         tempMap.put("sample_collection_date", rs.getString("sample_collection_date"));
+                        tempMap.put("date_received", rs.getString("date_received"));
                         tempMap.put("datesent", rs.getString("datesent"));
-
 
                         labEncounters.add(tempMap);
                     }
@@ -89,14 +90,14 @@ public class LabDao {
 			
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 			
-			String query = "INSERT INTO dqr_lab (patient_id, encounter_id, vl_result, date_sample_sent, sample_collection_date, vl_order)VALUES";
+			String query = "INSERT INTO dqr_lab (patient_id, encounter_id, vl_result, date_sample_sent, sample_collection_date, vl_order, date_received_at_lab)VALUES";
 			for (int i = 0; i < allLabEncounters.size(); i++) {
-				query += "(?, ?, ?, ?, ?, ?),";
+				query += "(?, ?, ?, ?, ?, ?, ?),";
 			}
 			
 			query = query.substring(0, query.length() - 1);
 			query += " ON DUPLICATE KEY UPDATE vl_result=VALUES(vl_result), date_sample_sent=VALUES(date_sample_sent), sample_collection_date=VALUES(sample_collection_date), ";
-			query += " vl_order=VALUES(vl_order) ";
+			query += " vl_order=VALUES(vl_order), date_received_at_lab=VALUES(date_received_at_lab) ";
 			
 			int i = 1;
 			stmt = con.prepareStatement(query);
@@ -109,12 +110,16 @@ public class LabDao {
 				        .get(j).get("sample_collection_date").equalsIgnoreCase("")) ? allLabEncounters.get(j).get(
 				    "sample_collection_date") : null;
 				
+				String dateReceived = (allLabEncounters.get(j).get("date_received") != null && !allLabEncounters.get(j)
+				        .get("date_received").equalsIgnoreCase("")) ? allLabEncounters.get(j).get("date_received") : null;
+				
 				stmt.setInt(i++, Integer.parseInt(allLabEncounters.get(j).get("patient_id")));
 				stmt.setInt(i++, Integer.parseInt(allLabEncounters.get(j).get("encounter_id")));
 				stmt.setString(i++, allLabEncounters.get(j).get("vlresult"));
 				stmt.setString(i++, dateSent);
 				stmt.setString(i++, sampleCollectionDate);
 				stmt.setString(i++, allLabEncounters.get(j).get("vl_ordered"));
+				stmt.setString(i++, dateReceived);
 				
 			}
 			//stmt.setFetchSize(200);
@@ -133,7 +138,7 @@ public class LabDao {
 		}
 	}
 	
-	public List<Map<String,String>>  getAllARVPtsWithVLRequest6Months(String startDate, String endDate) {
+	public List<Map<String,String>>  getAllARVPtsWithVLRequest6Months(String startDate, String endDate, int type) {
 		
             PreparedStatement stmt = null;
             ResultSet rs = null;
@@ -167,7 +172,13 @@ public class LabDao {
                     queryString.append(" WHERE art_start_date >=? AND ");
                     queryString.append(" DATE_ADD(pharmacy.lastpickup,  INTERVAL (pharmacy.days_refill+28) DAY) > ?  ");
                     queryString.append(" AND (dqr_meta.termination_status IS NULL OR dqr_meta.termination_status!=1066 ) ");
-                    queryString.append(" AND datediff(first_sample, dqr_meta.art_start_date) <=180 ");
+                    if(type == 1)
+                    {
+                        queryString.append(" AND datediff(first_sample, dqr_meta.art_start_date) <=180 ");
+                    }else{
+                        queryString.append(" AND datediff(first_sample, dqr_meta.art_start_date) > 180 ");
+                    }
+                    
                     //queryString.append(" group by person.person_id ");
 
                     int i = 1;
@@ -204,7 +215,7 @@ public class LabDao {
 		}
 	}
 	
-	public List<Map<String,String>>  getAllARVPtsWithVLRequest7Months(String startDate, String endDate) {
+	public List<Map<String,String>>  getAllARVPtsWithVLRequest7Months(String startDate, String endDate, int type) {
 		
             PreparedStatement stmt = null;
             ResultSet rs = null;
@@ -238,7 +249,12 @@ public class LabDao {
                     queryString.append(" WHERE art_start_date >=? AND ");
                     queryString.append(" DATE_ADD(pharmacy.lastpickup,  INTERVAL (pharmacy.days_refill+28) DAY) > ?  ");
                     queryString.append(" AND (dqr_meta.termination_status IS NULL OR dqr_meta.termination_status!=1066 ) ");
-                    queryString.append(" AND datediff(first_sample, dqr_meta.art_start_date) <=210 ");
+                     if(type == 1)
+                    {
+                        queryString.append(" AND datediff(first_sample, dqr_meta.art_start_date) <=210 ");
+                    }else{
+                        queryString.append(" AND datediff(first_sample, dqr_meta.art_start_date) > 210 ");
+                    }
                     //queryString.append(" group by person.person_id ");
 
                     int i = 1;
@@ -319,7 +335,7 @@ public class LabDao {
 		}
 	}
 	
-	public List<Map<String,String>> getAllPtsWithSuppressedFirstVl(String startDate, String endDate) {
+	public List<Map<String,String>> getAllPtsWithSuppressedFirstVl(String startDate, String endDate, int type) {
 		
             PreparedStatement stmt = null;
             ResultSet rs = null;
@@ -336,7 +352,15 @@ public class LabDao {
                     queryString.append("JOIN ( ");
                     queryString
                             .append(" SELECT MIN(dqr_lab.sample_collection_date) AS first_vl, vl_result, patient_id FROM dqr_lab ");
-                    queryString.append("    WHERE vl_result IS NOT NULL AND vl_result < 1000  GROUP BY patient_id ");
+                    queryString.append("    WHERE vl_result IS NOT NULL ");
+                    if(type == 1)
+                    {
+                        queryString.append(" AND vl_result < 1000  ");
+                    }else{
+                        queryString.append(" AND vl_result >= 1000  ");
+                    }
+                    
+                    queryString.append( " GROUP BY patient_id ");
                     queryString.append(") lab ON lab.patient_id=dqr_meta.patient_id ");
                     queryString.append(" JOIN ( ");
                     
@@ -378,7 +402,7 @@ public class LabDao {
             }
 	}
 	
-	public List<Map<String,String>> getAllPedPtsWithSuppressedFirstVl(String startDate, String endDate) {
+	public List<Map<String,String>> getAllPedPtsWithSuppressedFirstVl(String startDate, String endDate, int type) {
 		
             PreparedStatement stmt = null;
             ResultSet rs = null;
@@ -395,7 +419,14 @@ public class LabDao {
                     queryString.append("JOIN ( ");
                     queryString
                             .append(" SELECT MIN(dqr_lab.sample_collection_date) AS first_vl, vl_result, patient_id FROM dqr_lab ");
-                    queryString.append("    WHERE vl_result IS NOT NULL AND vl_result < 1000  GROUP BY patient_id ");
+                    queryString.append("    WHERE vl_result IS NOT NULL ");
+                    if(type == 1)
+                    {
+                        queryString.append(" AND vl_result < 1000  ");
+                    }else{
+                        queryString.append(" AND vl_result >= 1000  ");
+                    }
+                    queryString.append( " GROUP BY patient_id ");
                     queryString.append(") lab ON lab.patient_id=dqr_meta.patient_id ");
                     queryString.append(" JOIN ( ");
                     
@@ -655,6 +686,80 @@ public class LabDao {
 		}
 	}
 	
+	public List<Map<String, String>> getAllScreenedPatients(String startDate, String endDate, boolean isBeforePeriod) {
+            //indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
+            //pretty strange.
+
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            Connection con = null;
+            List<Map<String, String>> allPatients = new ArrayList<>();
+            try {
+                    con = Database.connectionPool.getConnection();
+                    //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                    //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                    StringBuilder queryString = new StringBuilder(
+                            "select dqr_meta.patient_id, dqr_meta.dob, dqr_meta.gender, patient_identifier.identifier, dqr_meta.art_start_date FROM dqr_meta  ");
+                   queryString.append(" LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4");
+                    queryString
+                            .append(" LEFT JOIN ( "
+                                    + "	SELECT patient_id, MIN(dqr_pharmacy.pickupdate) AS first_pickup FROM dqr_pharmacy GROUP BY patient_id "
+                                    + ") pharmacy ON pharmacy.patient_id=dqr_meta.patient_id ");
+                    queryString.append(" WHERE art_start_date IS NOT NULL   ");
+                    if (isBeforePeriod == false) {
+                            queryString.append(" AND ( art_start_date BETWEEN ? AND ? ) AND (pharmacy.first_pickup BETWEEN ? AND ? ) ");
+                    } else {
+                            queryString.append(" AND ( art_start_date < ? AND pharmacy.first_pickup < ?) ");
+                    }
+
+                    queryString
+                            .append(" AND dqr_meta.patient_id IN (SELECT dqr_ipt.patient_id FROM dqr_ipt JOIN encounter ON encounter.encounter_id=dqr_ipt.encounter_id WHERE encounter.encounter_datetime BETWEEN ? AND ?) ");
+
+                    int i = 1;
+                    //DateTime now = new DateTime(new Date());
+                    //String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+                    stmt = con.prepareStatement(queryString.toString());
+
+                    if (isBeforePeriod == false) {
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, endDate);
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, endDate);
+                    } else {
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, startDate);
+                    }
+                    stmt.setString(i++, startDate);
+                    stmt.setString(i++, endDate);
+
+                    rs = stmt.executeQuery();
+
+                    rs = stmt.executeQuery();
+                    while(rs.next())
+                    {
+                        String age = Misc.getAge(rs.getString("dob"), rs.getString("art_start_date"));
+                        String ageRange = Misc.getAgeRange(age);
+                        Map<String, String> tempPatient = new HashMap<>();
+                        tempPatient.put("patientId", rs.getString("patient_id"));
+                        tempPatient.put("artNumber", rs.getString("identifier"));
+                        tempPatient.put("dob", age);
+                        tempPatient.put("ageRange", ageRange);
+                        tempPatient.put("gender", rs.getString("gender"));
+                        allPatients.add(tempPatient);
+                    }
+                    return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return null;
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
 	public int getTotalPtsPresumptiveTb(String startDate, String endDate, boolean isBeforePeriod) {
 		//indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
 		//pretty strange.
@@ -715,6 +820,84 @@ public class LabDao {
 		catch (SQLException ex) {
 			Database.handleException(ex);
 			return 0;
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
+	public List<Map<String, String>>  getAllPtsPresumptiveTb(String startDate, String endDate, boolean isBeforePeriod) {
+            //indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
+            //pretty strange.
+
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            Connection con = null;
+            List<Map<String, String>> allPatients = new ArrayList<>();
+            try {
+                    con = Database.connectionPool.getConnection();
+                    //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                    //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                    StringBuilder queryString = new StringBuilder(
+                            "select dqr_meta.patient_id, dqr_meta.dob, dqr_meta.gender, patient_identifier.identifier, dqr_meta.art_start_date FROM dqr_meta  ");
+                    queryString.append(" LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4");
+                    queryString
+                            .append(" LEFT JOIN ( "
+                                    + "	SELECT patient_id, MIN(dqr_pharmacy.pickupdate) AS first_pickup FROM dqr_pharmacy GROUP BY patient_id "
+                                    + ") pharmacy ON pharmacy.patient_id=dqr_meta.patient_id ");
+
+                    queryString
+                            .append("  JOIN ("
+                                    + "     SELECT MAX(encounter.encounter_datetime) AS max_encounter, dqr_clinicals.patient_id FROM dqr_clinicals  "
+                                    + "	JOIN encounter ON encounter.encounter_id=dqr_clinicals.encounter_id WHERE tb_status='Presumptive TB' GROUP BY patient_id  "
+                                    + "    HAVING max_encounter BETWEEN ? AND ? "
+                                    + " )clinicals ON clinicals.patient_id=dqr_meta.patient_id");
+                    queryString.append(" WHERE art_start_date IS NOT NULL   ");
+                    if (isBeforePeriod == false) {
+                            queryString.append(" AND ( art_start_date BETWEEN ? AND ? ) AND (pharmacy.first_pickup BETWEEN ? AND ? ) ");
+                    } else {
+                            queryString.append(" AND ( art_start_date < ? AND pharmacy.first_pickup < ?) ");
+                    }
+
+                    int i = 1;
+                    //DateTime now = new DateTime(new Date());
+                    //String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+                    stmt = con.prepareStatement(queryString.toString());
+
+                    stmt.setString(i++, startDate);
+                    stmt.setString(i++, endDate);
+
+                    if (isBeforePeriod == false) {
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, endDate);
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, endDate);
+                    } else {
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, startDate);
+                    }
+
+                    rs = stmt.executeQuery();
+
+                    while(rs.next())
+                    {
+                        String age = Misc.getAge(rs.getString("dob"), rs.getString("art_start_date"));
+                        String ageRange = Misc.getAgeRange(age);
+                        Map<String, String> tempPatient = new HashMap<>();
+                        tempPatient.put("patientId", rs.getString("patient_id"));
+                        tempPatient.put("artNumber", rs.getString("identifier"));
+                        tempPatient.put("dob", age);
+                        tempPatient.put("ageRange", ageRange);
+                        tempPatient.put("gender", rs.getString("gender"));
+                        allPatients.add(tempPatient);
+                    }
+                    return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return null;
 		}
 		finally {
 			Database.cleanUp(rs, stmt, con);
@@ -787,6 +970,83 @@ public class LabDao {
 		}
 	}
 	
+	public List<Map<String, String>> getAllPtsConfirmedTb(String startDate, String endDate, boolean isBeforePeriod) {
+		//indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
+		//pretty strange.
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+                List<Map<String, String>> allPatients = new ArrayList<>();
+		try {
+			con = Database.connectionPool.getConnection();
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			StringBuilder queryString = new StringBuilder(
+			        "select dqr_meta.patient_id, dqr_meta.dob, dqr_meta.gender, patient_identifier.identifier, dqr_meta.art_start_date FROM dqr_meta  ");
+                        queryString.append(" LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4");
+			queryString
+			        .append(" LEFT JOIN ( "
+			                + "	SELECT patient_id, MIN(dqr_pharmacy.pickupdate) AS first_pickup FROM dqr_pharmacy GROUP BY patient_id "
+			                + ") pharmacy ON pharmacy.patient_id=dqr_meta.patient_id ");
+			
+			queryString
+			        .append("  JOIN ("
+			                + "     SELECT MAX(encounter.encounter_datetime) AS max_encounter, dqr_clinicals.patient_id FROM dqr_clinicals  "
+			                + "	JOIN encounter ON encounter.encounter_id=dqr_clinicals.encounter_id WHERE tb_status='Confirmed TB' GROUP BY patient_id  "
+			                + "    HAVING max_encounter BETWEEN ? AND ? "
+			                + " )clinicals ON clinicals.patient_id=dqr_meta.patient_id");
+			queryString.append(" WHERE art_start_date IS NOT NULL   ");
+			if (isBeforePeriod == false) {
+				queryString.append(" AND ( art_start_date BETWEEN ? AND ? ) AND (pharmacy.first_pickup BETWEEN ? AND ? ) ");
+			} else {
+				queryString.append(" AND ( art_start_date < ? AND pharmacy.first_pickup < ?) ");
+			}
+			
+			int i = 1;
+			//DateTime now = new DateTime(new Date());
+			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+			stmt = con.prepareStatement(queryString.toString());
+			
+			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+			
+			if (isBeforePeriod == false) {
+				stmt.setString(i++, startDate);
+				stmt.setString(i++, endDate);
+				stmt.setString(i++, startDate);
+				stmt.setString(i++, endDate);
+			} else {
+				stmt.setString(i++, startDate);
+				stmt.setString(i++, startDate);
+			}
+			
+			rs = stmt.executeQuery();
+			while(rs.next())
+                        {
+                            String age = Misc.getAge(rs.getString("dob"), rs.getString("art_start_date"));
+                            String ageRange = Misc.getAgeRange(age);
+                            Map<String, String> tempPatient = new HashMap<>();
+                            tempPatient.put("patientId", rs.getString("patient_id"));
+                            tempPatient.put("artNumber", rs.getString("identifier"));
+                            tempPatient.put("dob", age);
+                            tempPatient.put("ageRange", ageRange);
+                            tempPatient.put("gender", rs.getString("gender"));
+                            allPatients.add(tempPatient);
+                        }
+                    return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return null;
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
 	public int getTotalPtsOnTbTreatment(String startDate, String endDate, boolean isBeforePeriod) {
 		//indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
 		//pretty strange.
@@ -801,7 +1061,7 @@ public class LabDao {
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 			
 			StringBuilder queryString = new StringBuilder(
-			        "select count(DIStinct dqr_meta.patient_id ) AS count FROM dqr_meta  ");
+			        "select dqr_meta.patient_id, dqr_meta.dob, dqr_meta.gender, patient_identifier.identifier, dqr_meta.art_start_date FROM dqr_meta  ");
 			queryString
 			        .append(" LEFT JOIN ( "
 			                + "	SELECT patient_id, MIN(dqr_pharmacy.pickupdate) AS first_pickup FROM dqr_pharmacy GROUP BY patient_id "
@@ -851,6 +1111,83 @@ public class LabDao {
 		finally {
 			Database.cleanUp(rs, stmt, con);
 		}
+	}
+	
+	public List<Map<String, String>>  getAllPtsOnTbTreatment(String startDate, String endDate, boolean isBeforePeriod) {
+            //indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
+            //pretty strange.
+
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            Connection con = null;
+            List<Map<String, String>> allPatients = new ArrayList<>();
+            try {
+                    con = Database.connectionPool.getConnection();
+                    //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                    //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                    StringBuilder queryString = new StringBuilder(
+                            "select dqr_meta.patient_id, dqr_meta.dob, dqr_meta.gender, patient_identifier.identifier, dqr_meta.art_start_date FROM dqr_meta  ");
+                    queryString.append(" LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4");
+                    queryString
+                            .append(" LEFT JOIN ( "
+                                    + "	SELECT patient_id, MIN(dqr_pharmacy.pickupdate) AS first_pickup FROM dqr_pharmacy GROUP BY patient_id "
+                                    + ") pharmacy ON pharmacy.patient_id=dqr_meta.patient_id ");
+
+                    queryString
+                            .append("  JOIN ("
+                                    + "     SELECT MAX(encounter.encounter_datetime) AS max_encounter, dqr_clinicals.patient_id FROM dqr_clinicals  "
+                                    + "	JOIN encounter ON encounter.encounter_id=dqr_clinicals.encounter_id WHERE tb_status='TB Treatmen' GROUP BY patient_id  "
+                                    + "    HAVING max_encounter BETWEEN ? AND ? "
+                                    + " )clinicals ON clinicals.patient_id=dqr_meta.patient_id");
+                    queryString.append(" WHERE art_start_date IS NOT NULL   ");
+                    if (isBeforePeriod == false) {
+                            queryString.append(" AND ( art_start_date BETWEEN ? AND ? ) AND (pharmacy.first_pickup BETWEEN ? AND ? ) ");
+                    } else {
+                            queryString.append(" AND ( art_start_date < ? AND pharmacy.first_pickup < ?) ");
+                    }
+
+                    int i = 1;
+                    //DateTime now = new DateTime(new Date());
+                    //String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+                    stmt = con.prepareStatement(queryString.toString());
+
+                    stmt.setString(i++, startDate);
+                    stmt.setString(i++, endDate);
+
+                    if (isBeforePeriod == false) {
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, endDate);
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, endDate);
+                    } else {
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, startDate);
+                    }
+
+                    rs = stmt.executeQuery();
+                    while(rs.next())
+                    {
+                        String age = Misc.getAge(rs.getString("dob"), rs.getString("art_start_date"));
+                        String ageRange = Misc.getAgeRange(age);
+                        Map<String, String> tempPatient = new HashMap<>();
+                        tempPatient.put("patientId", rs.getString("patient_id"));
+                        tempPatient.put("artNumber", rs.getString("identifier"));
+                        tempPatient.put("dob", age);
+                        tempPatient.put("ageRange", ageRange);
+                        tempPatient.put("gender", rs.getString("gender"));
+                        allPatients.add(tempPatient);
+                    }
+                    return allPatients;
+            }
+            catch (SQLException ex) {
+                    Database.handleException(ex);
+                    return null;
+            }
+            finally {
+                    Database.cleanUp(rs, stmt, con);
+            }
 	}
 	
 	public int getTotalPtsTestedForTb(String startDate, String endDate, boolean isBeforePeriod, String type) {
@@ -922,7 +1259,89 @@ public class LabDao {
 		}
 	}
 	
-	public int getTotalPtsDiagnoseddForTb(String startDate, String endDate, boolean isBeforePeriod, String type) {
+	public List<Map<String, String>> getAllPtsTestedForTb(String startDate, String endDate, boolean isBeforePeriod, String type) {
+            //indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
+            //pretty strange.
+
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            Connection con = null;
+            List<Map<String, String>> allPatients = new ArrayList<>();
+            try {
+                    con = Database.connectionPool.getConnection();
+                    //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                    //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                    StringBuilder queryString = new StringBuilder(
+                            "select dqr_meta.patient_id, dqr_meta.dob, dqr_meta.gender, patient_identifier.identifier, dqr_meta.art_start_date FROM dqr_meta  ");
+                    queryString.append(" LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4");
+                    queryString
+                            .append(" LEFT JOIN ( "
+                                    + "	SELECT patient_id, MIN(dqr_pharmacy.pickupdate) AS first_pickup FROM dqr_pharmacy GROUP BY patient_id "
+                                    + ") pharmacy ON pharmacy.patient_id=dqr_meta.patient_id ");
+
+                    queryString
+                            .append("  JOIN ("
+                                    + "     SELECT MAX(encounter.encounter_datetime) AS max_encounter, genexpert, chestxray, culture, dqr_ipt.patient_id FROM dqr_ipt  "
+                                    + "	JOIN encounter ON encounter.encounter_id=dqr_ipt.encounter_id ");
+
+                    queryString.append(" WHERE 1=1 ");
+                    queryString.append(" AND " + type + "!='' ");
+
+                    queryString.append("    HAVING max_encounter BETWEEN ? AND ? " + " )ipt ON ipt.patient_id=dqr_meta.patient_id");
+                    queryString.append(" WHERE art_start_date IS NOT NULL   ");
+                    if (isBeforePeriod == false) {
+                            queryString.append(" AND ( art_start_date BETWEEN ? AND ? ) AND (pharmacy.first_pickup BETWEEN ? AND ? ) ");
+                    } else {
+                            queryString.append(" AND ( art_start_date < ? AND pharmacy.first_pickup < ?) ");
+                    }
+
+                    int i = 1;
+                    //DateTime now = new DateTime(new Date());
+                    //String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+                    stmt = con.prepareStatement(queryString.toString());
+
+                    stmt.setString(i++, startDate);
+                    stmt.setString(i++, endDate);
+
+                    if (isBeforePeriod == false) {
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, endDate);
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, endDate);
+                    } else {
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, startDate);
+                    }
+
+                    rs = stmt.executeQuery();
+
+                   while(rs.next())
+                    {
+                        String age = Misc.getAge(rs.getString("dob"), rs.getString("art_start_date"));
+                        String ageRange = Misc.getAgeRange(age);
+                        Map<String, String> tempPatient = new HashMap<>();
+                        tempPatient.put("patientId", rs.getString("patient_id"));
+                        tempPatient.put("artNumber", rs.getString("identifier"));
+                        tempPatient.put("dob", age);
+                        tempPatient.put("ageRange", ageRange);
+                        tempPatient.put("gender", rs.getString("gender"));
+                        allPatients.add(tempPatient);
+                    }
+                    return allPatients;
+            }
+            catch (SQLException ex) {
+                    Database.handleException(ex);
+                    return null;
+            }
+            finally {
+                    Database.cleanUp(rs, stmt, con);
+            }
+	}
+	
+	public int getTotalPtsDiagnoseddForTb(String startDate, String endDate, boolean isBeforePeriod, String type,
+	        int isPositive) {
 		//indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
 		//pretty strange.
 		
@@ -948,14 +1367,17 @@ public class LabDao {
 			                + "	JOIN encounter ON encounter.encounter_id=dqr_ipt.encounter_id ");
 			
 			queryString.append(" WHERE 1=1 ");
-			if (type.equalsIgnoreCase("genexpert")) {
-				queryString.append(" AND " + type + "='PTB positive MTB detected' ");
-			} else if (type.equalsIgnoreCase("chestxray")) {
-				queryString.append(" AND " + type + "='Suggestive' ");
-			} else if (type.equalsIgnoreCase("culture")) {
-				queryString.append(" AND " + type + "='Positive' ");
+			if (isPositive == 1) {
+				if (type.equalsIgnoreCase("genexpert")) {
+					queryString.append(" AND " + type + "='PTB positive MTB detected' ");
+				} else if (type.equalsIgnoreCase("chestxray")) {
+					queryString.append(" AND " + type + "='Suggestive' ");
+				} else if (type.equalsIgnoreCase("culture")) {
+					queryString.append(" AND " + type + "='Positive' ");
+				}
+			} else {
+				queryString.append(" AND " + type + "!='' AND " + type + " IS NOT NULL");
 			}
-			
 			queryString.append("    HAVING max_encounter BETWEEN ? AND ? " + " )ipt ON ipt.patient_id=dqr_meta.patient_id");
 			queryString.append(" WHERE art_start_date IS NOT NULL   ");
 			if (isBeforePeriod == false) {
@@ -991,6 +1413,97 @@ public class LabDao {
 		catch (SQLException ex) {
 			Database.handleException(ex);
 			return 0;
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
+	public List<Map<String, String>> getAllPtsDiagnoseddForTb(String startDate, String endDate, boolean isBeforePeriod, String type, int isPositive) {
+		//indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
+		//pretty strange.
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+                List<Map<String, String>> allPatients = new ArrayList<>();
+		try {
+			con = Database.connectionPool.getConnection();
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			StringBuilder queryString = new StringBuilder(
+			        "select dqr_meta.patient_id, dqr_meta.dob, dqr_meta.gender, patient_identifier.identifier, dqr_meta.art_start_date FROM dqr_meta  ");
+                        queryString.append(" LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4");
+			queryString
+			        .append(" LEFT JOIN ( "
+			                + "	SELECT patient_id, MIN(dqr_pharmacy.pickupdate) AS first_pickup FROM dqr_pharmacy GROUP BY patient_id "
+			                + ") pharmacy ON pharmacy.patient_id=dqr_meta.patient_id ");
+			
+			queryString
+			        .append("  JOIN ("
+			                + "     SELECT MAX(encounter.encounter_datetime) AS max_encounter, genexpert, chestxray, culture, dqr_ipt.patient_id FROM dqr_ipt  "
+			                + "	JOIN encounter ON encounter.encounter_id=dqr_ipt.encounter_id ");
+			
+			queryString.append(" WHERE 1=1 ");
+                        if(isPositive == 1){
+                            if (type.equalsIgnoreCase("genexpert")) {
+                                    queryString.append(" AND " + type + "='PTB positive MTB detected' ");
+                            } else if (type.equalsIgnoreCase("chestxray")) {
+                                    queryString.append(" AND " + type + "='Suggestive' ");
+                            } else if (type.equalsIgnoreCase("culture")) {
+                                    queryString.append(" AND " + type + "='Positive' ");
+                            }
+                        } else {
+                            queryString.append(" AND " + type + "!='' AND "+type+" IS NOT NULL");
+                        }
+			
+			queryString.append("    HAVING max_encounter BETWEEN ? AND ? " + " )ipt ON ipt.patient_id=dqr_meta.patient_id");
+			queryString.append(" WHERE art_start_date IS NOT NULL   ");
+			if (isBeforePeriod == false) {
+				queryString.append(" AND ( art_start_date BETWEEN ? AND ? ) AND (pharmacy.first_pickup BETWEEN ? AND ? ) ");
+			} else {
+				queryString.append(" AND ( art_start_date < ? AND pharmacy.first_pickup < ?) ");
+			}
+			
+			int i = 1;
+			//DateTime now = new DateTime(new Date());
+			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+			stmt = con.prepareStatement(queryString.toString());
+			
+			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+			
+			if (isBeforePeriod == false) {
+				stmt.setString(i++, startDate);
+				stmt.setString(i++, endDate);
+				stmt.setString(i++, startDate);
+				stmt.setString(i++, endDate);
+			} else {
+				stmt.setString(i++, startDate);
+				stmt.setString(i++, startDate);
+			}
+			
+			rs = stmt.executeQuery();
+			
+			while(rs.next())
+                        {
+                            String age = Misc.getAge(rs.getString("dob"), rs.getString("art_start_date"));
+                            String ageRange = Misc.getAgeRange(age);
+                            Map<String, String> tempPatient = new HashMap<>();
+                            tempPatient.put("patientId", rs.getString("patient_id"));
+                            tempPatient.put("artNumber", rs.getString("identifier"));
+                            tempPatient.put("dob", age);
+                            tempPatient.put("ageRange", ageRange);
+                            tempPatient.put("gender", rs.getString("gender"));
+                            allPatients.add(tempPatient);
+                        }
+                        return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return null;
 		}
 		finally {
 			Database.cleanUp(rs, stmt, con);
@@ -1062,6 +1575,83 @@ public class LabDao {
 		}
 	}
 	
+	public List<Map<String,String>> getAllPtsEligibleForIPT(String startDate, String endDate, boolean isBeforePeriod) {
+		//indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
+		//pretty strange.
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+                 List<Map<String, String>> allPatients = new ArrayList<>();
+		try {
+			con = Database.connectionPool.getConnection();
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			StringBuilder queryString = new StringBuilder(
+			        "select dqr_meta.patient_id, dqr_meta.dob, dqr_meta.gender, patient_identifier.identifier, dqr_meta.art_start_date FROM dqr_meta  ");
+                        queryString.append(" LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4");
+			queryString
+			        .append(" LEFT JOIN ( "
+			                + "	SELECT patient_id, MIN(dqr_pharmacy.pickupdate) AS first_pickup FROM dqr_pharmacy GROUP BY patient_id "
+			                + ") pharmacy ON pharmacy.patient_id=dqr_meta.patient_id ");
+			
+			queryString
+			        .append("  JOIN ("
+			                + "     SELECT MAX(encounter.encounter_datetime) AS max_encounter, dqr_ipt.patient_id FROM dqr_ipt  "
+			                + "	JOIN encounter ON encounter.encounter_id=dqr_ipt.encounter_id WHERE eligible_for_ipt='Yes' GROUP BY patient_id  "
+			                + "    HAVING max_encounter BETWEEN ? AND ? " + " )ipt ON ipt.patient_id=dqr_meta.patient_id");
+			queryString.append(" WHERE art_start_date IS NOT NULL   ");
+			if (isBeforePeriod == false) {
+				queryString.append(" AND ( art_start_date BETWEEN ? AND ? ) AND (pharmacy.first_pickup BETWEEN ? AND ? ) ");
+			} else {
+				queryString.append(" AND ( art_start_date < ? AND pharmacy.first_pickup < ?) ");
+			}
+			
+			int i = 1;
+			//DateTime now = new DateTime(new Date());
+			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+			stmt = con.prepareStatement(queryString.toString());
+			
+			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+			
+			if (isBeforePeriod == false) {
+				stmt.setString(i++, startDate);
+				stmt.setString(i++, endDate);
+				stmt.setString(i++, startDate);
+				stmt.setString(i++, endDate);
+			} else {
+				stmt.setString(i++, startDate);
+				stmt.setString(i++, startDate);
+			}
+			
+			rs = stmt.executeQuery();
+			
+			while(rs.next())
+                        {
+                            String age = Misc.getAge(rs.getString("dob"), rs.getString("art_start_date"));
+                            String ageRange = Misc.getAgeRange(age);
+                            Map<String, String> tempPatient = new HashMap<>();
+                            tempPatient.put("patientId", rs.getString("patient_id"));
+                            tempPatient.put("artNumber", rs.getString("identifier"));
+                            tempPatient.put("dob", age);
+                            tempPatient.put("ageRange", ageRange);
+                            tempPatient.put("gender", rs.getString("gender"));
+                            allPatients.add(tempPatient);
+                        }
+                        return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return null;
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
 	public int getTotalPtsStartedOnIPT(String startDate, String endDate, boolean isBeforePeriod) {
 		//indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
 		//pretty strange.
@@ -1121,6 +1711,83 @@ public class LabDao {
 		catch (SQLException ex) {
 			Database.handleException(ex);
 			return 0;
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
+	public List<Map<String, String>> getAllPtsStartedOnIPT(String startDate, String endDate, boolean isBeforePeriod) {
+		//indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
+		//pretty strange.
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+                List<Map<String, String>> allPatients = new ArrayList<>();
+		try {
+			con = Database.connectionPool.getConnection();
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			StringBuilder queryString = new StringBuilder(
+			        "select dqr_meta.patient_id, dqr_meta.dob, dqr_meta.gender, patient_identifier.identifier, dqr_meta.art_start_date FROM dqr_meta  ");
+                        queryString.append(" LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4");
+			queryString
+			        .append(" LEFT JOIN ( "
+			                + "	SELECT patient_id, MIN(dqr_pharmacy.pickupdate) AS first_pickup FROM dqr_pharmacy GROUP BY patient_id "
+			                + ") pharmacy ON pharmacy.patient_id=dqr_meta.patient_id ");
+			
+			queryString
+			        .append("  JOIN ("
+			                + "     SELECT MAX(encounter.encounter_datetime) AS max_encounter, dqr_ipt.patient_id FROM dqr_ipt  "
+			                + "	JOIN encounter ON encounter.encounter_id=dqr_ipt.encounter_id WHERE ipt_start_date IS NOT NULL GROUP BY patient_id  "
+			                + "    HAVING max_encounter BETWEEN ? AND ? " + " )ipt ON ipt.patient_id=dqr_meta.patient_id");
+			queryString.append(" WHERE art_start_date IS NOT NULL   ");
+			if (isBeforePeriod == false) {
+				queryString.append(" AND ( art_start_date BETWEEN ? AND ? ) AND (pharmacy.first_pickup BETWEEN ? AND ? ) ");
+			} else {
+				queryString.append(" AND ( art_start_date < ? AND pharmacy.first_pickup < ?) ");
+			}
+			
+			int i = 1;
+			//DateTime now = new DateTime(new Date());
+			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+			stmt = con.prepareStatement(queryString.toString());
+			
+			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+			
+			if (isBeforePeriod == false) {
+				stmt.setString(i++, startDate);
+				stmt.setString(i++, endDate);
+				stmt.setString(i++, startDate);
+				stmt.setString(i++, endDate);
+			} else {
+				stmt.setString(i++, startDate);
+				stmt.setString(i++, startDate);
+			}
+			
+			rs = stmt.executeQuery();
+			
+			while(rs.next())
+                        {
+                            String age = Misc.getAge(rs.getString("dob"), rs.getString("art_start_date"));
+                            String ageRange = Misc.getAgeRange(age);
+                            Map<String, String> tempPatient = new HashMap<>();
+                            tempPatient.put("patientId", rs.getString("patient_id"));
+                            tempPatient.put("artNumber", rs.getString("identifier"));
+                            tempPatient.put("dob", age);
+                            tempPatient.put("ageRange", ageRange);
+                            tempPatient.put("gender", rs.getString("gender"));
+                            allPatients.add(tempPatient);
+                        }
+                        return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return null;
 		}
 		finally {
 			Database.cleanUp(rs, stmt, con);
@@ -1191,6 +1858,63 @@ public class LabDao {
 		}
 	}
 	
+	public List<Map<String,String>> getAllPtsEligibleForVLWithoutResult(String startDate, String endDate) {
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+                List<Map<String, String>> allPatients = new ArrayList<>();
+		try {
+			con = Database.connectionPool.getConnection();
+			
+			StringBuilder queryString = new StringBuilder(
+			        "select IFNULL(encounter.encounter_id, 0) AS encounter_id, encounter.encounter_datetime, dqr_meta.patient_id, person_name.given_name, person_name.family_name, patient_identifier.identifier  FROM dqr_meta  "
+                          
+                            +"	LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 " 
+                               + "	JOIN person_name ON person_name.person_id=dqr_meta.patient_id " );
+                        queryString.append(" JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.vl_result IS  NULL ");
+			queryString.append(" JOIN encounter ON encounter.encounter_id=dqr_lab.encounter_id ");
+			queryString.append(" WHERE art_start_date <=? AND encounter.encounter_datetime BETWEEN ? AND ? GROUP BY dqr_meta.patient_id ");
+			int i = 1;
+			stmt = con.prepareStatement(queryString.toString());
+			
+			stmt.setString(i++, endDate);
+			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+
+                            int encounterId = rs.getInt("encounter_id");
+                            String patientId = rs.getString("patient_id");
+                            String patientIdentifier = rs.getString("identifier");
+                            String firstName = rs.getString("given_name");
+                            String lastName = rs.getString("family_name");
+                            Map<String, String> tempData = new HashMap<>();
+                            tempData.put("patientId", patientId);
+                            tempData.put("patientIdentifier", patientIdentifier);
+                            tempData.put("firstName", firstName);
+                            tempData.put("lastName", lastName);
+                            if(encounterId == 0)
+                            {
+                                tempData.put("link", "/openmrs/coreapps/clinicianfacing/patient.page?patientId="+patientId);
+                            }
+                            else{
+                                tempData.put("link", "/openmrs/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
+                            }
+
+                            allPatients.add(tempData);
+                        }
+                        return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return new ArrayList<>();
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
 	public int getTotalPtsWithVlResult(String startDate, String endDate) {
 		
 		PreparedStatement stmt = null;
@@ -1202,7 +1926,7 @@ public class LabDao {
 			        "select count(DISTINCT dqr_meta.patient_id ) AS count FROM dqr_meta  ");
 			queryString.append(" JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.vl_result IS NOT NULL ");
 			queryString.append(" JOIN encounter ON encounter.encounter_id=dqr_lab.encounter_id ");
-			queryString.append(" WHERE   ");
+			queryString.append(" WHERE   dqr_lab.vl_order='true' AND ");
 			queryString.append("  encounter.encounter_datetime= (  SELECT MAX(encounter_datetime) FROM encounter labvl "
 			        + " WHERE labvl.patient_id=dqr_lab.patient_id AND labvl.form_id=21 "
 			        + "	 HAVING MAX(encounter_datetime) <= ? )");
@@ -1231,10 +1955,10 @@ public class LabDao {
 		try {
 			con = Database.connectionPool.getConnection();
 			StringBuilder queryString = new StringBuilder(
-			        "select count(DISTINCT dqr_meta.patient_id ) AS count FROM dqr_meta  ");
+			        "select count(DISTINCT dqr_meta.patient_id ) AS count  FROM dqr_meta  ");
 			queryString.append(" JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.vl_result IS NOT NULL ");
 			queryString.append(" JOIN encounter ON encounter.encounter_id=dqr_lab.encounter_id ");
-			queryString.append(" WHERE  dqr_lab.sample_collection_date IS NOT NULL AND ");
+			queryString.append(" WHERE  dqr_lab.sample_collection_date IS NOT NULL AND dqr_lab.vl_order='true' AND  ");
 			queryString.append("  encounter.encounter_datetime= (  SELECT MAX(encounter_datetime) FROM encounter labvl "
 			        + " WHERE labvl.patient_id=dqr_lab.patient_id AND labvl.form_id=21 "
 			        + "	 HAVING MAX(encounter_datetime) <= ? )");
@@ -1255,6 +1979,62 @@ public class LabDao {
 		}
 	}
 	
+	public List<Map<String,String>>  getAllPtsWithVlResultWithoutCollectionDate(String startDate, String endDate) {
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+                List<Map<String, String>> allPatients = new ArrayList<>();
+		try {
+			con = Database.connectionPool.getConnection();
+			StringBuilder queryString = new StringBuilder(
+			 " SELECT IFNULL(encounter.encounter_id, 0) AS encounter_id, encounter.encounter_datetime, dqr_meta.patient_id, person_name.given_name, person_name.family_name, patient_identifier.identifier FROM dqr_meta "+
+                         " JOIN person_name ON person_name.person_id=dqr_meta.patient_id "
+                       + " LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 " );
+                        
+			queryString.append(" JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id  ");
+			queryString.append(" JOIN encounter ON encounter.encounter_id=dqr_lab.encounter_id ");
+			queryString.append(" WHERE  dqr_lab.sample_collection_date IS  NULL AND dqr_lab.vl_result IS NOT NULL AND dqr_lab.vl_order='true' AND ");
+			queryString.append("  encounter.encounter_datetime= (  SELECT MAX(encounter_datetime) FROM encounter labvl "
+			        + " WHERE labvl.patient_id=dqr_lab.patient_id AND labvl.form_id=21 "
+			        + "	 HAVING MAX(encounter_datetime) <= ? ) GROUP BY dqr_meta.patient_id ");
+			int i = 1;
+			stmt = con.prepareStatement(queryString.toString());
+			stmt.setString(i++, endDate);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+
+                            int encounterId = rs.getInt("encounter_id");
+                            String patientId = rs.getString("patient_id");
+                            String patientIdentifier = rs.getString("identifier");
+                            String firstName = rs.getString("given_name");
+                            String lastName = rs.getString("family_name");
+                            Map<String, String> tempData = new HashMap<>();
+                            tempData.put("patientId", patientId);
+                            tempData.put("patientIdentifier", patientIdentifier);
+                            tempData.put("firstName", firstName);
+                            tempData.put("lastName", lastName);
+                            if(encounterId == 0)
+                            {
+                                tempData.put("link", "/openmrs/coreapps/clinicianfacing/patient.page?patientId="+patientId);
+                            }
+                            else{
+                                tempData.put("link", "/openmrs/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
+                            }
+
+                            allPatients.add(tempData);
+                        }
+                        return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return new ArrayList<>();
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
 	public int getTotalPtsWithVlResultAndSampleSentDate(String startDate, String endDate) {
 		
 		PreparedStatement stmt = null;
@@ -1266,7 +2046,7 @@ public class LabDao {
 			        "select count(DISTINCT dqr_meta.patient_id ) AS count FROM dqr_meta  ");
 			queryString.append(" JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.vl_result IS NOT NULL ");
 			queryString.append(" JOIN encounter ON encounter.encounter_id=dqr_lab.encounter_id ");
-			queryString.append(" WHERE  dqr_lab.date_sample_sent IS NOT NULL AND ");
+			queryString.append(" WHERE  dqr_lab.date_sample_sent IS NOT NULL AND dqr_lab.vl_order='true' AND ");
 			queryString.append("  encounter.encounter_datetime= (  SELECT MAX(encounter_datetime) FROM encounter labvl "
 			        + " WHERE labvl.patient_id=dqr_lab.patient_id AND labvl.form_id=21 "
 			        + "	 HAVING MAX(encounter_datetime) <= ? )");
@@ -1281,6 +2061,150 @@ public class LabDao {
 		catch (SQLException ex) {
 			Database.handleException(ex);
 			return 0;
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
+	public int getTotalPtsWithVlResultAndSampleReceivedDate(String startDate, String endDate) {
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+		try {
+			con = Database.connectionPool.getConnection();
+			StringBuilder queryString = new StringBuilder(
+			        "select count(DISTINCT dqr_meta.patient_id ) AS count FROM dqr_meta  ");
+			queryString.append(" JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.vl_result IS NOT NULL ");
+			queryString.append(" JOIN encounter ON encounter.encounter_id=dqr_lab.encounter_id ");
+			queryString
+			        .append(" WHERE  (dqr_lab.date_received_at_lab IS NOT NULL AND dqr_lab.date_received_at_lab !='' ) AND dqr_lab.vl_order='true' ");
+			queryString.append("  encounter.encounter_datetime= (  SELECT MAX(encounter_datetime) FROM encounter labvl "
+			        + " WHERE labvl.patient_id=dqr_lab.patient_id AND labvl.form_id=21 "
+			        + "	 HAVING MAX(encounter_datetime) <= ? )");
+			int i = 1;
+			stmt = con.prepareStatement(queryString.toString());
+			stmt.setString(i++, endDate);
+			rs = stmt.executeQuery();
+			rs.next();
+			int totalCount = rs.getInt("count");
+			return totalCount;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return 0;
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
+	public List<Map<String,String>>  getAllPtsWithVlResultAndNoSampleSentDate(String startDate, String endDate) {
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+                List<Map<String, String>> allPatients = new ArrayList<>();
+		try {
+			con = Database.connectionPool.getConnection();
+			StringBuilder queryString = new StringBuilder(
+			        "SELECT IFNULL(encounter.encounter_id, 0) AS encounter_id, encounter.encounter_datetime, dqr_meta.patient_id, person_name.given_name, person_name.family_name, patient_identifier.identifier FROM dqr_meta "+
+                        " JOIN person_name ON person_name.person_id=dqr_meta.patient_id   ");
+			queryString.append(" JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.vl_result IS NOT NULL ");
+			queryString.append(" JOIN encounter ON encounter.encounter_id=dqr_lab.encounter_id ");
+			queryString.append(" WHERE  dqr_lab.date_sample_sent IS NULL AND ");
+			queryString.append("  encounter.encounter_datetime= (  SELECT MAX(encounter_datetime) FROM encounter labvl "
+			        + " WHERE labvl.patient_id=dqr_lab.patient_id AND labvl.form_id=21 "
+			        + "	 HAVING MAX(encounter_datetime) <= ? )");
+			int i = 1;
+			stmt = con.prepareStatement(queryString.toString());
+			stmt.setString(i++, endDate);
+			rs = stmt.executeQuery();
+			rs.next();
+			while (rs.next()) {
+
+                            int encounterId = rs.getInt("encounter_id");
+                            String patientId = rs.getString("patient_id");
+                            String patientIdentifier = rs.getString("identifier");
+                            String firstName = rs.getString("given_name");
+                            String lastName = rs.getString("family_name");
+                            Map<String, String> tempData = new HashMap<>();
+                            tempData.put("patientId", patientId);
+                            tempData.put("patientIdentifier", patientIdentifier);
+                            tempData.put("firstName", firstName);
+                            tempData.put("lastName", lastName);
+                            if(encounterId == 0)
+                            {
+                                tempData.put("link", "/openmrs/coreapps/clinicianfacing/patient.page?patientId="+patientId);
+                            }
+                            else{
+                                tempData.put("link", "/openmrs/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
+                            }
+
+                            allPatients.add(tempData);
+                        }
+                        return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return new ArrayList<>();
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
+	public List<Map<String,String>>  getAllPtsWithVlResultAndNoSampleReceivedDate(String startDate, String endDate) {
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+                List<Map<String, String>> allPatients = new ArrayList<>();
+		try {
+			con = Database.connectionPool.getConnection();
+			StringBuilder queryString = new StringBuilder(
+			        "SELECT IFNULL(encounter.encounter_id, 0) AS encounter_id, encounter.encounter_datetime, dqr_meta.patient_id, person_name.given_name, person_name.family_name, patient_identifier.identifier FROM dqr_meta "+
+                        " JOIN person_name ON person_name.person_id=dqr_meta.patient_id  "
+                      + " LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 ");
+			queryString.append(" JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id ");
+			queryString.append(" JOIN encounter ON encounter.encounter_id=dqr_lab.encounter_id ");
+			queryString.append(" WHERE  (dqr_lab.date_received_at_lab IS NULL OR dqr_lab.date_received_at_lab='') AND dqr_lab.vl_result IS NOT NULL AND  dqr_lab.vl_order='true' AND ");
+			queryString.append("  encounter.encounter_datetime= (  SELECT MAX(encounter_datetime) FROM encounter labvl "
+			        + " WHERE labvl.patient_id=dqr_lab.patient_id AND labvl.form_id=21 "
+			        + "	 HAVING MAX(encounter_datetime) <= ? ) GROUP BY dqr_meta.patient_id ");
+			int i = 1;
+			stmt = con.prepareStatement(queryString.toString());
+			stmt.setString(i++, endDate);
+			rs = stmt.executeQuery();
+			rs.next();
+			while (rs.next()) {
+
+                            int encounterId = rs.getInt("encounter_id");
+                            String patientId = rs.getString("patient_id");
+                            String patientIdentifier = rs.getString("identifier");
+                            String firstName = rs.getString("given_name");
+                            String lastName = rs.getString("family_name");
+                            Map<String, String> tempData = new HashMap<>();
+                            tempData.put("patientId", patientId);
+                            tempData.put("patientIdentifier", patientIdentifier);
+                            tempData.put("firstName", firstName);
+                            tempData.put("lastName", lastName);
+                            if(encounterId == 0)
+                            {
+                                tempData.put("link", "/openmrs/coreapps/clinicianfacing/patient.page?patientId="+patientId);
+                            }
+                            else{
+                                tempData.put("link", "/openmrs/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
+                            }
+
+                            allPatients.add(tempData);
+                        }
+                        return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return new ArrayList<>();
 		}
 		finally {
 			Database.cleanUp(rs, stmt, con);

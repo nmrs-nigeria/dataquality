@@ -23,7 +23,7 @@ def id = config.id
         <div class="col-sm-4 col-md-4">
             <select name="dataset" id="dataset" class="form-control">
                 <option value="">Select Dataset</option>
-                <option value="DQR">DQRI</option>
+                <option value="DQR">DQR</option>
                 <option value="CQI">CQI</option>
                 <option value="TB">TB</option>
                 <option value="OTZ">OTZ</option>

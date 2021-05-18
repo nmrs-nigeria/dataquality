@@ -14,10 +14,35 @@ ui.includeJavascript("dataquality", "datatable.button.min.js")
 ui.includeCss("dataquality", "buttons.dataTables.min.css")
 ui.includeCss("dataquality", "jquery.dataTables.min.css")
 ui.includeCss("dataquality", "myStyle.css")
+
 %>
 <%=ui.resourceLinks()%>
 <div class="container">
     <h3>${ui.format(title)}</h3>
+    
+    <fieldset>
+        <legend>Filters</legend>
+        <form action="" type="GET">
+            <input type="hidden" name="type" id="type" value="<%= type %>" />
+            <div class="row">
+               <label class="col-sm-6 col-md-2 " ><strong>Start Date</strong></label>
+                <div class="col-sm-6 col-md-3" style="position:relative">
+                   <input type="text" class="form-control date" id="startDate" name="startDate" value="<%=startDate %>"/>
+                </div>
+
+                <label class="col-sm-6 col-md-2 "><strong>End Date</strong></label>
+                <div class="col-sm-6 col-md-3" style="position:relative">
+                   <input type="text" class="form-control date" id="endDate" name="endDate" value="<%=endDate %>"/>
+                </div>
+
+
+                <div class="col-sm-6 col-md-2">
+                    <button class="submit" id="filterCQI">Filter</button>
+                </div>
+            </div>
+        </form>
+    </fieldset>
+    <br/>
     <table id="myTable" class="display dataTable">
        
         <thead style="font-size: 13px;">
@@ -54,6 +79,14 @@ ui.includeCss("dataquality", "myStyle.css")
     jq = jQuery;
 
     jq(document).ready(function() {
+    
+    jq('.date').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeYear: true,
+            changeMonth:true,
+            yearRange: "-30:+0",
+            autoclose: true
+        });
           jq(".dataTable").DataTable({
              pageLength: 100,
              "lengthMenu": [[50, 100, 250, 500, -1], [50, 100, 250, 500, "All"]],
@@ -104,6 +137,7 @@ ui.includeCss("dataquality", "myStyle.css")
     } );
 </script>
 <style>
+    
     .dt-buttons{
     float: right;
     }

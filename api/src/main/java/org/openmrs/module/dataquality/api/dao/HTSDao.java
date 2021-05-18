@@ -114,7 +114,7 @@ public class HTSDao {
 		}
 	}
 	
-	public List<Map<String,String>> getAllAdultClientsPatientsTestedPositiveForHIV(String startDate, String endDate) {
+	public List<Map<String,String>> getAllAdultClientsPatientsTestedPositiveForHIV(String startDate, String endDate, int type) {
 		
             List<Map<String, String>> allPatients = new ArrayList<>();
             PreparedStatement stmt = null;
@@ -134,7 +134,12 @@ public class HTSDao {
                     queryString.append(" JOIN patient_identifier ON patient_identifier.patient_id=dqr_clients.patient_id AND patient_identifier.identifier_type=8");
                     queryString.append(" LEFT JOIN obs setting ON setting.person_id=dqr_clients.patient_id AND setting.concept_id=165839");
                     queryString.append(" LEFT JOIN obs otherSetting ON otherSetting.person_id=dqr_clients.patient_id AND otherSetting.concept_id=165966");
-                    queryString.append(" where  encounter.encounter_datetime BETWEEN ? AND ? and lastresult='positive' ");
+                    if(type == 1)
+                    {
+                        queryString.append(" WHERE  encounter.encounter_datetime BETWEEN ? AND ? and lastresult='positive'  ");
+                    }else{
+                        queryString.append(" WHERE  encounter.encounter_datetime BETWEEN ? AND ? and (lastresult='negative' OR lastresult IS NULL)  ");
+                    }
                     queryString.append(" AND TIMESTAMPDIFF(YEAR, dqr_meta.dob, encounter.encounter_datetime) >=15 ");
 
                     int i = 1;
@@ -170,7 +175,7 @@ public class HTSDao {
             }
 	}
 	
-	public List<Map<String,String>> getAllPedClientsPatientsTestedPositiveForHIV(String startDate, String endDate) {
+	public List<Map<String,String>> getAllPedClientsPatientsTestedPositiveForHIV(String startDate, String endDate, int type) {
 		
             List<Map<String, String>> allPatients = new ArrayList<>();
             PreparedStatement stmt = null;
@@ -190,7 +195,12 @@ public class HTSDao {
                     queryString.append(" JOIN patient_identifier ON patient_identifier.patient_id=dqr_clients.patient_id AND patient_identifier.identifier_type=8");
                     queryString.append(" LEFT JOIN obs setting ON setting.person_id=dqr_clients.patient_id AND setting.concept_id=165839");
                     queryString.append(" LEFT JOIN obs otherSetting ON otherSetting.person_id=dqr_clients.patient_id AND otherSetting.concept_id=165966");
-                    queryString.append(" where  encounter.encounter_datetime BETWEEN ? AND ? and lastresult='positive' ");
+                    if(type == 1)
+                    {
+                        queryString.append(" WHERE  encounter.encounter_datetime BETWEEN ? AND ? and lastresult='positive'  ");
+                    }else{
+                        queryString.append(" WHERE  encounter.encounter_datetime BETWEEN ? AND ? and (lastresult='negative' OR lastresult IS NULL)  ");
+                    }
                     queryString.append(" AND TIMESTAMPDIFF(YEAR, dqr_meta.dob, encounter.encounter_datetime) < 15 ");
 
                     int i = 1;
@@ -353,7 +363,7 @@ public class HTSDao {
 		}
 	}
 	
-	public List<Map<String,String>> getAllAdultsOfferedIndexTesting(String startDate, String endDate) {//total adults plhiv offered index testing
+	public List<Map<String,String>> getAllAdultsOfferedIndexTesting(String startDate, String endDate, int type) {//total adults plhiv offered index testing
 	
             List<Map<String, String>> allPatients = new ArrayList<>();
             PreparedStatement stmt = null;
@@ -375,8 +385,14 @@ public class HTSDao {
                     queryString.append(" JOIN dqr_meta ON dqr_clients.patient_id=dqr_meta.patient_id ");
                     queryString.append(" LEFT JOIN obs setting ON setting.person_id=dqr_clients.patient_id AND setting.concept_id=165839");
                     queryString.append(" LEFT JOIN obs otherSetting ON otherSetting.person_id=dqr_clients.patient_id AND otherSetting.concept_id=165966");
-                    queryString.append(" where  encounter.encounter_datetime BETWEEN ? AND ? and lastresult='positive' AND offered_index='yes'  ");
-                    queryString.append(" AND TIMESTAMPDIFF(YEAR, dqr_meta.dob, encounter.encounter_datetime) >=15 ");
+                    if(type == 1)
+                    {
+                        queryString.append(" WHERE  encounter.encounter_datetime BETWEEN ? AND ? and lastresult='positive' AND offered_index='yes'  ");
+                    }else{
+                        queryString.append(" WHERE  encounter.encounter_datetime BETWEEN ? AND ? and lastresult='positive' AND (offered_index ='no' OR offered_index IS NULL)  ");
+                    }
+                    
+                    queryString.append(" AND TIMESTAMPDIFF(YEAR, dqr_meta.dob, encounter.encounter_datetime) >=15 GROUP BY dqr_clients.patient_id ");
 
                     //queryString.append(" group by person.person_id ");
 
@@ -415,7 +431,7 @@ public class HTSDao {
             }
 	}
 	
-	public List<Map<String,String>> getAllPedsOfferedIndexTesting(String startDate, String endDate) {//total adults plhiv offered index testing
+	public List<Map<String,String>> getAllPedsOfferedIndexTesting(String startDate, String endDate, int type) {//total adults plhiv offered index testing
 	
             List<Map<String, String>> allPatients = new ArrayList<>();
             PreparedStatement stmt = null;
@@ -435,7 +451,12 @@ public class HTSDao {
                     queryString.append(" JOIN dqr_meta ON dqr_clients.patient_id=dqr_meta.patient_id ");
                     queryString.append(" LEFT JOIN obs setting ON setting.person_id=dqr_clients.patient_id AND setting.concept_id=165839");
                     queryString.append(" LEFT JOIN obs otherSetting ON otherSetting.person_id=dqr_clients.patient_id AND otherSetting.concept_id=165966");
-                    queryString.append(" where  encounter.encounter_datetime BETWEEN ? AND ? and lastresult='positive' AND offered_index='yes'  ");
+                    if(type == 1)
+                    {
+                        queryString.append(" WHERE  encounter.encounter_datetime BETWEEN ? AND ? and lastresult='positive' AND offered_index='yes'  ");
+                    }else{
+                        queryString.append(" WHERE  encounter.encounter_datetime BETWEEN ? AND ? and lastresult='positive' AND (offered_index ='no' OR offered_index IS NULL)  ");
+                    }
                     queryString.append(" AND TIMESTAMPDIFF(YEAR, dqr_meta.dob, encounter.encounter_datetime) <15 ");
 
                     //queryString.append(" group by person.person_id ");
@@ -541,9 +562,9 @@ public class HTSDao {
 
                     String query = " SELECT encounter.encounter_id, resultobs.value_coded AS final_result, " +
                                     " offeredobs.value_coded AS offered_index FROM encounter " +
-                                    " LEFT JOIN obs resultobs ON resultobs.encounter_id=encounter.encounter_id AND resultobs.concept_id=165843 " +
-                                    " LEFT JOIN obs offeredobs ON offeredobs.encounter_id=encounter.encounter_id AND offeredobs.concept_id=165794 " +
-                                    " WHERE encounter.encounter_type=2 AND encounter.patient_id=? ";
+                                    " LEFT JOIN obs resultobs ON resultobs.encounter_id=encounter.encounter_id AND resultobs.concept_id=165843 AND resultobs.voided=0 " +
+                                    " LEFT JOIN obs offeredobs ON offeredobs.encounter_id=encounter.encounter_id AND offeredobs.concept_id=165794 AND offeredobs.voided=0 " +
+                                    " WHERE encounter.encounter_type=2 AND encounter.patient_id=? AND encounter.voided=0 ";
                     int i = 1;
                     //DateTime now = new DateTime(new Date());
                     //String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");

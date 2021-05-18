@@ -63,9 +63,9 @@ public class PatientDao {
 			
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 			
-			String query = " SELECT patient_id FROM patient  WHERE patient.voided=0 AND (patient.date_created >=? OR patient.date_changed >=?)";
-                        query += " AND " +
-                                "( " +
+			String query = " SELECT patient_id FROM patient  WHERE patient.voided=0 AND (patient.date_created >=? OR patient.date_changed >=? ";
+                        query += " OR " +
+                                " " +
                                 "   patient_id  in (SELECT person_id FROM obs WHERE date_created >= ? ) OR " +
                                 "   patient_id IN (SELECT patient_id FROM encounter WHERE date_created >=? OR date_changed >=?) " +
                                 ")";
@@ -201,7 +201,8 @@ public class PatientDao {
 				stmt.setString(i++, allPatientMetas.get(j).get("termination_status"));
 			}
 			//stmt.setFetchSize(200);
-			stmt.executeUpdate();
+			if (allPatientMetas.size() > 0)
+				stmt.executeUpdate();
 			
 			return 1;
 			
@@ -209,6 +210,38 @@ public class PatientDao {
 		catch (SQLException ex) {
 			Database.handleException(ex);
 			return 0;
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
+	public void saveGlobalProperty(String property, String propertyValue, String description, String uuid) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+		
+		try {
+			con = Database.connectionPool.getConnection();
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			String query = "INSERT INTO global_property (property, property_value, description, uuid)VALUES(?, ?, ?, ?)";
+			
+			int i = 1;
+			stmt = con.prepareStatement(query);
+			stmt.setString(i++, property);
+			stmt.setString(i++, propertyValue);
+			stmt.setString(i++, description);
+			stmt.setString(i++, uuid);
+			
+			stmt.executeUpdate();
+			
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			
 		}
 		finally {
 			Database.cleanUp(rs, stmt, con);

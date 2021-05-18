@@ -435,6 +435,9 @@ public class ClinicalDao {
 	
 	public int getNoActivePtsWithWithEducationalStatus(String startDate, String endDate) {
 		
+		System.out.println(startDate);
+		System.out.println(endDate);
+		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		Connection con = null;
@@ -446,8 +449,7 @@ public class ClinicalDao {
 			
 			StringBuilder queryString = new StringBuilder(
 			        " select COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
-			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id "
-			                + "	 WHERE art_start_date >=? AND  "
+			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " + "	 WHERE  "
 			                + "	 DATE_ADD(dqr_pharmacy.pickupdate,  INTERVAL (dqr_pharmacy.days_refill+28) DAY) >= ?  "
 			                + "     AND dqr_pharmacy.pickupdate= ( "
 			                + "		SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
@@ -460,7 +462,7 @@ public class ClinicalDao {
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
 			
-			stmt.setString(i++, startDate);
+			//stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
@@ -477,6 +479,7 @@ public class ClinicalDao {
 			Database.cleanUp(rs, stmt, con);
 		}
 	}
+	
 	public int getNoActivePtsWithWithMaritalStatus(String startDate, String endDate) {
 		
 		PreparedStatement stmt = null;
@@ -490,8 +493,7 @@ public class ClinicalDao {
 			
 			StringBuilder queryString = new StringBuilder(
 			        " select COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
-			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id "
-			                + "	 WHERE art_start_date >=? AND  "
+			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " + "	 WHERE   "
 			                + "	 DATE_ADD(dqr_pharmacy.pickupdate,  INTERVAL (dqr_pharmacy.days_refill+28) DAY) >= ?  "
 			                + "     AND dqr_pharmacy.pickupdate= ( "
 			                + "		SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
@@ -504,7 +506,7 @@ public class ClinicalDao {
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
 			
-			stmt.setString(i++, startDate);
+			//stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
@@ -535,8 +537,7 @@ public class ClinicalDao {
 			
 			StringBuilder queryString = new StringBuilder(
 			        " select COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
-			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id "
-			                + "	 WHERE art_start_date >=? AND  "
+			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " + "	 WHERE   "
 			                + "	 DATE_ADD(dqr_pharmacy.pickupdate,  INTERVAL (dqr_pharmacy.days_refill+28) DAY) >= ?  "
 			                + "     AND dqr_pharmacy.pickupdate= ( "
 			                + "		SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
@@ -549,7 +550,7 @@ public class ClinicalDao {
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
 			
-			stmt.setString(i++, startDate);
+			//stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
@@ -717,7 +718,7 @@ public class ClinicalDao {
 			StringBuilder queryString = new StringBuilder(
 			        " select COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
 			                + "	 WHERE art_start_date >=? AND art_start_date <=? ");
-			queryString.append(" AND dqr_meta.hiv_enrollment_date !=''  AND dqr_meta.hiv_enrollment_date IS NOT NULL ");
+			queryString.append(" AND dqr_meta.hiv_diagnosis_date !=''  AND dqr_meta.hiv_diagnosis_date IS NOT NULL ");
 			
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
@@ -784,9 +785,9 @@ public class ClinicalDao {
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 			StringBuilder queryString = new StringBuilder(
 			        " select COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
-			                + "	 WHERE art_start_date >=? AND art_start_date <=? ");
+			                + "	 WHERE art_start_date BETWEEN ? AND ? ");
 			queryString
-			        .append(" AND dqr_meta.patient_id IN (SELECT person_id FROM obs WHERE concept_id=5497 AND value_numeric IS NOT NULL) ");
+			        .append(" AND dqr_meta.patient_id IN (SELECT person_id FROM obs WHERE concept_id=5497 AND value_numeric IS NOT NULL AND obs.voided=0 ) ");
 			
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
@@ -852,11 +853,12 @@ public class ClinicalDao {
 			
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 			StringBuilder queryString = new StringBuilder(
-			        "  select COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta  " +
-			        
-			        " WHERE  dqr_meta.patient_id IN (SELECT dqr_clinicals.patient_id FROM dqr_clinicals "
+			        "  select COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta  "
+			                +
+			                
+			                " WHERE  dqr_meta.patient_id IN (SELECT dqr_clinicals.patient_id FROM dqr_clinicals "
 			                + " JOIN encounter ON encounter.encounter_id=dqr_clinicals.encounter_id "
-			                + " WHERE encounter.encounter_datetime BETWEEN ? AND ? AND dqr_clinicals.weight IS NOT NULL )  ");
+			                + " WHERE encounter.encounter_datetime BETWEEN ? AND ? AND (dqr_clinicals.weight IS NOT NULL) )  ");
 			
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
@@ -1148,7 +1150,7 @@ public class ClinicalDao {
 			
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 			StringBuilder queryString = new StringBuilder(" select COUNT(dqr_meta.patient_id) AS count FROM dqr_meta "
-			        + "	 WHERE art_start_date >=? AND art_start_date <=? ");
+			        + "	 WHERE art_start_date BETWEEN ? AND ? ");
 			
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
@@ -1182,8 +1184,7 @@ public class ClinicalDao {
 			
 			StringBuilder queryString = new StringBuilder(
 			        " SELECT COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
-			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id "
-			                + "	 WHERE art_start_date >=? AND  "
+			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " + "	 WHERE   "
 			                + "	 DATE_ADD(dqr_pharmacy.pickupdate,  INTERVAL (dqr_pharmacy.days_refill+28) DAY) >= ?  "
 			                + "	 AND (dqr_meta.termination_status IS NULL OR dqr_meta.termination_status!=1066 ) "
 			                + "     AND dqr_pharmacy.pickupdate= ( "
@@ -1194,7 +1195,7 @@ public class ClinicalDao {
 			
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
-			stmt.setString(i++, startDate);
+			//stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();

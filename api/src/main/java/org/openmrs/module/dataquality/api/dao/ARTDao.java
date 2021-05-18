@@ -78,6 +78,70 @@ public class ARTDao {
 		}
 	}
 	
+	public List<Map<String,String>> getAllPtsStartedOnArt(String startDate, String endDate, boolean isBeforePeriod) {
+            //indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
+            //pretty strange.
+
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            Connection con = null;
+            List<Map<String, String>> allPatients = new ArrayList<>();
+            try {
+                    con = Database.connectionPool.getConnection();
+                    //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                    //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                    StringBuilder queryString = new StringBuilder("select dqr_meta.patient_id, dqr_meta.dob, dqr_meta.gender, patient_identifier.identifier, dqr_meta.art_start_date  FROM dqr_meta  ");
+                    
+                    queryString.append(" LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4");
+                    queryString.append(" LEFT JOIN ( "
+                                    + "	SELECT patient_id, MIN(dqr_pharmacy.pickupdate) AS first_pickup FROM dqr_pharmacy GROUP BY patient_id "
+                                    + ") pharmacy ON pharmacy.patient_id=dqr_meta.patient_id ");
+                    queryString.append(" WHERE art_start_date IS NOT NULL   ");
+                    if (isBeforePeriod == false) {
+                        queryString.append(" AND ( art_start_date BETWEEN ? AND ? ) AND (pharmacy.first_pickup BETWEEN ? AND ? ) ");
+                    } else {
+                        queryString.append(" AND ( art_start_date < ? AND pharmacy.first_pickup < ?) GROUP BY dqr_meta.patient_id ");
+                    }
+                    int i = 1;
+                    //DateTime now = new DateTime(new Date());
+                    //String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+                    stmt = con.prepareStatement(queryString.toString());
+                    if (isBeforePeriod == false) {
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, endDate);
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, endDate);
+                    } else {
+                            stmt.setString(i++, startDate);
+                            stmt.setString(i++, startDate);
+                    }
+
+                   rs = stmt.executeQuery();
+                   while(rs.next())
+                    {
+                        String age = Misc.getAge(rs.getString("dob"), rs.getString("art_start_date"));
+                        String ageRange = Misc.getAgeRange(age);
+                        Map<String, String> tempPatient = new HashMap<>();
+                        tempPatient.put("patientId", rs.getString("patient_id"));
+                        tempPatient.put("artNumber", rs.getString("identifier"));
+                        tempPatient.put("dob", age);
+                        tempPatient.put("ageRange", ageRange);
+                        tempPatient.put("gender", rs.getString("gender"));
+                        allPatients.add(tempPatient);
+                    }
+                    return allPatients;
+            }
+            catch (SQLException ex) {
+                    Database.handleException(ex);
+                    return null;
+            }
+            finally {
+                    Database.cleanUp(rs, stmt, con);
+            }
+	}
+	
 	public int getAdultsStartedOnArt(String startDate, String endDate) {
 		//indeed for some reason, doing a count was much slower than selecting the entire record and counting it. 
 		//pretty strange.

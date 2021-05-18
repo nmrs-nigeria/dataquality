@@ -26,7 +26,7 @@ def id = config.id
                <input type="text" class="form-control date" id="startDate" name="startDate"/>
             </div>
             
-            <label class="col-sm-6 col-md-2 "><strong>Start Date</strong></label>
+            <label class="col-sm-6 col-md-2 "><strong>End Date</strong></label>
             <div class="col-sm-6 col-md-3" style="position:relative">
                <input type="text" class="form-control date" id="endDate" name="endDate"/>
             </div>
@@ -56,26 +56,26 @@ def id = config.id
             <tr>
                 <td>I</td>
                 <td>Proportion of all active patients with a documented educational status </td>
-                <td id="activePtsWithDocEduStat" ><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalActivePatientsEdu"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentEduStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="activePtsWithDocEduStat" class="loadingContent" ><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalActivePatientsEdu" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentEduStatus" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>II</td>
                 <td>Proportion of all active patients with a documented marital status </td>
-                <td id="activePtsWithDocMarStat"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalActivePatientsMar"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentMarStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.ACTIVE_DOCUMENTED_MARITAL_STATUS_COHORT)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="activePtsWithDocMarStat" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalActivePatientsMar" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentMarStatus" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.ACTIVE_DOCUMENTED_MARITAL_STATUS_COHORT)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>III</td>
                 <td>Proportion of all active patients with a documented occupational status </td>
-                <td id="activePtsWithDocOccuStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalActivePatientsOccu"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentOccuStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.ACTIVE_DOCUMENTED_OCCUPATIONAL_STATUS_COHORT)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="activePtsWithDocOccuStatus" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalActivePatientsOccu" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentOccuStatus" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.ACTIVE_DOCUMENTED_OCCUPATIONAL_STATUS_COHORT)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>IV</td>
@@ -83,10 +83,10 @@ def id = config.id
                    <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with documented age and/or Date of Birth</span>
                    <span class="withDate hidden">Proportion of patients started on ART between <strong class="startDate"></strong> and <strong class="endDate"></strong> with documented age and/or Date of Birth</span>
                 </td>
-                <td id="startedOnArtWithDob"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalStartedOnArtDob"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentStartedArtDob"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DOB)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="startedOnArtWithDob" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtDob" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtDob" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);"  data-href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DOB)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>V</td>
@@ -94,10 +94,10 @@ def id = config.id
                     <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with documented Sex </span>
                     <span class="withDate hidden">Proportion of patients  started on ART between <strong class="startDate"></strong> and <strong class="endDate"></strong> with documented Sex </span>
                 </td>
-                <td id="startedOnArtWithGender"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalStartedOnArtGender"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentStartedArtGender"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_SEX)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="startedOnArtWithGender" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtGender" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtGender" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_SEX)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>VI</td>
@@ -105,10 +105,10 @@ def id = config.id
                     <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with registered address/LGA of residence</span>
                     <span class="withDate hidden">Proportion of patients  started on ART between <strong class="startDate"></strong> and <strong class="endDate"></strong> with registered address/LGA of residence</span>
                 </td>
-                <td id="startedOnArtWithAddress"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalStartedOnArtAddress"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentStartedArtAddress"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.NEWLY_STARTED_ON_ART_WITH_DOCUMENTED_LGA)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="startedOnArtWithAddress" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtAddress" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtAddress" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.NEWLY_STARTED_ON_ART_WITH_DOCUMENTED_LGA)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>VII</td>
@@ -116,10 +116,10 @@ def id = config.id
                     <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with documented date of HIV diagnosis</span>
                     <span class="withDate hidden">Proportion of patients  started on ART between <strong class="startDate"></strong> and <strong class="endDate"></strong> with documented date of HIV diagnosis</span>
                 </td>
-                <td id="startedOnArtWithDiagnosisDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalStartedOnArtDiagnosisDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentStartedArtDiagnosisDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DATECONFIRMED_POSITIVE)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="startedOnArtWithDiagnosisDate" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtDiagnosisDate" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtDiagnosisDate" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DATECONFIRMED_POSITIVE)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>VIII</td>
@@ -128,10 +128,10 @@ def id = config.id
                     <span class="withDate hidden">Proportion of patients  started on ART between <strong class="startDate"></strong> and <strong class="endDate"></strong> months with documented HIV enrollment date</span>
 
                 </td>
-                <td id="startedOnArtWithEnrollmentDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalStartedOnArtEnrollmentDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentStartedArtEnrollmentDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_HIVENROLLMENT)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="startedOnArtWithEnrollmentDate" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtEnrollmentDate" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtEnrollmentDate" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_HIVENROLLMENT)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>IX</td>
@@ -139,10 +139,10 @@ def id = config.id
                     <span class="withNoDate">Number of All patients Newly started on ART in the last 6 months with a documented Drug pickup</span>
                     <span class="withDate hidden">Number of All patients started between <strong class="startDate"></strong> and <strong class="endDate"></strong> with a documented Drug pickup</span>
                 </td>
-                <td id="startedOnArtWithDrugPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalStartedOnArtDrugPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentStartedArtDrugPickup"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="#" class="button" title="View records with issues">View Issues</a></td>
+                <td id="startedOnArtWithDrugPickup" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtDrugPickup" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtDrugPickup" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.DOCUMENTED_ART_START_DATE_ARV_PICKUP_COHORT)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>X</td>
@@ -150,10 +150,10 @@ def id = config.id
                      <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with documented CD4 result </span>
                      <span class="withDate hidden">Proportion of patients started on ART between <strong class="startDate"></strong> and <strong class="endDate"></strong> with documented CD4 result </span>
                 </td>
-                <td id="startedOnArtWithCd4"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalStartedOnArtCd4"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentStartedArtCd4"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_CD4_COUNT)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="startedOnArtWithCd4" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtCd4" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtCd4" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_CD4_COUNT)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XI</td>
@@ -162,10 +162,10 @@ def id = config.id
                     <span class="withDate hidden">Proportion of patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate"></strong> that had documented weight</span>
                 
                 </td>
-                <td id="clinicVisitWithWeight"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalClinicVisitWeight"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentClinicVisitWeight"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WEIGH)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="clinicVisitWithWeight" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalClinicVisitWeight" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentClinicVisitWeight" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WEIGH)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <!--
                 <td></td>
@@ -178,12 +178,12 @@ def id = config.id
                 <td>XII</td>
                 <td>
                     <span class="withNoDate">Proportion of pediatric patients with a clinic visit in the last 6 months that had documented MUAC </span>
-                    <span class="withDate hidden">Proportion of pediatric patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate"></strong> that had documented MUAC </span>
+                    <span class="withDate hidden">Proportion of pediatric patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate dqrDetails"></strong> that had documented MUAC </span>
                 </td>
-                <td id="clinicVisitWithMuac"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalClinicVisitMuac"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentClinicVisitMuac"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="clinicVisitWithMuac" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalClinicVisitMuac" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentClinicVisitMuac" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC)}" class="button dqrDetails"  title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XIII</td>
@@ -192,10 +192,10 @@ def id = config.id
                     <span class="withDate hidden">Proportion of patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate"></strong> that had documented WHO clinical stage</span>
                     
                 </td>
-                <td id="clinicVisitWithWho"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalClinicVisitWho"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentClinicVisitWho"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WHO)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="clinicVisitWithWho" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalClinicVisitWho" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentClinicVisitWho" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WHO)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XIV</td>
@@ -203,10 +203,10 @@ def id = config.id
                     <span class="withNoDate">Proportion of patients with a clinic visit in the last 6 months that had documented TB status</span>
                     <span class="withDate hidden">Proportion of patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate"></strong> that had documented TB status</span>
                 </td>
-                <td id="clinicVisitWithTBStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalClinicVisitTBStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentClinicVisitTBStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_TB_STATUS)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="clinicVisitWithTBStatus" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalClinicVisitTBStatus" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentClinicVisitTBStatus" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_TB_STATUS)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XV</td>
@@ -214,10 +214,10 @@ def id = config.id
                     <span class="withNoDate">Proportion of patients with a clinic visit in the last 6 months that had documented functional status</span>
                     <span class="withDate hidden">Proportion of patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate"></strong> that had documented functional status</span>
                 </td>
-                <td id="clinicVisitWithFunctionalStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalClinicVisitFunctionalStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentClinicVisitFunctionalStatus"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="clinicVisitWithFunctionalStatus" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalClinicVisitFunctionalStatus" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentClinicVisitFunctionalStatus" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XVI</td>
@@ -225,10 +225,10 @@ def id = config.id
                     <span class="withNoDate">Proportion of patients newly started on ART in the last 6 months with initial ART regimen</span>
                     <span class="withDate hidden">Proportion of patients  started on ART <strong class="startDate"></strong> and <strong class="endDate"></strong> with initial ART regimen</span>
                 </td>
-                <td id="startedOnArtWithInitialRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalStartedOnArtInitialRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentStartedArtInitialRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="startedOnArtWithInitialRegimen" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalStartedOnArtInitialRegimen" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentStartedArtInitialRegimen" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XVII</td>
@@ -237,10 +237,10 @@ def id = config.id
                     <span class="withDate hidden">Proportion of all patients with a clinic visit between <strong class="startDate"></strong> and <strong class="endDate"></strong> that have documented next scheduled appointment date</span>
                     
                 </td>
-                <td id="clinicVisitWithNextAppDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalClinicVisitNextAppDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentClinicVisitNextAppDate"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="clinicVisitWithNextAppDate" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalClinicVisitNextAppDate" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentClinicVisitNextAppDate" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             <tr>
                 <td>XVIII</td>
@@ -248,10 +248,10 @@ def id = config.id
                     <span class="withNoDate">Proportion of all inactive patients with a documented exit reason</span>
                     <span class="withDate hidden">Proportion of all inactive patients as at <strong class="endDate"></strong> with a documented exit reason</span>
                 </td>
-                <td id="totalInactiveDocReason"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalInactive"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentInactiveDocReason"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.DOCUMENTED_EXIT_REASON_INACTIVE_COHORT)}" class="button" title="View records with issues">View Issues</a></td>
+                <td id="totalInactiveDocReason" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalInactive" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentInactiveDocReason" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.DOCUMENTED_EXIT_REASON_INACTIVE_COHORT)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>
             </tr>
             
             <tr>
@@ -268,34 +268,34 @@ def id = config.id
             <tr>
                 <td>I</td> 
                 <td>Proportion of patients with a documented ART regimen quantity in the last drug refill visit</td>
-                <td id="totalPickupWithQty"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalPickupQty"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentagePickupQty"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_QUANTITY)}" class="button" title="View records with issues">View issues</a></td>    
+                <td id="totalPickupWithQty" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalPickupQty" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentagePickupQty" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_QUANTITY)}" class="button dqrDetails" title="View records with issues">View issues</a></td>    
             </tr>
             <tr>
                 <td>II</td>
                 <td>Proportion of patients with a documented ART regimen duration in the last drug refill visit</td>
-                <td id="totalPickupWithDuration"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalPickupDuration"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentagePickupDuration"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION)}" class="button" title="View records with issues">View issues</a></td>    
+                <td id="totalPickupWithDuration" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalPickupDuration" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentagePickupDuration" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION)}" class="button dqrDetails" title="View records with issues">View issues</a></td>    
             </tr>
             <tr>
                 <td>III</td> 
                 <td>Proportion of patients with documented ART regimen in the last drug refill visit</td>
-                <td id="totalPickupWithRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalPickupRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentagePickupRegimen"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION)}" class="button" title="View records with issues">View issues</a></td>    
+                <td id="totalPickupWithRegimen" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalPickupRegimen" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentagePickupRegimen" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_REGIMEN)}" class="button dqrDetails" title="View records with issues">View issues</a></td>    
             </tr>
             <tr>
-                <td>IV</td> 
+                <td>IV</td>
                 <td>Proportion of patients with ART regimen duration not more than six(6) months  in the last drug refill visit</td>
-                <td id="totalPickupWithQty180"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalPickupQty180"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentagePickupQty180"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION_MORETHAN180DAYS)}" class="button" title="View records with issues">View issues</a></td>    
+                <td id="totalPickupWithQty180" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalPickupQty180" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentagePickupQty180" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION_MORETHAN180DAYS)}" class="button dqrDetails" title="View records with issues">View issues</a></td>    
             </tr>
 
             <tr>
@@ -312,27 +312,27 @@ def id = config.id
             <tr>
                 <td>I</td>
                 <td>Proportion of eligible patients with documented Viral Load results done in the last one year</td>
-                <td id="totalEligibleWithResult"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalEligibleResult"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentEligibleResult"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.VIRAL_LOAD_ELIGIBLE_WITH_DOCUMENTED_RESULT)}" class="button" title="View records with issues">View issues</a></td>       
+                <td id="totalEligibleWithResult" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalEligibleResult" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentEligibleResult" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.VIRAL_LOAD_ELIGIBLE_WITH_DOCUMENTED_RESULT)}" class="button dqrDetails" title="View records with issues">View issues</a></td>       
             </tr>
             <tr>
                 <td>II</td>
                 <td>Proportion of patients with Viral Load result that had documented specimen collection date </td>
-                <td id="totalResultWithResultCollection"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalResultCollection"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentResultCollection"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE)}" class="button" title="View records with issues">View Issues</a></td>       
+                <td id="totalResultWithResultCollection" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalResultCollection" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentResultCollection" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>       
             </tr>
             
             <tr>
                 <td>III</td> 
                 <td>Proportion of patients with Viral load results with a documented date sample was received at the PCR lab</td>
-                <td id="totalResultWithResultSent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="totalResultSent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td id="percentResultSent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
-                <td><a href="dataqualityview.page?type=${ui.format(constants.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR)}" class="button" title="View records with issues">View Issues</a></td>       
+                <td id="totalResultWithResultSent" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="totalResultSent" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td id="percentResultSent" class="loadingContent"><img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" /></td>
+                <td><a href="javascript:void(0);" data-href="dataqualityview.page?type=${ui.format(constants.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR)}" class="button dqrDetails" title="View records with issues">View Issues</a></td>       
             </tr>
 
 
@@ -420,6 +420,14 @@ def id = config.id
     var totalPtsWithVl = 0;
    // getCohorts(cohortAjaxUrl);
    //educational status
+   jq(".dqrDetails").click(function(){
+        var url = jq(this).attr("data-href");
+        var startDate = jq("#startDate").val();
+        var endDate = jq("#endDate").val();
+        //window.location = url+"&startDate="+startDate+"&endDate="+endDate;
+        window.open(url+"&startDate="+startDate+"&endDate="+endDate, "_blank");
+        
+   });
    
    jq('.date').datepicker({
             dateFormat: 'yy-mm-dd',
@@ -437,6 +445,7 @@ def id = config.id
         {
             alert("Please select start and end date");
         }else{
+             jq(".loadingContent").html('<img width="50" src="${ ui.resourceLink("dataquality", "images/loading.gif") }" />');
              jq(".startDate").html(startDate)
              jq(".endDate").html(endDate);
              jq(".withDate").removeClass("hidden");

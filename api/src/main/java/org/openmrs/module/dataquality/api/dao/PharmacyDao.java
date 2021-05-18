@@ -38,8 +38,9 @@ public class PharmacyDao {
                                     " refillobs.value_numeric AS days_refill, IFNULL(regimenlineobs.value_coded, 0) AS regimenline, regimenobs.value_coded AS regimen  " +
                                     "  FROM encounter " +
                                     "  LEFT JOIN obs refillobs ON refillobs.encounter_id=encounter.encounter_id AND refillobs.concept_id=159368 AND refillobs.voided=0 " +
-                                    "  LEFT JOIN obs quantityobs ON quantityobs.encounter_id=encounter.encounter_id AND quantityobs.concept_id=160856 AND quantityobs.voided=0 " +                            
                                     "  AND refillobs.obs_group_id IN (select obs_id from obs where concept_id=162240) " +
+                                    "  LEFT JOIN obs quantityobs ON quantityobs.encounter_id=encounter.encounter_id AND quantityobs.concept_id=160856 AND quantityobs.voided=0 " +                            
+                                    "  AND quantityobs.obs_group_id IN (select obs_id from obs where concept_id=162240) " +
                                     " LEFT JOIN obs regimenlineobs ON regimenlineobs.encounter_id=encounter.encounter_id AND regimenlineobs.concept_id=165708"+ 
                                     " LEFT JOIN obs regimenobs ON regimenobs.encounter_id=encounter.encounter_id AND regimenobs.concept_id IN (164506, 164513, 165702, 164507, 164514, 165703)"+ 
                                     "  WHERE encounter.encounter_type=13 AND encounter.voided=0 AND encounter.patient_id=? GROUP BY encounter.encounter_id ORDER BY encounter.encounter_datetime   ";
@@ -441,14 +442,16 @@ public class PharmacyDao {
 			
 			StringBuilder queryString = new StringBuilder(
 			        " SELECT COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
-			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " + "	 WHERE  "
+			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id "
+			                + "	 WHERE  "
 			                + " dqr_pharmacy.quantity > 0 "
 			                + "     AND dqr_pharmacy.pickupdate= (  SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
-			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id "
-			                + "	 HAVING MAX(pickupdate) <=? )  ");
+			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id AND (lastpickup.pickupdate BETWEEN ? AND ?) "
+			                + "	  )  ");
 			
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
+			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
 			rs.next();
@@ -458,6 +461,69 @@ public class PharmacyDao {
 		catch (SQLException ex) {
 			Database.handleException(ex);
 			return 0;
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
+	public List<Map<String,String>>  getAllPtsWithoutLastPickupQuantity(String startDate, String endDate) {
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+                List<Map<String, String>> allPatients = new ArrayList<>();
+		try {
+			con = Database.connectionPool.getConnection();
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			StringBuilder queryString = new StringBuilder(
+			        " SELECT IFNULL(encounter.encounter_id, 0) AS encounter_id, encounter.encounter_datetime, dqr_meta.patient_id, person_name.given_name, person_name.family_name, patient_identifier.identifier FROM dqr_meta "
+			        +" JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " 
+                                +" JOIN encounter ON encounter.encounter_id=dqr_pharmacy.encounter_id " 
+                                +"	JOIN person_name ON person_name.person_id=dqr_meta.patient_id " +
+                                    "	LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 " +
+                                        "	 WHERE "
+			                + " (dqr_pharmacy.quantity <= 0 OR dqr_pharmacy.quantity IS NULL) "
+			                + "     AND dqr_pharmacy.pickupdate= (  SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
+			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id AND (lastpickup.pickupdate BETWEEN ? AND ?) "
+			                + "	 )  GROUP BY dqr_meta.patient_id ");
+			
+			int i = 1;
+			stmt = con.prepareStatement(queryString.toString());
+			stmt.setString(i++, startDate);
+                        stmt.setString(i++, endDate);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+
+                            int encounterId = rs.getInt("encounter_id");
+                            String patientId = rs.getString("patient_id");
+                            String patientIdentifier = rs.getString("identifier");
+                            String firstName = rs.getString("given_name");
+                            String lastName = rs.getString("family_name");
+                            Map<String, String> tempData = new HashMap<>();
+                            tempData.put("patientId", patientId);
+                            tempData.put("patientIdentifier", patientIdentifier);
+                            tempData.put("firstName", firstName);
+                            tempData.put("lastName", lastName);
+                            if(encounterId == 0)
+                            {
+                                tempData.put("link", "/openmrs/coreapps/clinicianfacing/patient.page?patientId="+patientId);
+                            }
+                            else{
+                                tempData.put("link", "/openmrs/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
+                            }
+
+                            allPatients.add(tempData);
+                        }
+                    return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return null;
 		}
 		finally {
 			Database.cleanUp(rs, stmt, con);
@@ -476,15 +542,17 @@ public class PharmacyDao {
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 			
 			StringBuilder queryString = new StringBuilder(
-			        " SELECT COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
-			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " + "	 WHERE  "
+			        " SELECT COUNT(distinct dqr_meta.patient_id) AS count  FROM dqr_meta "
+			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id "
+			                + "	 WHERE  "
 			                + " dqr_pharmacy.days_refill > 0 "
 			                + "     AND dqr_pharmacy.pickupdate= (  SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
-			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id "
-			                + "	 HAVING MAX(pickupdate) <=? )  ");
+			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id AND (lastpickup.pickupdate BETWEEN ? AND ?) "
+			                + "	  )  ");
 			
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
+			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
 			rs.next();
@@ -500,11 +568,73 @@ public class PharmacyDao {
 		}
 	}
 	
+	public List<Map<String,String>> getAllPtsWithoutLastPickupDuration(String startDate, String endDate) {
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+                List<Map<String, String>> allPatients = new ArrayList<>();
+		try {
+			con = Database.connectionPool.getConnection();
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			StringBuilder queryString = new StringBuilder(
+			        " SELECT IFNULL(encounter.encounter_id, 0) AS encounter_id, encounter.encounter_datetime, dqr_meta.patient_id, person_name.given_name, person_name.family_name, patient_identifier.identifier FROM dqr_meta "
+                                +" JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " +
+                                    "	JOIN person_name ON person_name.person_id=dqr_meta.patient_id " +
+                                    "	LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "
+                                  +"	JOIN encounter ON encounter.encounter_id=dqr_pharmacy.encounter_id " 
+                                        +"	 WHERE  "
+			                + " (dqr_pharmacy.days_refill < 0 OR dqr_pharmacy.days_refill IS NULL  ) "
+			                + "     AND dqr_pharmacy.pickupdate= (  SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
+			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id "
+			                + "	 AND (lastpickup BETWEEN ? AND ? )  ) GROUP BY dqr_meta.patient_id ");
+			
+			int i = 1;
+			stmt = con.prepareStatement(queryString.toString());
+			stmt.setString(i++, endDate);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+
+                            int encounterId = rs.getInt("encounter_id");
+                            String patientId = rs.getString("patient_id");
+                            String patientIdentifier = rs.getString("identifier");
+                            String firstName = rs.getString("given_name");
+                            String lastName = rs.getString("family_name");
+                            Map<String, String> tempData = new HashMap<>();
+                            tempData.put("patientId", patientId);
+                            tempData.put("patientIdentifier", patientIdentifier);
+                            tempData.put("firstName", firstName);
+                            tempData.put("lastName", lastName);
+                            if(encounterId == 0)
+                            {
+                                tempData.put("link", "/openmrs/coreapps/clinicianfacing/patient.page?patientId="+patientId);
+                            }
+                            else{
+                                tempData.put("link", "/openmrs/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
+                            }
+
+                            allPatients.add(tempData);
+                        }
+                        return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return new ArrayList<>();
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
 	public int getTotalPtsWithLastPickupRegimen(String startDate, String endDate) {
 		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		Connection con = null;
+		
 		try {
 			con = Database.connectionPool.getConnection();
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
@@ -513,14 +643,16 @@ public class PharmacyDao {
 			
 			StringBuilder queryString = new StringBuilder(
 			        " SELECT COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
-			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " + "	 WHERE  "
+			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id "
+			                + "	 WHERE  "
 			                + " dqr_pharmacy.regimen > 0 "
 			                + "     AND dqr_pharmacy.pickupdate= (  SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
-			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id "
-			                + "	 HAVING MAX(pickupdate) <=? )  ");
+			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id AND (lastpickup.pickupdate BETWEEN ? AND ?) "
+			                + "	  )  ");
 			
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
+			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
 			rs.next();
@@ -534,6 +666,69 @@ public class PharmacyDao {
 		finally {
 			Database.cleanUp(rs, stmt, con);
 		}
+	}
+	
+	public List<Map<String,String>>  getAllPtsWithLastPickupNoRegimen(String startDate, String endDate) {
+		
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            Connection con = null;
+            List<Map<String, String>> allPatients = new ArrayList<>();
+            try {
+                    con = Database.connectionPool.getConnection();
+                    //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                    //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                    StringBuilder queryString = new StringBuilder(
+                            " SELECT IFNULL(encounter.encounter_id, 0) AS encounter_id, encounter.encounter_datetime, dqr_meta.patient_id, person_name.given_name, person_name.family_name, patient_identifier.identifier FROM dqr_meta "
+                                    +" JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " +
+                                    "	JOIN person_name ON person_name.person_id=dqr_meta.patient_id " +
+                                    "	LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "
+                                  +"	JOIN encounter ON encounter.encounter_id=dqr_pharmacy.encounter_id " 
+                                    
+                                    + "	 WHERE  "
+                                    + " (dqr_pharmacy.regimen < 0 OR dqr_pharmacy.regimen IS NULL) "
+                                    + "     AND dqr_pharmacy.pickupdate= (  SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
+                                    + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id "
+                                    + "	 AND (lastpickup.pickupdate BETWEEN ? AND ?) )  ");
+
+                    int i = 1;
+                    stmt = con.prepareStatement(queryString.toString());
+                    stmt.setString(i++, startDate);
+                    stmt.setString(i++, endDate);
+                    rs = stmt.executeQuery();
+                    while (rs.next()) {
+
+                            int encounterId = rs.getInt("encounter_id");
+                            String patientId = rs.getString("patient_id");
+                            String patientIdentifier = rs.getString("identifier");
+                            String firstName = rs.getString("given_name");
+                            String lastName = rs.getString("family_name");
+                            Map<String, String> tempData = new HashMap<>();
+                            tempData.put("patientId", patientId);
+                            tempData.put("patientIdentifier", patientIdentifier);
+                            tempData.put("firstName", firstName);
+                            tempData.put("lastName", lastName);
+                            if(encounterId == 0)
+                            {
+                                tempData.put("link", "/openmrs/coreapps/clinicianfacing/patient.page?patientId="+patientId);
+                            }
+                            else{
+                                tempData.put("link", "/openmrs/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
+                            }
+
+                            allPatients.add(tempData);
+                        }
+                        return allPatients;
+            }
+            catch (SQLException ex) {
+                    Database.handleException(ex);
+                    return new ArrayList<>();
+            }
+            finally {
+                    Database.cleanUp(rs, stmt, con);
+            }
 	}
 	
 	public int getTotalPtsWithLastPickupQtyLessThan180(String startDate, String endDate) {
@@ -549,14 +744,15 @@ public class PharmacyDao {
 			
 			StringBuilder queryString = new StringBuilder(
 			        " SELECT COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
-			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " + "	 WHERE  "
+			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id "
+			                + "	 WHERE  "
 			                + " dqr_pharmacy.days_refill <= 180 "
 			                + "     AND dqr_pharmacy.pickupdate= (  SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
-			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id "
-			                + "	 HAVING MAX(pickupdate) <=? )  ");
+			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id AND lastpickup.pickupdate BETWEEN ? AND ? )  ");
 			
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
+			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
 			rs.next();
@@ -572,11 +768,74 @@ public class PharmacyDao {
 		}
 	}
 	
+	public List<Map<String,String>> getAllPtsWithLastPickupQtyMoreThan180(String startDate, String endDate) {
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+                 List<Map<String, String>> allPatients = new ArrayList<>();
+		try {
+			con = Database.connectionPool.getConnection();
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			StringBuilder queryString = new StringBuilder(
+			        " SELECT IFNULL(encounter.encounter_id, 0) AS encounter_id, encounter.encounter_datetime, dqr_meta.patient_id, person_name.given_name, person_name.family_name, patient_identifier.identifier FROM dqr_meta "
+			        +"	JOIN person_name ON person_name.person_id=dqr_meta.patient_id " +
+                                "	LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 " 
+                                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " 
+                                +"	JOIN encounter ON encounter.encounter_id=dqr_pharmacy.encounter_id " 
+                                + "	 WHERE  "
+                                + " (dqr_pharmacy.days_refill > 180 OR dqr_pharmacy.days_refill IS NULL)"
+                                + "     AND dqr_pharmacy.pickupdate= (  SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
+                                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id AND  lastpickup.pickupdate BETWEEN ? AND ? )   group by dqr_meta.patient_id ");
+			
+			int i = 1;
+			stmt = con.prepareStatement(queryString.toString());
+			stmt.setString(i++, startDate);
+                        stmt.setString(i++, endDate);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+
+                            int encounterId = rs.getInt("encounter_id");
+                            String patientId = rs.getString("patient_id");
+                            String patientIdentifier = rs.getString("identifier");
+                            String firstName = rs.getString("given_name");
+                            String lastName = rs.getString("family_name");
+                            Map<String, String> tempData = new HashMap<>();
+                            tempData.put("patientId", patientId);
+                            tempData.put("patientIdentifier", patientIdentifier);
+                            tempData.put("firstName", firstName);
+                            tempData.put("lastName", lastName);
+                            if(encounterId == 0)
+                            {
+                                tempData.put("link", "/openmrs/coreapps/clinicianfacing/patient.page?patientId="+patientId);
+                            }
+                            else{
+                                tempData.put("link", "/openmrs/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
+                            }
+
+                            allPatients.add(tempData);
+                        }
+                        return allPatients;
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return new ArrayList<>();
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
 	public int getTotalPtsWithLastPick(String startDate, String endDate) {
 		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		Connection con = null;
+                List<Map<String, String>> allPatients = new ArrayList<>();
 		try {
 			con = Database.connectionPool.getConnection();
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
@@ -587,12 +846,13 @@ public class PharmacyDao {
 			        " SELECT COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
 			                + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " + "	 WHERE  "
 			                + "  dqr_pharmacy.pickupdate= (  SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
-			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id "
-			                + "	 HAVING MAX(pickupdate) <=? )  ");
+			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id  AND lastpickup.pickupdate BETWEEN ? AND ?"
+			                + "	 )  ");
 			
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
-			stmt.setString(i++, endDate);
+			stmt.setString(i++, startDate);
+                        stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
 			rs.next();
 			int totalCount = rs.getInt("count");

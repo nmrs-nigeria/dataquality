@@ -129,8 +129,8 @@ public class TbFragmentController {
             String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
             String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 
-            int totalEvaluatedWithGeneXpertThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "genexpert");
-            int totalEvaluatedWithGeneXpertBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "genexpert");
+            int totalEvaluatedWithGeneXpertThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "genexpert", 0);
+            int totalEvaluatedWithGeneXpertBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "genexpert", 0);
             //int adultsTestedPositive = htsDao.getAllAdultPatientsTestedPositieForHIV(startDate, endDate);
 
             Map<String, String> dataMap = new HashMap<>();
@@ -149,8 +149,8 @@ public class TbFragmentController {
             String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
             String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 
-            int totalDiagnosedWithGeneXpertThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "genexpert");
-            int totalDiagnosedWithGeneXpertBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "genexpert");
+            int totalDiagnosedWithGeneXpertThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "genexpert", 1);
+            int totalDiagnosedWithGeneXpertBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "genexpert", 1);
             //int adultsTestedPositive = htsDao.getAllAdultPatientsTestedPositieForHIV(startDate, endDate);
 
             Map<String, String> dataMap = new HashMap<>();
@@ -169,8 +169,8 @@ public class TbFragmentController {
         String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
         String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 
-        int totalEvaluatedWithChestXRayThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "chestxray");
-        int totalEvaluatedWithChestXRayBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "chestxray");
+        int totalEvaluatedWithChestXRayThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "chestxray", 0);
+        int totalEvaluatedWithChestXRayBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "chestxray", 0);
         //int adultsTestedPositive = htsDao.getAllAdultPatientsTestedPositieForHIV(startDate, endDate);
 
         Map<String, String> dataMap = new HashMap<>();
@@ -189,8 +189,8 @@ public class TbFragmentController {
             String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
             String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 
-            int totalDiagnosedWithChestXRayThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "chestxray");
-            int totalDiagnosedWithChestXRayBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "chestxray");
+            int totalDiagnosedWithChestXRayThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "chestxray", 1);
+            int totalDiagnosedWithChestXRayBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "chestxray", 1);
             //int adultsTestedPositive = htsDao.getAllAdultPatientsTestedPositieForHIV(startDate, endDate);
 
             Map<String, String> dataMap = new HashMap<>();
@@ -209,8 +209,8 @@ public class TbFragmentController {
         String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
         String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 
-        int totalEvaluatedWithCultureThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "culture");
-        int totalEvaluatedWithCultureBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "culture");
+        int totalEvaluatedWithCultureThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "culture", 0);
+        int totalEvaluatedWithCultureBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "culture", 0);
         //int adultsTestedPositive = htsDao.getAllAdultPatientsTestedPositieForHIV(startDate, endDate);
 
         Map<String, String> dataMap = new HashMap<>();
@@ -229,8 +229,8 @@ public class TbFragmentController {
         String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
         String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 
-        int totalDiagnosedWithCultureThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "culture");
-        int totalDiagnosedWithCultureBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "culture");
+        int totalDiagnosedWithCultureThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "culture", 1);
+        int totalDiagnosedWithCultureBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "culture", 1);
         //int adultsTestedPositive = htsDao.getAllAdultPatientsTestedPositieForHIV(startDate, endDate);
 
         Map<String, String> dataMap = new HashMap<>();

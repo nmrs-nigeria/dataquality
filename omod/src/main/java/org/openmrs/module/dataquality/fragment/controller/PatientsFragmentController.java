@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.dataquality.fragment.controller;
 
+import org.openmrs.module.dataquality.api.dao.ClinicalDaoHelper;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
 import org.openmrs.ui.framework.annotation.SpringBean;
@@ -28,950 +29,660 @@ import org.joda.time.DateTime;
 import org.openmrs.module.dataquality.Constants;
 //import org.openmrs.module.dataquality.api.CohortBuilder;
 import org.openmrs.module.dataquality.api.DataqualityService;
+import org.openmrs.module.dataquality.api.dao.LabDao;
+import org.openmrs.module.dataquality.api.dao.PharmacyDao;
 
 public class PatientsFragmentController {
 	
 	DataqualityService dataQualityService = Context.getService(DataqualityService.class);
 	
+	ClinicalDaoHelper clinicalDaoHelper = new ClinicalDaoHelper();
+	
+	PharmacyDao pharmacyDao = new PharmacyDao();
+	
+	LabDao labDao = new LabDao();
+	
 	public void controller(FragmentModel model, HttpServletRequest request) {
 		
-        int type = Integer.parseInt(request.getParameter("type"));
-        DateTime endDateTime = new DateTime(new Date());
-	DateTime startDateTime = endDateTime.minusMonths(6);
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-        String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-        
-         
-        if(type == Constants.ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT)
-        {
-           
-           List<Object> data = dataQualityService.getActivePatientsWithoutDocumentedEducationalStatus();
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of all active patients without a documented educational status ");
-            //return totalActiveWithDocEducationalStatus+"";
-        }
-        else if(type == Constants.ACTIVE_DOCUMENTED_MARITAL_STATUS_COHORT)
-        {
-            System.out.println("2");
-             List<Object> data = dataQualityService.getActivePatientsWithoutDocumentedMaritalStatus();
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of all active patients without a documented marital status ");
-           
-        }
-        else if(type == Constants.ACTIVE_DOCUMENTED_OCCUPATIONAL_STATUS_COHORT)
-        {
-            System.out.println("3");
-            List<Object> data = dataQualityService.getActivePatientsWithoutDocumentedOccupationalStatus();
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of all active patients without a documented occupational status ");
-           
-        }
-        else if(type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DOB)
-        {
-            System.out.println("4");
-            List<Object> data = dataQualityService.getPatientsWithoutDocumentedDob(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               String patientIdentifier = dataObject[1].toString();
-               String firstName = dataObject[2].toString();
-               String lastName = dataObject[3].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-              
-               tempData.put("link", "/registrationapp/editSection.page?patientId="+patientId+"&sectionId=demographics&appId=referenceapplication.registrationapp.registerPatient");
-               
-               
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of patients newly started on ART in the last 6 months without documented age and/or Date of Birth ");
-           
-            
-        }   
-        else if(type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_SEX)
-        {
-            System.out.println("5");
-            List<Object> data = dataQualityService.getPatientsWithoutDocumentedGender(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               String patientIdentifier = dataObject[1].toString();
-               String firstName = dataObject[2].toString();
-               String lastName = dataObject[3].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-              
-               tempData.put("link", "/registrationapp/editSection.page?patientId="+patientId+"&sectionId=demographics&appId=referenceapplication.registrationapp.registerPatient");
-               
-               
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of patients newly started on ART in the last 6 months without documented gender ");
-           
-            
-        }
-        else if(type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DATECONFIRMED_POSITIVE)
-        {
-            System.out.println("6");
-           List<Object> data = dataQualityService.getPatientsWithoutDocumentedPostiveDate(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-              
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of patients newly started on ART in the last 6 months without documented date of HIV diagnosis ");
-            
-        }
-        else if(type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_HIVENROLLMENT)
-        {
-            System.out.println("7");
-            List<Object> data = dataQualityService.getPatientsWithoutDocumentedHIVEnrollment(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               //int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[1].toString();
-               String firstName = dataObject[2].toString();
-               String lastName = dataObject[3].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-              // tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-              
-              tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of patients newly started on ART in the last 6 months without documented  HIV Enrollment ");
-            
-            
-        }
-
-        else if(type == Constants.DOCUMENTED_ART_START_DATE_ARV_PICKUP_COHORT)
-        {
-            System.out.println("8");
-            Map<String, String>dataMap = new HashMap<>();
-            
-            int numerator = dataQualityService.getPatientsWhoPickARVCount(startDate, endDate);//CohortBuilder.getPatientsWhoPickARVCount(startDate, endDate);
-            int denominator = dataQualityService.getPatientsOnARTCount(startDate, endDate);//CohortBuilder.getPatientsOnARTCount(startDate, endDate);
-            
-        }        
-        
-        else if(type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_CD4_COUNT)
-        {
-            System.out.println("9");
-             List<Object> data = dataQualityService.getPatientsWithoutDocCd4Cnt(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               //int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[1].toString();
-               String firstName = dataObject[2].toString();
-               String lastName = dataObject[3].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-              // tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-              
-              tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               
-               
-               patientData.add(tempData);
-           } 
-           model.addAttribute("data", patientData); 
-           model.addAttribute("title", "Proportion of patients newly started on ART in the last 6 months without documented  CD4 Count");
-            
-           
-        }  
-        else if(type == Constants.NEWLY_STARTED_ON_ART_WITH_DOCUMENTED_LGA)
-        {
-            System.out.println("10");
-            List<Object> data = dataQualityService.getPatientsWithoutDocumentedAddress(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               String patientIdentifier = dataObject[1].toString();
-               String firstName = dataObject[2].toString();
-               String lastName = dataObject[3].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-              
-               tempData.put("link", "/registrationapp/editSection.page?patientId="+patientId+"&sectionId=contactInfo&appId=referenceapplication.registrationapp.registerPatient");
-               
-               
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of patients newly started on ART in the last 6 months without registered address/LGA of residence ");
-           
-            
-        }  
-        else if(type == Constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WEIGH)
-        {
-            System.out.println("11");
-            List<Object> data = dataQualityService.getPtsWithClinicalVisitNoDocWeight(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-              
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of patients with a clinic visit in the last 6 months that had no documented weight ");
-           
-            
-            
-        }  
-        else if(type == Constants.PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC)
-        {
-            System.out.println("12");
-           System.out.println("11");
-            List<Object> data = dataQualityService.getPtsWithClinicalVisitNoDocMUAC(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-              
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-        
-           model.addAttribute("title", "Proportion of pediatric patients with a clinic visit in the last 6 months that had no documented MUAC  ");
-            
-        } 
-
-        else if(type == Constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WHO)
-        {
-            System.out.println("13");
-            List<Object> data = dataQualityService.getPtsWithClinicalVisitNoDocWHO(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of patients with a clinic visit in the last 6 months that had no documented WHO clinical stage");
-            
-            
-            
-        } 
-        
-        else if(type == Constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_TB_STATUS)
-        {
-            System.out.println("14");
-            List<Object> data = dataQualityService.getPtsWithClinicalVisitNoDocTBStatus(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of patients with a clinic visit in the last 6 months that had no documented TB status");
-            
-            
-        } 
-        else if(type == Constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION)
-        {
-            System.out.println("15");
-            List<Object> data = dataQualityService.getPtsWithDocLastARVPickupWithoutDurationCount();
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of patients without a documented ART regimen duration in the last drug refill visit");
-            
-            
-        } 
-        else if(type == Constants.LAST_ARV_PHARMACY_PICKUP_WITH_QUANTITY)
-        {
-            System.out.println("16");
-            List<Object> data = dataQualityService.getPtsWithDocLastARVPickupWithoutQtyCount();
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of patients without a documented ART regimen quantity in the last drug refill visit");
-            
-            
-        } 
-        else if(type == Constants.LAST_ARV_PHARMACY_PICKUP_WITH_REGIMEN)
-        {
-            System.out.println("17");
-            List<Object> data = dataQualityService.getPtsWithDocLastARVPickupWithoutDurationCount();
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           model.addAttribute("title", "Proportion of patients without documented ART regimen in the last drug refill visit");
-            
-        } 
-        else if(type == Constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION_MORETHAN180DAYS)
-        {
-            System.out.println("18");
-            List<Object> data = dataQualityService.getPtsWithDocLastARVPickupWithDurationMoreThan180();
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           model.addAttribute("title", "Proportion of patients with ART regimen duration  more than six(6) months in the last drug refill visit");
-            
-        } 
-        
-        else if(type == Constants.VIRAL_LOAD_ELIGIBLE_WITH_DOCUMENTED_RESULT)
-        {
-            System.out.println("19");
-            List<Object> data = dataQualityService.getPtsEligibleForVLWithoutResult();
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = 0;//Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[1].toString();
-               String firstName = dataObject[2].toString();
-               String lastName = dataObject[3].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           model.addAttribute("title", "Proportion of eligible patients without documented Viral Load results done in the last one year");
-            
-            
-        } 
-        
-        else if(type == Constants.VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE)
-        {
-            System.out.println("20");
-            List<Object> data = dataQualityService.getPtsEligibleForVLWithoutSampleCollection();
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           model.addAttribute("title", "Proportion of patients with Viral Load result that had no documented specimen collection date ");
-            
-           
-        } 
-        else if(type == Constants.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR)
-        {
-            System.out.println("21");
-            List<Object> data = dataQualityService.getPtsEligibleForVLWithoutSampleReceived();
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = 0;//Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[1].toString();
-               String firstName = dataObject[2].toString();
-               String lastName = dataObject[3].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           model.addAttribute("title", "Proportion of patients with Viral Load result that had no documented specimen collection date ");
-            
-           
-        } 
-        else if(type == Constants.CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS)
-        {
-            System.out.println("22");
-            List<Object> data = dataQualityService.getPtsWithClinicalVisitNoFunctionalStatus(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of patients with a clinic visit in the last 6 months that had no documented functional status");
-            
-           
-        } 
-        
-        else if(type == Constants.STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN)
-        {
-            System.out.println("23");
-             List<Object> data = dataQualityService.getPtsOnArtWithNoInitialRegimen(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of patients newly started on ART in the last 6 months without initial ART regimen");
-            
-           
-            
-        } 
-        
-        else if(type == Constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE)
-        {
-            System.out.println("24");
-           List<Object> data = dataQualityService.getPtsWithClinicalVisitNoNextAppDate(startDate, endDate);
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               if(encounterId == 0)
-               {
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               }
-               else{
-                   tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               }
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of all patients with a clinic visit in the last 6 months that have no documented next scheduled appointment date");
-            
-           
-            
-        }
-        
-        else if(type == Constants.DOCUMENTED_EXIT_REASON_INACTIVE_COHORT)
-        {
-            System.out.println("25");
-           
-           List<Object> data = dataQualityService.getInactivePtsWithoutReasonCount();
-           
-           List<Map<String, String>> patientData = new ArrayList<>();
-           
-           for(int i=0; i<data.size(); i++)
-           {
-               //Map<String, Object> d = (HashMap<String, Object>)data.get(i);
-               Object[] dataObject = (Object[]) data.get(i);
-               String patientId = dataObject[0].toString();
-               int encounterId = Integer.parseInt(dataObject[1].toString());
-               String patientIdentifier = dataObject[2].toString();
-               String firstName = dataObject[3].toString();
-               String lastName = dataObject[4].toString();
-               Map<String, String> tempData = new HashMap<>();
-               tempData.put("patientId", patientId);
-               tempData.put("encounterId", encounterId+"");
-               tempData.put("patientIdentifier", patientIdentifier);
-               tempData.put("firstName", firstName);
-               tempData.put("lastName", lastName);
-               //if(encounterId == 0)
-               //{
-                   tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
-               //}
-               //else{
-                 //  tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
-               //}
-               
-               patientData.add(tempData);
-           }
-            
-           model.addAttribute("data", patientData);
-           
-           model.addAttribute("title", "Proportion of all inactive patients without a documented exit reason");
-            
-           
-            
-        }
-        
-	model.addAttribute("constants", Constants.class);
+		int type = Integer.parseInt(request.getParameter("type"));
+		DateTime endDateTime = new DateTime(new Date());
+		DateTime startDateTime = endDateTime.minusYears(100);
+		String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+		String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 		
-    }
+		model.addAttribute("type", type);
+		if (type == Constants.ACTIVE_DOCUMENTED_EDUCATIONAL_STATUS_COHORT) {
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+			} else {
+				
+				startDateTime = new DateTime("1990-01-01");
+				endDateTime = new DateTime(new Date());
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper.getActivePtsWithoutWithEducationalStatus(startDate,
+			    endDate);
+			model.addAttribute("data", patientData);
+			
+			model.addAttribute("title", "Active patients without a documented educational status ");
+			//return totalActiveWithDocEducationalStatus+"";
+		} else if (type == Constants.ACTIVE_DOCUMENTED_MARITAL_STATUS_COHORT) {
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+			} else {
+				
+				startDateTime = new DateTime("1990-01-01");
+				endDateTime = new DateTime(new Date());
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper.getActivePtsWithoutMaritalStatus(startDate, endDate);
+			model.addAttribute("data", patientData);
+			model.addAttribute("title", "Active patients without a documented marital status ");
+			
+		} else if (type == Constants.ACTIVE_DOCUMENTED_OCCUPATIONAL_STATUS_COHORT) {
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+			} else {
+				
+				startDateTime = new DateTime("1990-01-01");
+				endDateTime = new DateTime(new Date());
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			List<Map<String, String>> patientData = clinicalDaoHelper
+			        .getActivePtsWithoutOccupationStatus(startDate, endDate);
+			model.addAttribute("data", patientData);
+			
+			model.addAttribute("data", patientData);
+			
+			model.addAttribute("title", "Active patients without a documented occupational status ");
+			
+		} else if (type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DOB) {
+			
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " without documented age and/or Date of Birth ";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months without documented age and/or Date of Birth ";
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper.getPtsStartedOnARTWithoutDocDob(startDate, endDate);
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			
+			model.addAttribute("data", patientData);
+			
+			model.addAttribute("title", title);
+			
+		} else if (type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_SEX) {
+			System.out.println("5");
+			
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " without without a documented gender  ";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months without a documented gender  ";
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper.getPtsStartedOnARTWithoutDocGender(startDate, endDate);
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			
+			model.addAttribute("data", patientData);
+			
+			model.addAttribute("title", title);
+		} else if (type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_DATECONFIRMED_POSITIVE) {
+			
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " without without a documented date of HIV diagnosis   ";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months without a documented date of HIV diagnosis   ";
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper.getPtsStartedOnARTWithoutDocHIVDiagnosisDate(
+			    startDate, endDate);
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			
+			model.addAttribute("data", patientData);
+			
+			model.addAttribute("title", title);
+			
+		} else if (type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_HIVENROLLMENT) {
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " without  a documented  HIV Enrollment  ";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months without a documented  HIV Enrollment  ";
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper.getPtsStartedOnARTWithoutDocHIVEnrollmentDate(
+			    startDate, endDate);
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			
+			model.addAttribute("data", patientData);
+			
+			model.addAttribute("title", title);
+			
+		}
+		
+		else if (type == Constants.DOCUMENTED_ART_START_DATE_ARV_PICKUP_COHORT) {
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " without a documented Drug pickup ";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months without a documented Drug pickup  ";
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper
+			        .getPtsStartedOnARTWithDocDrugPickup(startDate, endDate);
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			
+			model.addAttribute("data", patientData);
+			
+			model.addAttribute("title", title);
+		} else if (type == Constants.STARTED_ART_LAST_6MONTHS_DOCUMENTED_CD4_COUNT) {
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " without documented  CD4 Count";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months without documented  CD4 Count ";
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			System.out.println(startDate);
+			System.out.println(endDate);
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper.getPtsStartedOnARTWithDocCd4(startDate, endDate);
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			model.addAttribute("data", patientData);
+			model.addAttribute("title", title);
+			
+		} else if (type == Constants.NEWLY_STARTED_ON_ART_WITH_DOCUMENTED_LGA) {
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " without a registered address/LGA of residence  ";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months without a without registered address/LGA of residence  ";
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper
+			        .getPtsStartedOnARTWithoutDocAddress(startDate, endDate);
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			
+			model.addAttribute("data", patientData);
+			
+			model.addAttribute("title", title);
+			
+		} else if (type == Constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WEIGH) {
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " that had no documented weight  ";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months that had no documented weight  ";
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper.getPtsWithClinicVisitWithoutDocWeight(startDate,
+			    endDate);
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			model.addAttribute("data", patientData);
+			model.addAttribute("title", title);
+			
+		} else if (type == Constants.PEDIATRIC_CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_MUAC) {
+			
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " that had no documented MUAC  ";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months that had no documented MUAC  ";
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper
+			        .getPtsWithClinicVisitWithoutDocMuac(startDate, endDate);
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			model.addAttribute("data", patientData);
+			model.addAttribute("title", title);
+			
+		}
+		
+		else if (type == Constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_WHO) {
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " that had no documented WHO clinical stage  ";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months that had no documented WHO clinical stage  ";
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper.getPtsWithClinicVisitWithoutDocStaging(startDate,
+			    endDate);
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			model.addAttribute("data", patientData);
+			model.addAttribute("title", title);
+		}
+		
+		else if (type == Constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_TB_STATUS) {
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " that had no documented TB status ";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months that had no documented TB status  ";
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper.getPtsWithClinicVisitWithoutDocTBStatus(startDate,
+			    endDate);
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			model.addAttribute("data", patientData);
+			model.addAttribute("title", title);
+			
+		} else if (type == Constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION) {
+			System.out.println("15");
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				model.addAttribute("title",
+				    "Proportion of patients without a documented ART regimen duration in the last drug refill visit");
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = new DateTime("1990-01-01");
+				model.addAttribute("title",
+				    "Proportion of patients without a documented ART regimen duration in the last drug refill visit");
+			}
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			List<Map<String, String>> patientData = pharmacyDao.getAllPtsWithoutLastPickupDuration(startDate, endDate);
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			model.addAttribute("data", patientData);
+			
+		} else if (type == Constants.LAST_ARV_PHARMACY_PICKUP_WITH_QUANTITY) {
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				model.addAttribute("title",
+				    "Proportion of patients without a documented ART regimen quantity in the last drug refill visit as at "
+				            + endDate);
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = new DateTime("1990-01-01");
+				model.addAttribute("title",
+				    "Proportion of patients without a documented ART regimen quantity in the last drug refill visit");
+			}
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			List<Map<String, String>> patientData = pharmacyDao.getAllPtsWithoutLastPickupQuantity(startDate, endDate);
+			model.addAttribute("data", patientData);
+			
+		} else if (type == Constants.LAST_ARV_PHARMACY_PICKUP_WITH_REGIMEN) {
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				model.addAttribute("title",
+				    "Proportion of patients without documented ART regimen in the last drug refill visit as at " + endDate);
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = new DateTime("1990-01-01");
+				model.addAttribute("title",
+				    "Proportion of patients without documented ART regimen in the last drug refill visit");
+			}
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			List<Map<String, String>> patientData = pharmacyDao.getAllPtsWithLastPickupNoRegimen(startDate, endDate);
+			model.addAttribute("data", patientData);
+			
+		} else if (type == Constants.LAST_ARV_PHARMACY_PICKUP_WITH_DURATION_MORETHAN180DAYS) {
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				model.addAttribute("title",
+				    "Proportion of patients with ART regimen duration  more than six(6) months in the last drug refill visit between "
+				            + startDate + " and " + endDate);
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = new DateTime("1990-01-01");
+				startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+				endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+				model.addAttribute("title",
+				    "Proportion of patients with ART regimen duration  more than six(6) months in the last drug refill visit");
+			}
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			List<Map<String, String>> patientData = pharmacyDao.getAllPtsWithLastPickupQtyMoreThan180(startDate, endDate);
+			model.addAttribute("data", patientData);
+			
+		}
+		
+		else if (type == Constants.VIRAL_LOAD_ELIGIBLE_WITH_DOCUMENTED_RESULT) {
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				model.addAttribute("title",
+				    "Proportion of eligible patients without documented Viral Load results done in the last one year ");
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = new DateTime("1990-01-01");
+				model.addAttribute("title",
+				    "Proportion of eligible patients without documented Viral Load results done in the last one year");
+			}
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			List<Map<String, String>> patientData = labDao.getAllPtsEligibleForVLWithoutResult(startDate, endDate);
+			model.addAttribute("data", patientData);
+			
+		}
+		
+		else if (type == Constants.VIRAL_LOAD_RESULT_WITH_SAMPLE_COLLECTION_DATE) {
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				model.addAttribute("title",
+				    "Proportion of patients with Viral Load result that had no documented specimen collection date between "
+				            + startDate + " and " + endDate);
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = new DateTime("1990-01-01");
+				model.addAttribute("title",
+				    "Proportion of patients with Viral Load result that had no documented specimen collection date ");
+			}
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			List<Map<String, String>> patientData = labDao.getAllPtsWithVlResultWithoutCollectionDate(startDate, endDate);
+			
+			model.addAttribute("data", patientData);
+			
+		} else if (type == Constants.SAMPLE_SENT_WITH_SAMPLE_RECEIVED_AT_PCR) {
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				model.addAttribute("title",
+				    "Proportion of patients with Viral Load result that had no documented date received at PCR lab date between "
+				            + startDate + " and " + endDate);
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = new DateTime("1990-01-01");
+				model.addAttribute("title",
+				    "Proportion of patients with Viral Load result that had no documented date received at PCR lab ");
+			}
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			//List<Map<String, String>> patientData = labDao.getAllPtsWithVlResultAndNoSampleSentDate(startDate, endDate);
+			
+			List<Map<String, String>> patientData = labDao.getAllPtsWithVlResultAndNoSampleReceivedDate(startDate, endDate);
+			model.addAttribute("data", patientData);
+			
+		} else if (type == Constants.CLINIC_VISIT_LAST_6MONTHS_WITH_FUNCTIONAL_STATUS) {
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " that had no documented functional status ";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months that had no documented functional status  ";
+			}
+			
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper.getPtsWithClinicVisitWithoutDocFunctionalStatus(
+			    startDate, endDate);
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			model.addAttribute("data", patientData);
+			model.addAttribute("title", title);
+			
+		}
+		
+		else if (type == Constants.STARTED_ART_LAST_6MONTHS_WITH_INITIAL_REGIMEN) {
+			System.out.println("23");
+			
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				title = "Proportion of patients newly started on ART between " + startDate + " and " + endDate
+				        + " without initial ART regimen ";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months without initial ART regimen ";
+			}
+			List<Map<String, String>> patientData = clinicalDaoHelper.getPtsStartedOnARTWithoutInitialRegimen(startDate,
+			    endDate);
+			model.addAttribute("data", patientData);
+			model.addAttribute("title", title);
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			
+		}
+		
+		else if (type == Constants.CLINIC_VISIT_LAST_6MONTHS_DOCUMENTED_NEXT_APPOINTMENT_DATE) {
+			String title = "";
+			
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				title = "Proportion of patients  started on ART in between " + startDate + " and " + endDate
+				        + " that had no documented next scheduled appointment date";
+			} else {
+				endDateTime = new DateTime(new Date());
+				startDateTime = endDateTime.minusMonths(6);
+				title = "Proportion of patients newly started on ART in the last 6 months that had no documented next scheduled appointment date ";
+			}
+			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+			List<Map<String, String>> patientData = clinicalDaoHelper
+			        .getPtsWithClinicVisitDocNextAppDate(startDate, endDate);
+			
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+			model.addAttribute("data", patientData);
+			model.addAttribute("title", title);
+			
+		}
+		
+		else if (type == Constants.DOCUMENTED_EXIT_REASON_INACTIVE_COHORT) {
+			if (request.getParameter("startDate") != null && !request.getParameter("startDate").equalsIgnoreCase("")) {
+				startDateTime = new DateTime(request.getParameter("startDate"));
+				endDateTime = new DateTime(request.getParameter("endDate"));
+				model.addAttribute("title", "Proportion of all inactive patients without a documented exit reason ");
+			} else {
+				startDateTime = new DateTime(new Date());
+				endDateTime = new DateTime("1990-01-01");
+				model.addAttribute("title", "Proportion of all inactive patients without a documented exit reason ");
+			}
+			
+			List<Map<String, String>> patientData = clinicalDaoHelper.getInactiveActivePtsWithDocReason(startDate, endDate);
+			model.addAttribute("data", patientData);
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+		}
+		
+		model.addAttribute("constants", Constants.class);
+		
+	}
 }

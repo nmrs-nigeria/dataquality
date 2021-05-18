@@ -88,8 +88,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime(new Date());
         }
         
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsWithEducationalStatus = clinicalDao.getNoActivePtsWithWithEducationalStatus(startDate, endDate);
         int totalActivePatients = clinicalDao.getNoActivePts(startDate, endDate);
@@ -117,8 +117,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime(new Date());
         }
         
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsWithMaritalStatus = clinicalDao.getNoActivePtsWithWithMaritalStatus(startDate, endDate);
         int totalActivePatients = clinicalDao.getNoActivePts(startDate, endDate);
@@ -147,8 +147,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime(new Date());
         }
         
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsWithOccupationalStatus = clinicalDao.getNoActivePtsWithWithOccupationalStatus(startDate, endDate);
         int totalActivePatients = clinicalDao.getNoActivePts(startDate, endDate);
@@ -175,8 +175,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsStartedOnArtWithDob = clinicalDao.getPtsStartedOnARTWithDocDob(startDate, endDate);
         int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
@@ -202,8 +202,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsStartedOnArtWithGender = clinicalDao.getPtsStartedOnARTWithDocGender(startDate, endDate);
         int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
@@ -229,8 +229,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsStartedOnArtWithAddress = clinicalDao.getPtsStartedOnARTWithDocAddress(startDate, endDate);
         int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
@@ -256,8 +256,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsStartedOnArtWithHivDiagnosisDate = clinicalDao.getPtsStartedOnARTWithDocHIVDiagnosisDate(startDate, endDate);
         int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
@@ -282,8 +282,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsStartedOnArtWithHivEnrollmentDate = clinicalDao.getPtsStartedOnARTWithDocHIVEnrollmentDate(startDate, endDate);
         int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
@@ -310,8 +310,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsStartedOnArtWithDrugPickup = clinicalDao.getPtsStartedOnARTWithDocDrugPickup(startDate, endDate);
         int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
@@ -337,8 +337,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsStartedOnArtWithCd4 = clinicalDao.getPtsStartedOnARTWithDocCd4(startDate, endDate);
         int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
@@ -365,8 +365,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsClinicVisitDocWeight = clinicalDao.getPtsWithClinicVisitDocWeight(startDate, endDate);
         int totalPtsClinicVisit = clinicalDao.getPtsWithClinicVisit(startDate, endDate);
@@ -392,8 +392,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsClinicVisitDocMuac = clinicalDao.getPtsWithClinicVisitDocMuac(startDate, endDate);
         int totalPtsClinicVisit = clinicalDao.getPedPtsWithClinicVisit(startDate, endDate);
@@ -419,8 +419,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsClinicVisitDocWhoStage = clinicalDao.getPtsWithClinicVisitDocWhoStage(startDate, endDate);
         int totalPtsClinicVisit = clinicalDao.getPtsWithClinicVisit(startDate, endDate);
@@ -446,8 +446,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsClinicVisitDocTBStatus = clinicalDao.getPtsWithClinicVisitDocTBStatus(startDate, endDate);
         int totalPtsClinicVisit = clinicalDao.getPtsWithClinicVisit(startDate, endDate);
@@ -473,8 +473,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsClinicVisitDocFunctionalStatus = clinicalDao.getPtsWithClinicVisitDocFunctionalStatusStatus(startDate, endDate);
         int totalPtsClinicVisit = clinicalDao.getPtsWithClinicVisit(startDate, endDate);
@@ -500,8 +500,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsStartedOnArtWithInitialRegimen = clinicalDao.getPtsStartedOnARTWithInitialRegimen(startDate, endDate);
         int totalPtsStartedOnArt = clinicalDao.getPtsStartedOnART(startDate, endDate);
@@ -526,8 +526,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsClinicVisitDocNextAppDate = clinicalDao.getPtsWithClinicVisitDocNextAppDate(startDate, endDate);
         int totalPtsClinicVisit = clinicalDao.getPtsWithClinicVisit(startDate, endDate);
@@ -553,8 +553,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalInactivePtsWithReason = clinicalDao.getInactiveActivePtsWithDocReason(startDate, endDate);
         int totalInactivePts = clinicalDao.getInactiveActivePts(startDate, endDate);
@@ -577,10 +577,11 @@ public class UsersFragmentController {
             endDateTime = new DateTime(request.getParameter("endDate"));
         }else{
             endDateTime = new DateTime();
-            startDateTime = endDateTime.minusMonths(6);
+            //startDateTime = endDateTime.minusMonths(6);
+            startDateTime = new DateTime("1990-01-01");
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPickupWithQuantity = pharmacyDao.getTotalPtsWithLastPickupQuantity(startDate, endDate);
         int totalPickup = pharmacyDao.getTotalPtsWithLastPick(startDate, endDate);
@@ -603,10 +604,11 @@ public class UsersFragmentController {
             endDateTime = new DateTime(request.getParameter("endDate"));
         }else{
             endDateTime = new DateTime();
-            startDateTime = endDateTime.minusMonths(6);
+            startDateTime = new DateTime("1990-01-01");
+            //startDateTime = endDateTime.minusMonths(6);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPickupWithDuration = pharmacyDao.getTotalPtsWithLastPickupDuration(startDate, endDate);
         int totalPickup = pharmacyDao.getTotalPtsWithLastPick(startDate, endDate);
@@ -628,10 +630,10 @@ public class UsersFragmentController {
             endDateTime = new DateTime(request.getParameter("endDate"));
         }else{
             endDateTime = new DateTime();
-            startDateTime = endDateTime.minusMonths(6);
+           startDateTime = new DateTime("1990-01-01");
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPickupWithRegimen = pharmacyDao.getTotalPtsWithLastPickupRegimen(startDate, endDate);
         int totalPickup = pharmacyDao.getTotalPtsWithLastPick(startDate, endDate);
@@ -655,10 +657,10 @@ public class UsersFragmentController {
             endDateTime = new DateTime(request.getParameter("endDate"));
         }else{
             endDateTime = new DateTime();
-            startDateTime = endDateTime.minusMonths(6);
+            startDateTime = new DateTime("1990-01-01");
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPickupWithQtyLessThan180 = pharmacyDao.getTotalPtsWithLastPickupQtyLessThan180(startDate, endDate);
         int totalPickup = pharmacyDao.getTotalPtsWithLastPick(startDate, endDate);
@@ -683,8 +685,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(12);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsEligibleForVlWithResult = labDao.getTotalPtsEligibleForVLWithResult(startDate, endDate);
         int totalPtsEligibleForVl = labDao.getTotalPtsEligibleForVL(startDate, endDate);
@@ -709,8 +711,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(12);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsWithVlResultAndSampleCollectionDate = labDao.getTotalPtsWithVlResultAndCollectionDate(startDate, endDate);
         int totalPtsWithResult = labDao.getTotalPtsWithVlResult(startDate, endDate);
@@ -735,8 +737,8 @@ public class UsersFragmentController {
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(12);
         }
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-	String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         int totalPtsWithVlResultAndReceivedDate = labDao.getTotalPtsWithVlResultAndSampleSentDate(startDate, endDate);
         int totalPtsWithResult = labDao.getTotalPtsWithVlResult(startDate, endDate);
@@ -753,8 +755,8 @@ public class UsersFragmentController {
         int type = Integer.parseInt(request.getParameter("type"));
         DateTime endDateTime = new DateTime(new Date());
 	DateTime startDateTime = endDateTime.minusMonths(6);
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-        String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+        String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
         
         if(type == Constants.TOTAL_ACTIVE_PATIENTS)

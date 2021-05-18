@@ -33,14 +33,14 @@ def id = config.id
                <input type="text" class="form-control date" id="startDate" name="startDate"/>
             </div>
             
-            <label class="col-sm-6 col-md-2 "><strong>Start Date</strong></label>
+            <label class="col-sm-6 col-md-2 "><strong>End Date</strong></label>
             <div class="col-sm-6 col-md-3" style="position:relative">
                <input type="text" class="form-control date" id="endDate" name="endDate"/>
             </div>
             
             
             <div class="col-sm-6 col-md-2">
-                <button class="button" id="filterCQI">Filter</button>
+                <button class="button" id="filterTB">Filter</button>
             </div>
         </div>
     </fieldset>
@@ -55,7 +55,7 @@ def id = config.id
                 <th>Newly diagnosed PLHIV and enrolled in care and treatment (first visit during the reporting period)</th>
                 <th> PLHIV on ART before the reporting period (follow up visits)</th>
                 <th>Total</th>
-                <!--<th></th>-->
+               <th></th>
             </tr>
         </thead>
         <tbody>
@@ -66,24 +66,25 @@ def id = config.id
                 <td id="enrolledBeforePeriod" class="loadingView">-</td>
                 <td id="totalEnrolled" class="loadingView">-</td>
                
-                <!--<td>
-                    <div class="panel panel-default">
+                <td>
+                   <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"> <span data-bind="label">Action</span>&nbsp;<span class="caret"></span>
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="1"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             <tr> 
                 <td># Screened (symptoms)</td>
@@ -91,7 +92,7 @@ def id = config.id
                 <td  id="enrolledBeforePeriodScreened" class="loadingView">-</td>
                 <td  id="totalEnrolledScreened" class="loadingView">-</td>
                
-                <!--<td>
+                <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
@@ -99,16 +100,17 @@ def id = config.id
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="2"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             <tr> 
                 <td># Presumptive TB</td>
@@ -116,7 +118,7 @@ def id = config.id
                 <td id="totalPresumptiveTBBeforePeriod" class="loadingView">-</td>
                 <td id="totalPresumptiveTB" class="loadingView">-</td>
                
-                <!--<td>
+                <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
@@ -124,16 +126,17 @@ def id = config.id
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                   
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="3"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             <tr> 
                 <td># Diagnosed TB (GeneXpert, CXR, clinical, others)</td>
@@ -141,7 +144,7 @@ def id = config.id
                 <td  id="totalConfirmedTBBeforePeriod" class="loadingView">-</td>
                 <td  id="totalConfirmedTB" class="loadingView">-</td>
                
-                <!--<td>
+                <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
@@ -149,16 +152,17 @@ def id = config.id
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                   
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="4"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             <tr> 
                 <td># GeneXpert evaluated </td>
@@ -166,7 +170,7 @@ def id = config.id
                 <td id="totalEvaluatedWithGeneXpertBeforePeriod" class="loadingView">-</td>
                 <td id="totalEvaluatedWithGeneXpert" class="loadingView">-</td>
                
-                <!--<td>
+                <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
@@ -174,16 +178,17 @@ def id = config.id
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                   
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="5"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             <tr> 
                 <td># GeneXpert diagnosed TB</td>
@@ -191,7 +196,7 @@ def id = config.id
                 <td id="totalDiagnosedWithGeneXpertBeforePeriod" class="loadingView">-</td>
                 <td id="totalDiagnosedWithGeneXpert" class="loadingView">-</td>
                
-                <!--<td>
+                <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
@@ -199,16 +204,17 @@ def id = config.id
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                   
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="6"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             <tr> 
                 <td># Chest x-ray evaluated </td>
@@ -216,24 +222,25 @@ def id = config.id
                 <td id="totalEvaluatedWithChestXRayBeforePeriod" class="loadingView">-</td>
                 <td id="totalEvaluatedWithChestXRay" class="loadingView">-</td>
                
-                <!--<td>
-                    <div class="panel panel-default">
+                <td>
+                   <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"> <span data-bind="label">Action</span>&nbsp;<span class="caret"></span>
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="7"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             <tr> 
                 <td># Chest x-ray diagnosed TB </td>
@@ -241,7 +248,7 @@ def id = config.id
                 <td  id="totalDiagnosedWithChestXRayBeforePeriod" class="loadingView">-</td>
                 <td  id="totalDiagnosedWithChestXRay" class="loadingView">-</td>
                
-                <!--<td>
+                <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
@@ -249,16 +256,17 @@ def id = config.id
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                   
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="8"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             <tr> 
                 <td># Clinically evaluated </td>
@@ -266,7 +274,7 @@ def id = config.id
                 <td  id="totalEvaluatedWithCultureBeforePeriod" class="loadingView">-</td>
                 <td  id="totalEvaluatedWithCulture" class="loadingView">-</td>
                
-                <!--<td>
+                <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
@@ -274,16 +282,17 @@ def id = config.id
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                   
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="9"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             <tr> 
                 <td># Clinically diagnosed TB</td>
@@ -291,24 +300,25 @@ def id = config.id
                 <td  id="totalDiagnosedWithCultureBeforePeriod" class="loadingView">-</td>
                 <td  id="totalDiagnosedWithCulture" class="loadingView">-</td>
                
-                <!--<td>
-                    <div class="panel panel-default">
+                <td>
+                   <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"> <span data-bind="label">Action</span>&nbsp;<span class="caret"></span>
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="10"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             <tr> 
                 <td># Commenced on TB treatment</td>
@@ -316,24 +326,25 @@ def id = config.id
                 <td id="totalPtsOnTBTreatmentBeforePeriod" class="loadingView">-</td>
                 <td id="totalPtsOnTBTreatment" class="loadingView">-</td>
                
-                <!--<td>
-                    <div class="panel panel-default">
+                <td>
+                   <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"> <span data-bind="label">Action</span>&nbsp;<span class="caret"></span>
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                   
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="11"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             <tr> 
                 <td># Eligible for TPT</td>
@@ -341,7 +352,7 @@ def id = config.id
                 <td id="totalEligibleForIPTBeforePeriod" class="loadingView">-</td>
                 <td id="totalEligibleForIPT" class="loadingView">-</td>
                
-               <!-- <td>
+               <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
@@ -349,16 +360,17 @@ def id = config.id
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                   
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="12"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             <tr> 
                 <td># Commenced on TPT</td>
@@ -366,7 +378,7 @@ def id = config.id
                 <td  id="totalStartedIPTBeforePeriod"  class="loadingView">-</td>
                 <td  id="totalStartedIPT"  class="loadingView">-</td>
                
-                <!--<td>
+                <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="btn-group">
@@ -374,16 +386,17 @@ def id = config.id
 
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                   
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="10">Details</a>
+                                    <li><a class="dropdown-item tbDetails" href="javascript:void(0);"  data-type="13"  >Details </a>
 
                                     </li>
+                                    
+                                    
                                    
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </td>-->
+                </td>
             </tr>
             
             
@@ -473,13 +486,19 @@ def id = config.id
       
       //ensure that the toggle button is closed
         
-        jq(".cqidetails").click(function(e){
-            var subSet = jq(this).attr("data-subset");
-            window.location = "cqidetail.page?subset="+subSet+"&startDate="+startDate+"&endDate="+endDate;
+        jq(".tbDetails").click(function(e){
+      
+            startDate = jq("#startDate").val();
+             endDate = jq("#endDate").val();
+            var type = jq(this).attr("data-type");
+            window.open("tbdetails.page?type="+type+"&startDate="+startDate+"&endDate="+endDate, "_blank");
         })
       
+        
+        
       
-        jq("#filterCQI").click(function(e){
+        jq("#filterTB").click(function(e){
+       
             currReportCount = 0;
             //show the progress area
             jq("#progressArea").removeClass("hidden");
