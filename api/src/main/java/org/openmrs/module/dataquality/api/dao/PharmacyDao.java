@@ -511,10 +511,10 @@ public class PharmacyDao {
                             tempData.put("lastName", lastName);
                             if(encounterId == 0)
                             {
-                                tempData.put("link", "/openmrs/coreapps/clinicianfacing/patient.page?patientId="+patientId);
+                                tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
                             }
                             else{
-                                tempData.put("link", "/openmrs/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
+                                tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
                             }
 
                             allPatients.add(tempData);
@@ -610,10 +610,10 @@ public class PharmacyDao {
                             tempData.put("lastName", lastName);
                             if(encounterId == 0)
                             {
-                                tempData.put("link", "/openmrs/coreapps/clinicianfacing/patient.page?patientId="+patientId);
+                                tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
                             }
                             else{
-                                tempData.put("link", "/openmrs/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
+                                tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
                             }
 
                             allPatients.add(tempData);
@@ -712,10 +712,10 @@ public class PharmacyDao {
                             tempData.put("lastName", lastName);
                             if(encounterId == 0)
                             {
-                                tempData.put("link", "/openmrs/coreapps/clinicianfacing/patient.page?patientId="+patientId);
+                                tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
                             }
                             else{
-                                tempData.put("link", "/openmrs/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
+                                tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
                             }
 
                             allPatients.add(tempData);
@@ -811,10 +811,10 @@ public class PharmacyDao {
                             tempData.put("lastName", lastName);
                             if(encounterId == 0)
                             {
-                                tempData.put("link", "/openmrs/coreapps/clinicianfacing/patient.page?patientId="+patientId);
+                                tempData.put("link", "/coreapps/clinicianfacing/patient.page?patientId="+patientId);
                             }
                             else{
-                                tempData.put("link", "/openmrs/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
+                                tempData.put("link", "/htmlformentryui/htmlform/editHtmlFormWithStandardUi.page?patientId="+patientId+"&encounterId="+encounterId+"");
                             }
 
                             allPatients.add(tempData);

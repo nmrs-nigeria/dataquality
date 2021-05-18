@@ -248,4 +248,35 @@ public class PatientDao {
 		}
 	}
 	
+	public String getGlobalProperty(String property) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection con = null;
+		
+		try {
+			con = Database.connectionPool.getConnection();
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+			
+			String query = "SELECT global_property.property_value FROM global_property WHERE property=?";
+			
+			int i = 1;
+			stmt = con.prepareStatement(query);
+			stmt.setString(i++, property);
+			rs = stmt.executeQuery();
+			rs.next();
+			
+			return rs.getString("property_value");
+			
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return "";
+			
+		}
+		finally {
+			Database.cleanUp(rs, stmt, con);
+		}
+	}
 }

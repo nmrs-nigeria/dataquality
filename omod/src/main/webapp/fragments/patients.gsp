@@ -62,7 +62,7 @@ ui.includeCss("dataquality", "myStyle.css")
                   <td>${ui.format(data.get(i).get("patientIdentifier"))}</td>  
                   <td>${ui.format(data.get(i).get("firstName"))}</td>  
                   <td>${ui.format(data.get(i).get("lastName"))}</td>
-                  <td><a href="${ui.format(data.get(i).get("link"))}" class="button" title="Fix issue">Fix Issue</a></td>  
+                  <td><a href="/<%= ui.contextPath();%>${ui.format(data.get(i).get("link"))}" class="button" title="Fix issue">Fix Issue</a></td>  
                   
                </tr>
            <% } %>

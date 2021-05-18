@@ -96,8 +96,9 @@ public class DataqualityActivator extends BaseModuleActivator {
                                     Context.setUserContext(Context.getUserContext());
                             }*/
                             //get the last date that the analysis was done. The very first analysis will take some time, but subsequent onces should not take long
-                            lastAnalysisDate = Context.getAdministrationService().getGlobalProperty("dqr_last_analysis_date");
-                            if(lastAnalysisDate == null)
+                            lastAnalysisDate = dao.getGlobalProperty("dqr_last_analysis_date");//Context.getAdministrationService().getGlobalProperty("dqr_last_analysis_date");
+                            System.out.println("Last analysis Date" + lastAnalysisDate);
+                            if(lastAnalysisDate == null || lastAnalysisDate.equalsIgnoreCase(""))
                             {
                                 lastAnalysisDate = "1990-01-01";
                                 UUID uuid = UUID.randomUUID();
@@ -105,7 +106,7 @@ public class DataqualityActivator extends BaseModuleActivator {
                                 patientDao.saveGlobalProperty("dqr_last_analysis_date", lastAnalysisDate, "Last time DQR Analysis was run", uuidAsString);
                                 
                             }
-                            lastAnalysisDate = "1990-01-01";
+                           // lastAnalysisDate = "1990-01-01";
                             System.out.println("Last analysis Date" + lastAnalysisDate);
                             System.out.println("Task Timer on Fixed Rate");
                             //get patient count
@@ -149,14 +150,15 @@ public class DataqualityActivator extends BaseModuleActivator {
                                     allIPTEncounters.clear();
                                     System.out.println("completed cycle " + i + "out of" + (totalPages - 1));
                             }
-                            System.out.println("completed");
                             
-                          
+                            
+                            
                             ///once complete, lets save last run date
                             DateTime today = new DateTime(new Date());
-                            String now = today.toString("yyyy'-'MM'-'dd");
+                            String now = today.toString("yyyy'-'MM'-'dd HH:mm");
                             Context.getAdministrationService().updateGlobalProperty("dqr_last_analysis_date", now);
                             Context.closeSession();
+                            System.out.println("completed");
                     };
 		};
 		t.scheduleAtFixedRate(tt, 5000, 10000);

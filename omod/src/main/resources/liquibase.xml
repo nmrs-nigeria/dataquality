@@ -65,7 +65,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="encounter_id" type="int" defaultValue="0"/>
-            <column name="vl_result" type="float">
+            <column name="vl_result" type="double">
                 <constraints nullable="true"/>
             </column>
              <column name="date_sample_sent" type="DATETIME">
