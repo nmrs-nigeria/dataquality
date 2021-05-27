@@ -39,7 +39,7 @@ public class PharmacyDao {
                                     "  FROM encounter " +
                                     "  LEFT JOIN obs refillobs ON refillobs.encounter_id=encounter.encounter_id AND refillobs.concept_id=159368 AND refillobs.voided=0 " +
                                     "  AND refillobs.obs_group_id IN (select obs_id from obs where concept_id=162240) " +
-                                    "  LEFT JOIN obs quantityobs ON quantityobs.encounter_id=encounter.encounter_id AND quantityobs.concept_id=160856 AND quantityobs.voided=0 " +                            
+                                    "  LEFT JOIN obs quantityobs ON quantityobs.encounter_id=encounter.encounter_id AND quantityobs.concept_id=1443 AND quantityobs.voided=0 " +                            
                                     "  AND quantityobs.obs_group_id IN (select obs_id from obs where concept_id=162240) " +
                                     " LEFT JOIN obs regimenlineobs ON regimenlineobs.encounter_id=encounter.encounter_id AND regimenlineobs.concept_id=165708"+ 
                                     " LEFT JOIN obs regimenobs ON regimenobs.encounter_id=encounter.encounter_id AND regimenobs.concept_id IN (164506, 164513, 165702, 164507, 164514, 165703)"+ 
@@ -590,11 +590,12 @@ public class PharmacyDao {
 			                + " (dqr_pharmacy.days_refill < 0 OR dqr_pharmacy.days_refill IS NULL  ) "
 			                + "     AND dqr_pharmacy.pickupdate= (  SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
 			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id "
-			                + "	 AND (lastpickup BETWEEN ? AND ? )  ) GROUP BY dqr_meta.patient_id ");
+			                + "	 AND (lastpickup.pickupdate BETWEEN ? AND ? )  ) GROUP BY dqr_meta.patient_id ");
 			
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
-			stmt.setString(i++, endDate);
+			stmt.setString(i++, startDate);
+                        stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 

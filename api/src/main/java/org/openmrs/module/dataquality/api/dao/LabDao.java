@@ -158,7 +158,6 @@ public class LabDao {
                     queryString.append(" GROUP BY dqr_pharmacy.patient_id ");
                     queryString.append(" HAVING lastpickup >=? ) ");
                     queryString.append(" pharmacy ON pharmacy.patient_id=dqr_meta.patient_id AND days_refill IS NOT NULL ");
-                    
                     queryString.append(" JOIN ( ");
                     queryString.append(" SELECT MIN(pickupdate) AS firstpickup, days_refill, patient_id FROM dqr_pharmacy ");
                     queryString.append(" GROUP BY dqr_pharmacy.patient_id ");
@@ -416,15 +415,15 @@ public class LabDao {
 
                     StringBuilder queryString = new StringBuilder("SELECT dqr_meta.patient_id, dqr_meta.dob, lab.first_vl, lab.vl_result, firstpharmacy.firstpickup, dqr_meta.gender, patient_identifier.identifier, art_start_date  FROM dqr_meta ");
                     queryString.append(" LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 ");
-                    queryString.append("JOIN ( ");
-                    queryString
-                            .append(" SELECT MIN(dqr_lab.sample_collection_date) AS first_vl, vl_result, patient_id FROM dqr_lab ");
-                    queryString.append("    WHERE vl_result IS NOT NULL ");
+                    queryString.append("JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.sample_collection_date= ( \n" +
+"			 SELECT MIN(dqr_lab.sample_collection_date) FROM dqr_lab first_lab\n" +
+"				where first_lab.patient_id=dqr_lab.patient_id " +
+"			)  ");
                     if(type == 1)
                     {
-                        queryString.append(" AND vl_result < 1000  ");
+                        queryString.append(" AND (vl_result IS NOT NULL AND vl_result < 1000  )");
                     }else{
-                        queryString.append(" AND vl_result >= 1000  ");
+                        queryString.append(" AND ( vl_result >= 1000 OR vl_result IS NULL )  ");
                     }
                     queryString.append( " GROUP BY patient_id ");
                     queryString.append(") lab ON lab.patient_id=dqr_meta.patient_id ");
@@ -489,9 +488,10 @@ public class LabDao {
 			        .append(" firstpharmacy ON firstpharmacy.patient_id=dqr_meta.patient_id AND firstpharmacy.days_refill IS NOT NULL ");
 			queryString.append("JOIN ( ");
 			queryString
-			        .append(" SELECT MIN(dqr_lab.sample_collection_date) AS first_vl, vl_result, patient_id FROM dqr_lab ");
-			queryString.append("    WHERE vl_result IS NOT NULL AND vl_result < 1000  GROUP BY patient_id ");
-			queryString.append(") lab ON lab.patient_id=dqr_meta.patient_id ");
+			        .append(" JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.sample_collection_date= ( "
+			                + "			 SELECT MIN(dqr_lab.sample_collection_date) FROM dqr_lab first_lab "
+			                + "				where first_lab.patient_id=dqr_lab.patient_id "
+			                + "			)  AND vl_result IS NOT NULL AND vl_result < 1000");
 			queryString
 			        .append(" WHERE dqr_meta.art_start_date BETWEEN ? AND ? AND TIMESTAMPDIFF(YEAR, dqr_meta.dob, CURDATE()) < 15 ");
 			int i = 1;

@@ -250,7 +250,7 @@ public class HTSDao {
 			        " select count(distinct dqr_clients.patient_id) AS count from dqr_clients ");
 			queryString.append(" JOIN encounter ON dqr_clients.encounter_id=encounter.encounter_id ");
 			queryString.append(" JOIN dqr_meta ON dqr_clients.patient_id=dqr_meta.patient_id ");
-			queryString.append(" where  encounter.encounter_datetime BETWEEN ? AND ? and lastresult='positive' ");
+			queryString.append(" where  encounter.encounter_datetime BETWEEN ? AND ?  ");
 			queryString.append(" AND TIMESTAMPDIFF(YEAR, dqr_meta.dob, encounter.encounter_datetime) <15 ");
 			
 			int i = 1;
@@ -286,20 +286,24 @@ public class HTSDao {
 			
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 			
-			StringBuilder queryString = new StringBuilder("select  count( distinct person.person_id) AS count FROM person ");
+			/*StringBuilder queryString = new StringBuilder("select  count( distinct person.person_id) AS count FROM person ");
 			queryString.append(" JOIN encounter ON encounter.form_id=? AND encounter.patient_id=person.person_id ");
-			queryString
-			        .append(" JOIN obs ON obs.concept_id=165843 AND obs.person_id=person.person_id AND obs.value_coded=703");
+			queryString.append(" JOIN obs ON obs.concept_id=165843 AND obs.person_id=person.person_id AND obs.voided=0 ");
 			queryString.append(" WHERE encounter.encounter_datetime BETWEEN ? AND ? ");
 			queryString
-			        .append("AND TIMESTAMPDIFF(YEAR,person.birthdate, encounter.encounter_datetime) >= 0 AND TIMESTAMPDIFF(YEAR,person.birthdate,encounter.encounter_datetime) <15 AND person.voided=0 ");
-			
+			        .append("AND TIMESTAMPDIFF(YEAR,person.birthdate, encounter.encounter_datetime) >= 0 AND TIMESTAMPDIFF(YEAR,person.birthdate,encounter.encounter_datetime) <15 AND person.voided=0 AND obs.value_coded=703 ");
+			*/
+			StringBuilder queryString = new StringBuilder(
+			        "select count(distinct dqr_clients.patient_id) AS count from dqr_clients ");
+			queryString.append(" JOIN encounter ON dqr_clients.encounter_id=encounter.encounter_id ");
+			queryString.append(" JOIN dqr_meta ON dqr_clients.patient_id=dqr_meta.patient_id ");
+			queryString.append(" where  encounter.encounter_datetime BETWEEN ? AND ? and lastresult='positive'  ");
+			queryString.append(" AND TIMESTAMPDIFF(YEAR, dqr_meta.dob, CURDATE()) < 15 ");
 			int i = 1;
 			//DateTime now = new DateTime(new Date());
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			
-			stmt.setInt(i++, Constants.CLIENT_INTAKE_FORM);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();

@@ -315,7 +315,14 @@ public class ARTDao {
 			
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 			
-			StringBuilder queryString = new StringBuilder("select count(DIStinct patient_id ) AS count FROM dqr_meta  ");
+			StringBuilder queryString = new StringBuilder(
+			        "select count(DINSTINCT dqr_meta.patient_id ) AS count FROM dqr_meta  ");
+			queryString.append(" JOIN ( ");
+			queryString.append("  SELECT MIN(pickupdate) AS firstpickup, days_refill, patient_id FROM dqr_pharmacy ");
+			queryString
+			        .append(" GROUP BY dqr_pharmacy.patient_id "
+			                + "  )     "
+			                + " firstpharmacy ON firstpharmacy.patient_id=dqr_meta.patient_id AND firstpharmacy.days_refill IS NOT NULL ");
 			queryString.append(" WHERE art_start_date IS NOT NULL AND ( art_start_date BETWEEN ? AND ? ) ");
 			queryString.append(" AND TIMESTAMPDIFF(YEAR,dqr_meta.dob, art_start_date) <15 ");
 			int i = 1;

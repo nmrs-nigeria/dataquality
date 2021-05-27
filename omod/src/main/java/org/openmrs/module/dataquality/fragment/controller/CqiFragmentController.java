@@ -48,8 +48,8 @@ public class CqiFragmentController {
                 //Database.initConnection();
                
                 System.out.println("start date time"+startDateTime);
-		String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-		String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+		String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+		String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 		
 		int adultsTested = htsDao.getAllAdultPatientsTestedForHIV(startDate, endDate);
 		//int adultsTestedPositive = htsDao.getAllAdultPatientsTestedPositieForHIV(startDate, endDate);
@@ -69,8 +69,8 @@ public class CqiFragmentController {
 		DateTime endDateTime = new DateTime(request.getParameter("endDate"));
                 //Database.initConnection();
                
-		String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-		String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+		String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+		String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 		
 		int pedsTested = htsDao.getAllPedPatientsTestedForHIV(startDate, endDate);
 		//int pedsTestedPositive = htsDao.getAllPedPatientsTestedPositiveForHIV(startDate, endDate);
@@ -89,8 +89,8 @@ public class CqiFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int adultsStartedOnArt = artDao.getAdultsStartedOnArt(startDate, endDate);
 
@@ -106,8 +106,8 @@ public class CqiFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int pedsStartedOnArt = artDao.getPedsStartedOnArt(startDate, endDate);
 
@@ -122,8 +122,8 @@ public class CqiFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalPatientsReceiving = artDao.getNoPatientsReceivingARV(startDate, endDate);
 
@@ -138,8 +138,8 @@ public class CqiFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalPtsVL6Months = artDao.getARVPtsWithVLRequest6Months(startDate, endDate);
 
@@ -154,8 +154,8 @@ public class CqiFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalPtsVL7Months = artDao.getARVPtsWithVLRequest7Months(startDate, endDate);
 
@@ -165,13 +165,13 @@ public class CqiFragmentController {
 	}
 	
 	//percentage of pts with first suppresset vl
-	public String getPtsWithSuppressedFirstVl(HttpServletRequest request) {
+	public String getPtsWithSuppressedFirstVl(HttpServletRequest request){
             DateTime startDateTime = new DateTime(request.getParameter("startDate"));
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
             System.out.println("starting to");
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalPtsWithSuppressedVl = labDao.getTotalPtsWithSuppressedFirstVl(startDate, endDate);
 
@@ -186,8 +186,8 @@ public class CqiFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
             System.out.println("starting to");
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalPtsWithSuppressedVl = labDao.getTotalPedPtsWithSuppressedFirstVl(startDate, endDate);
 
@@ -201,8 +201,8 @@ public class CqiFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalAdultPlhivOfferedIndexTesting = htsDao.getTotalAdultsOfferedIndexTesting(startDate, endDate);
             int totalAdultPlhiv = htsDao.getAllAdultPatientsTestedPositiveForHIV(startDate, endDate);
@@ -218,8 +218,8 @@ public class CqiFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalPedPlhivOfferedIndexTesting = htsDao.getTotalPedsOfferedIndexTesting(startDate, endDate);
             int totalPedPlhiv = htsDao.getAllPedPatientsTestedPositiveForHIV(startDate, endDate);
@@ -235,8 +235,8 @@ public class CqiFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalPtsWithMissedAppointment = pharmacyDao.getPtsWithMissedAppointment(startDate, endDate);
             int totalPtsWithAppointment = pharmacyDao.getPtsWithAppointment(startDate, endDate);
@@ -252,8 +252,8 @@ public class CqiFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalPedPtsWithMissedAppointment = pharmacyDao.getPedPtsWithAppointment(startDate, endDate);
             int totalPedPtsWithAppointment = pharmacyDao.getPedPtsWithAppointment(startDate, endDate);

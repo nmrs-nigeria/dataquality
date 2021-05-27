@@ -160,6 +160,7 @@ public class CqidetailsFragmentController {
 		}
 		if (subSet == 11) {//peds started on art 
 			//lets get the data
+			System.out.println("this is type: " + type);
 			List<Map<String, String>> allPatients = labDao.getAllPedPtsWithSuppressedFirstVl(startDate, endDate, type);
 			model.addAttribute("title", "List of  Pediatric ART patients with a suppressed first viral load  ");
 			if (type == 2) {

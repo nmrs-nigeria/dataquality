@@ -52,7 +52,8 @@
             <column name="who_stage" type="varchar(244)" defaultValue="-" >
                 <constraints nullable="true"/>
             </column>
-            
+           
+
         </createTable>
         
         

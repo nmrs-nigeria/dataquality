@@ -44,8 +44,8 @@ public class TbFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalEnrolledThisPeriod = artDao.getPtsStartedOnArt(startDate, endDate, false);
             int totalEnrolledBeforePeriod = artDao.getPtsStartedOnArt(startDate, endDate, true);
@@ -66,8 +66,8 @@ public class TbFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalEnrolledThisPeriodScreened = labDao.getTotalScreenedPatients(startDate, endDate, false);
             int totalEnrolledBeforePeriodScreened = labDao.getTotalScreenedPatients(startDate, endDate, true);
@@ -86,8 +86,8 @@ public class TbFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalOnPresumptiveTBThisPeriod = labDao.getTotalPtsPresumptiveTb(startDate, endDate, false);
             int totalOnPresumptiveTBBeforePeriod = labDao.getTotalScreenedPatients(startDate, endDate, true);
@@ -106,8 +106,8 @@ public class TbFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalConfirmedTBThisPeriod = labDao.getTotalPtsConfirmedTb(startDate, endDate, false);
             int totalConfirmedTBBeforePeriod = labDao.getTotalPtsConfirmedTb(startDate, endDate, true);
@@ -126,8 +126,8 @@ public class TbFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalEvaluatedWithGeneXpertThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "genexpert", 0);
             int totalEvaluatedWithGeneXpertBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "genexpert", 0);
@@ -146,8 +146,8 @@ public class TbFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalDiagnosedWithGeneXpertThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "genexpert", 1);
             int totalDiagnosedWithGeneXpertBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "genexpert", 1);
@@ -166,8 +166,8 @@ public class TbFragmentController {
         DateTime endDateTime = new DateTime(request.getParameter("endDate"));
         //Database.initConnection();
 
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-        String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+        String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
         int totalEvaluatedWithChestXRayThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "chestxray", 0);
         int totalEvaluatedWithChestXRayBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "chestxray", 0);
@@ -186,8 +186,8 @@ public class TbFragmentController {
             DateTime endDateTime = new DateTime(request.getParameter("endDate"));
             //Database.initConnection();
 
-            String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-            String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+            String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+            String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
             int totalDiagnosedWithChestXRayThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "chestxray", 1);
             int totalDiagnosedWithChestXRayBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "chestxray", 1);
@@ -206,8 +206,8 @@ public class TbFragmentController {
         DateTime endDateTime = new DateTime(request.getParameter("endDate"));
         //Database.initConnection();
 
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-        String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+        String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
         int totalEvaluatedWithCultureThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "culture", 0);
         int totalEvaluatedWithCultureBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "culture", 0);
@@ -226,8 +226,8 @@ public class TbFragmentController {
         DateTime endDateTime = new DateTime(request.getParameter("endDate"));
         //Database.initConnection();
 
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-        String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+        String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
         int totalDiagnosedWithCultureThisPeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, false, "culture", 1);
         int totalDiagnosedWithCultureBeforePeriod = labDao.getTotalPtsDiagnoseddForTb(startDate, endDate, true, "culture", 1);
@@ -246,8 +246,8 @@ public class TbFragmentController {
         DateTime endDateTime = new DateTime(request.getParameter("endDate"));
         //Database.initConnection();
 
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-        String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+        String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
         int totalPtsOnTBTreatmentThisPeriod = labDao.getTotalPtsOnTbTreatment(startDate, endDate, false);
         int totalPtsOnTBTreatmentBeforePeriod = labDao.getTotalPtsOnTbTreatment(startDate, endDate, true);
@@ -265,8 +265,8 @@ public class TbFragmentController {
         DateTime endDateTime = new DateTime(request.getParameter("endDate"));
         //Database.initConnection();
 
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-        String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+        String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
         int totalEligibleForIPTThisPeriod = labDao.getTotalPtsEligibleForIPT(startDate, endDate, false);
         int totalEligibleForIPTBeforePeriod = labDao.getTotalPtsEligibleForIPT(startDate, endDate, true);
@@ -284,8 +284,8 @@ public class TbFragmentController {
         DateTime endDateTime = new DateTime(request.getParameter("endDate"));
         //Database.initConnection();
 
-        String startDate = startDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
-        String endDate = endDateTime.toString("yyyy'-'MM'-'dd' 'HH':'mm");
+        String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+        String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 
         int totalStartedIPTThisPeriod = labDao.getTotalPtsStartedOnIPT(startDate, endDate, false);
         int totalStartedIPTBeforePeriod = labDao.getTotalPtsStartedOnIPT(startDate, endDate, true);

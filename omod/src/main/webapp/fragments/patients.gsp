@@ -49,8 +49,8 @@ ui.includeCss("dataquality", "myStyle.css")
             <tr>
                 <th>S/N</th>
                 <th>ART No.</th>
-                <th>First Name</th>
-                <th>Last Name</th>
+                <!--<th>First Name</th>
+                <th>Last Name</th>-->
                 <th>Edit Record </th>
             </tr>
 
@@ -60,8 +60,8 @@ ui.includeCss("dataquality", "myStyle.css")
                <tr>
                    <td>${ui.format(i+1)}</td>
                   <td>${ui.format(data.get(i).get("patientIdentifier"))}</td>  
-                  <td>${ui.format(data.get(i).get("firstName"))}</td>  
-                  <td>${ui.format(data.get(i).get("lastName"))}</td>
+                  <!--<td>${ui.format(data.get(i).get("firstName"))}</td>  
+                  <td>${ui.format(data.get(i).get("lastName"))}</td>-->
                   <td><a href="/<%= ui.contextPath();%>${ui.format(data.get(i).get("link"))}" class="button" title="Fix issue">Fix Issue</a></td>  
                   
                </tr>

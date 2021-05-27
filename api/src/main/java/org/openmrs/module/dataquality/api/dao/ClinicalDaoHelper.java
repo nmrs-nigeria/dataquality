@@ -629,7 +629,7 @@ public class ClinicalDaoHelper {
                             "	LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 " +
                             "	WHERE dqr_meta.patient_id IN (SELECT dqr_clinicals.patient_id FROM dqr_clinicals " +
                             "	JOIN encounter ON encounter.encounter_id=dqr_clinicals.encounter_id " +
-                            "	WHERE  (dqr_clinicals.weight IS NULL) " +
+                            "	WHERE  (dqr_clinicals.weight IS NULL ) " +
                             "            AND encounter.encounter_datetime=(SELECT MAX(encounter_datetime) FROM encounter carecard  " +
                             "			WHERE carecard.patient_id=encounter.patient_id AND carecard.encounter_datetime BETWEEN ? AND ? )" +
                             "		)" +

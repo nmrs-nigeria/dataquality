@@ -197,8 +197,8 @@ def id = config.id
             </tr>
             
             <tr>
-                <td rowspan="7">2nd 95</td>
-                <td rowspan="7" >ART</td>
+                <td rowspan="5">2nd 95</td>
+                <td rowspan="5" >ART</td>
                 <td>Number of Adult patients started on Antiretroviral therapy (ART)</td>
                 <td id="adultsStartedOnArt" class="loadingView">-</td>
                 <td>-</td>
@@ -278,8 +278,68 @@ def id = config.id
                     </div>
                 </td>
             </tr>
+            <tr>
+                <td>Percentage of Paediatric patients with missed appointment</td>
+                <td id="totalPedPtsWithMissedAppointment" class="loadingView">-</td>
+                <td id="totalPedPtsWithAppointment" class="loadingView">-</td>
+                <td id="percentPedPtsAppointment" class="loadingView">-</td>
+                <td>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"> <span data-bind="label">Action</span>&nbsp;<span class="caret"></span>
+
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a class="dropdown-item getInformation" href="#" data-key="missed_app_ped"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
+
+                                    </li>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="13" data-type="1">View Numerator</a>
+
+                                    </li>
+                                   
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </td>
+            </tr>
             
+            
+            
+            <tr>
+                
+                <td>Percentage of patients with missed appointment</td>
+                <td id="totalPtsWithMissedAppointment" class="loadingView">-</td>
+                <td id="totalPtsWithAppointment" class="loadingView">-</td>
+                <td id="percentPtsAppointment" class="loadingView">-</td>
+                <td>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"> <span data-bind="label">Action</span>&nbsp;<span class="caret"></span>
+
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a class="dropdown-item getInformation" href="#" data-key="missed_app"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
+
+                                    </li>
+                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="12" data-type="1">View Numerator</a>
+
+                                    </li>
+                                    
+                                   
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </td>
+            </tr>
             <tr> 
+                <td rowspan="4">3rd 95</td>
+                <td rowspan="4" >Clinical Care</td>
                 <td>Percentage of monthly cohort ART new patients with a viral load (VL) request at six (6) months after commencing ART</td>
                 <td id="totalPtsVL6Months" class="loadingView">-</td>
                 <td id="totalPts6Months" class="loadingView">-</td>
@@ -308,6 +368,7 @@ def id = config.id
                     </div>
                 </td>
             </tr>
+            
             
             <tr> 
                 <td>Percentage of monthly cohort of new ART patients with a viral load (VL) result by month seven (7) after commencing ART</td>
@@ -399,63 +460,6 @@ def id = config.id
                    </td>
             </tr>
             
-            <tr>
-                <td rowspan="2">3rd 95</td>
-                <td rowspan="2" >Clinical Care</td>
-                <td>Percentage of patients with missed appointment</td>
-                <td id="totalPtsWithMissedAppointment" class="loadingView">-</td>
-                <td id="totalPtsWithAppointment" class="loadingView">-</td>
-                <td id="percentPtsAppointment" class="loadingView">-</td>
-                <td>
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"> <span data-bind="label">Action</span>&nbsp;<span class="caret"></span>
-
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a class="dropdown-item getInformation" href="#" data-key="missed_app"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
-
-                                    </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="12" data-type="1">View Numerator</a>
-
-                                    </li>
-                                    
-                                   
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </td>
-            </tr>
-            <tr>
-                <td>Percentage of Paediatric patients with missed appointment</td>
-                <td id="totalPedPtsWithMissedAppointment" class="loadingView">-</td>
-                <td id="totalPedPtsWithAppointment" class="loadingView">-</td>
-                <td id="percentPedPtsAppointment" class="loadingView">-</td>
-                <td>
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown"> <span data-bind="label">Action</span>&nbsp;<span class="caret"></span>
-
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a class="dropdown-item getInformation" href="#" data-key="missed_app_ped"  data-toggle="modal"  data-target="#descriptionModal">View Description </a>
-
-                                    </li>
-                                    <li><a class="dropdown-item cqidetails" href="javascript:void(0);" data-subset="13" data-type="1">View Numerator</a>
-
-                                    </li>
-                                   
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </td>
-            </tr>
                    
         </tbody>
         
