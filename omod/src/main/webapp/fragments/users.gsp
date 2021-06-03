@@ -474,11 +474,12 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsWithEducationalStatus = data["totalPtsWithEducationalStatus"];
              var totalActivePatients = data["totalActivePatients"];
-             var percent = ( totalPtsWithEducationalStatus/totalActivePatients * 100).toFixed(1);
+             var percent = (totalActivePatients > 0) ? ( totalPtsWithEducationalStatus/totalActivePatients * 100).toFixed(1) + "%" :"-";
 
              jq("#activePtsWithDocEduStat").html(totalPtsWithEducationalStatus);
              jq("#totalActivePatientsEdu").html(totalActivePatients);
-             jq("#percentEduStatus").html(percent+"%");
+             
+             jq("#percentEduStatus").html(percent);
             
 
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getActivePatientsWithDocumentMaritalStaus") }');
@@ -488,11 +489,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsWithMaritalStatus = data["totalPtsWithMaritalStatus"];
              var totalActivePatients = data["totalActivePatients"];
-             var percent = ( totalPtsWithMaritalStatus/totalActivePatients * 100).toFixed(1);
+             var percent = (totalActivePatients > 0) ? ( totalPtsWithMaritalStatus/totalActivePatients * 100).toFixed(1) + "%" : "-";
 
              jq("#activePtsWithDocMarStat").html(totalPtsWithMaritalStatus);
              jq("#totalActivePatientsMar").html(totalActivePatients);
-             jq("#percentMarStatus").html(percent+"%");
+             jq("#percentMarStatus").html(percent);
             
 
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getActivePatientsWithDocumentOccupationalStaus") }');
@@ -503,11 +504,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsWithOccupationalStatus = data["totalPtsWithOccupationalStatus"];
              var totalActivePatients = data["totalActivePatients"];
-             var percent = ( totalPtsWithOccupationalStatus/totalActivePatients * 100).toFixed(1);
+             var percent = (totalActivePatients > 0) ? ( totalPtsWithOccupationalStatus/totalActivePatients * 100).toFixed(1) + "%" : "-" ;
 
              jq("#activePtsWithDocOccuStatus").html(totalPtsWithOccupationalStatus);
              jq("#totalActivePatientsOccu").html(totalActivePatients);
-             jq("#percentOccuStatus").html(percent+"%");
+             jq("#percentOccuStatus").html(percent);
 
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocDob") }');
          })
@@ -517,11 +518,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsStartedOnArtWithDob = data["totalPtsStartedOnArtWithDob"];
              var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
-             var percent = ( totalPtsStartedOnArtWithDob/totalPtsStartedOnArt * 100).toFixed(1);
+             var percent = (totalPtsStartedOnArt > 0) ? ( totalPtsStartedOnArtWithDob/totalPtsStartedOnArt * 100).toFixed(1) + "%" : "-";
 
              jq("#startedOnArtWithDob").html(totalPtsStartedOnArtWithDob);
              jq("#totalStartedOnArtDob").html(totalPtsStartedOnArt);
-             jq("#percentStartedArtDob").html(percent+"%");
+             jq("#percentStartedArtDob").html(percent);
             
 
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocGender") }');
@@ -533,11 +534,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsStartedOnArtWithGender = data["totalPtsStartedOnArtWithGender"];
              var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
-             var percent = ( totalPtsStartedOnArtWithGender/totalPtsStartedOnArt * 100).toFixed(1);
+             var percent = (totalPtsStartedOnArt > 0) ? ( totalPtsStartedOnArtWithGender/totalPtsStartedOnArt * 100).toFixed(1) + "%" : "-";
 
              jq("#startedOnArtWithGender").html(totalPtsStartedOnArtWithGender);
              jq("#totalStartedOnArtGender").html(totalPtsStartedOnArt);
-             jq("#percentStartedArtGender").html(percent+"%");
+             jq("#percentStartedArtGender").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocAddress") }');
          })
@@ -547,11 +548,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsStartedOnArtWithAddress = data["totalPtsStartedOnArtWithAddress"];
              var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
-             var percent = ( totalPtsStartedOnArtWithAddress/totalPtsStartedOnArt * 100).toFixed(1);
+             var percent = (totalPtsStartedOnArt > 0) ? ( totalPtsStartedOnArtWithAddress/totalPtsStartedOnArt * 100).toFixed(1) + "%" : "-";
 
              jq("#startedOnArtWithAddress").html(totalPtsStartedOnArtWithAddress);
              jq("#totalStartedOnArtAddress").html(totalPtsStartedOnArt);
-             jq("#percentStartedArtAddress").html(percent+"%");
+             jq("#percentStartedArtAddress").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocHivDiagnosisDate") }');
          })
@@ -562,11 +563,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsStartedOnArtWithHivDiagnosisDate = data["totalPtsStartedOnArtWithHivDiagnosisDate"];
              var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
-             var percent = ( totalPtsStartedOnArtWithHivDiagnosisDate/totalPtsStartedOnArt * 100).toFixed(1);
+             var percent =  (totalPtsStartedOnArt > 0) ? ( totalPtsStartedOnArtWithHivDiagnosisDate/totalPtsStartedOnArt * 100).toFixed(1) +"%" : "-";
 
              jq("#startedOnArtWithDiagnosisDate").html(totalPtsStartedOnArtWithHivDiagnosisDate);
              jq("#totalStartedOnArtDiagnosisDate").html(totalPtsStartedOnArt);
-             jq("#percentStartedArtDiagnosisDate").html(percent+"%");
+             jq("#percentStartedArtDiagnosisDate").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocHivEnrollmentDate") }');
          })
@@ -576,11 +577,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsStartedOnArtWithHivEnrollmentDate = data["totalPtsStartedOnArtWithHivEnrollmentDate"];
              var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
-             var percent = ( totalPtsStartedOnArtWithHivEnrollmentDate/totalPtsStartedOnArt * 100).toFixed(1);
+             var percent = (totalPtsStartedOnArt > 0) ? ( totalPtsStartedOnArtWithHivEnrollmentDate/totalPtsStartedOnArt * 100).toFixed(1) +"%" : "-";
 
              jq("#startedOnArtWithEnrollmentDate").html(totalPtsStartedOnArtWithHivEnrollmentDate);
              jq("#totalStartedOnArtEnrollmentDate").html(totalPtsStartedOnArt);
-             jq("#percentStartedArtEnrollmentDate").html(percent+"%");
+             jq("#percentStartedArtEnrollmentDate").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocDrugPickup") }');
          })
@@ -590,11 +591,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsStartedOnArtWithDrugPickup = data["totalPtsStartedOnArtWithDrugPickup"];
              var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
-             var percent = ( totalPtsStartedOnArtWithDrugPickup/totalPtsStartedOnArt * 100).toFixed(1);
+             var percent = (totalPtsStartedOnArt > 0) ? ( totalPtsStartedOnArtWithDrugPickup/totalPtsStartedOnArt * 100).toFixed(1) : "-";
 
              jq("#startedOnArtWithDrugPickup").html(totalPtsStartedOnArtWithDrugPickup);
              jq("#totalStartedOnArtDrugPickup").html(totalPtsStartedOnArt);
-             jq("#percentStartedArtDrugPickup").html(percent+"%");
+             jq("#percentStartedArtDrugPickup").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithDocCd4") }');
          })
@@ -603,11 +604,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsStartedOnArtWithCd4 = data["totalPtsStartedOnArtWithCd4"];
              var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
-             var percent = ( totalPtsStartedOnArtWithCd4/totalPtsStartedOnArt * 100).toFixed(1);
+             var percent = (totalPtsStartedOnArt > 0) ? ( totalPtsStartedOnArtWithCd4/totalPtsStartedOnArt * 100).toFixed(1) +"%" : "-";
 
              jq("#startedOnArtWithCd4").html(totalPtsStartedOnArtWithCd4);
              jq("#totalStartedOnArtCd4").html(totalPtsStartedOnArt);
-             jq("#percentStartedArtCd4").html(percent+"%");
+             jq("#percentStartedArtCd4").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsClinicVisitDocWeight") }');
          })
@@ -617,11 +618,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsClinicVisitDocWeight = data["totalPtsClinicVisitDocWeight"];
              var totalPtsClinicVisit = data["totalPtsClinicVisit"];
-             var percent = ( totalPtsClinicVisitDocWeight/totalPtsClinicVisit * 100).toFixed(1);
+             var percent = (totalPtsClinicVisit > 0) ? ( totalPtsClinicVisitDocWeight/totalPtsClinicVisit * 100).toFixed(1) + "%": "-";
 
              jq("#clinicVisitWithWeight").html(totalPtsClinicVisitDocWeight);
              jq("#totalClinicVisitWeight").html(totalPtsClinicVisit);
-             jq("#percentClinicVisitWeight").html(percent+"%");
+             jq("#percentClinicVisitWeight").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsClinicVisitDocMuac") }');
          })
@@ -630,11 +631,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsClinicVisitDocMuac = data["totalPtsClinicVisitDocMuac"];
              var totalPtsClinicVisit = data["totalPtsClinicVisit"];
-             var percent = ( totalPtsClinicVisitDocMuac/totalPtsClinicVisit * 100).toFixed(1);
+             var percent = (totalPtsClinicVisit > 0) ?  ( totalPtsClinicVisitDocMuac/totalPtsClinicVisit * 100).toFixed(1) +"%" : "-";
 
              jq("#clinicVisitWithMuac").html(totalPtsClinicVisitDocMuac);
              jq("#totalClinicVisitMuac").html(totalPtsClinicVisit);
-             jq("#percentClinicVisitMuac").html(percent+"%");
+             jq("#percentClinicVisitMuac").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsClinicVisitDocWhoStage") }');
          })
@@ -644,11 +645,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsClinicVisitDocWhoStage = data["totalPtsClinicVisitDocWhoStage"];
              var totalPtsClinicVisit = data["totalPtsClinicVisit"];
-             var percent = ( totalPtsClinicVisitDocWhoStage/totalPtsClinicVisit * 100).toFixed(1);
+             var percent = (totalPtsClinicVisit > 0) ? ( totalPtsClinicVisitDocWhoStage/totalPtsClinicVisit * 100).toFixed(1) + "%" : "-";
 
              jq("#clinicVisitWithWho").html(totalPtsClinicVisitDocWhoStage);
              jq("#totalClinicVisitWho").html(totalPtsClinicVisit);
-             jq("#percentClinicVisitWho").html(percent+"%");
+             jq("#percentClinicVisitWho").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsClinicVisitDocTBStatus") }');
          })
@@ -657,11 +658,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsClinicVisitDocTBStatus = data["totalPtsClinicVisitDocTBStatus"];
              var totalPtsClinicVisit = data["totalPtsClinicVisit"];
-             var percent = ( totalPtsClinicVisitDocTBStatus/totalPtsClinicVisit * 100).toFixed(1);
+             var percent = (totalPtsClinicVisit > 0) ? ( totalPtsClinicVisitDocTBStatus/totalPtsClinicVisit * 100).toFixed(1) + "%" :"-";
 
              jq("#clinicVisitWithTBStatus").html(totalPtsClinicVisitDocTBStatus);
              jq("#totalClinicVisitTBStatus").html(totalPtsClinicVisit);
-             jq("#percentClinicVisitTBStatus").html(percent+"%");
+             jq("#percentClinicVisitTBStatus").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsClinicVisitDocFunctionalStatus") }');
          })
@@ -670,11 +671,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsClinicVisitDocFunctionalStatus = data["totalPtsClinicVisitDocFunctionalStatus"];
              var totalPtsClinicVisit = data["totalPtsClinicVisit"];
-             var percent = ( totalPtsClinicVisitDocFunctionalStatus/totalPtsClinicVisit * 100).toFixed(1);
+             var percent = (totalPtsClinicVisit > 0) ? ( totalPtsClinicVisitDocFunctionalStatus/totalPtsClinicVisit * 100).toFixed(1) + "%" : "-";
 
              jq("#clinicVisitWithFunctionalStatus").html(totalPtsClinicVisitDocFunctionalStatus);
              jq("#totalClinicVisitFunctionalStatus").html(totalPtsClinicVisit);
-             jq("#percentClinicVisitFunctionalStatus").html(percent+"%");
+             jq("#percentClinicVisitFunctionalStatus").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsStartedOnARTWithInitialRegimen") }');
          })
@@ -684,11 +685,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsStartedOnArtWithInitialRegimen = data["totalPtsStartedOnArtWithInitialRegimen"];
              var totalPtsStartedOnArt = data["totalPtsStartedOnArt"];
-             var percent = ( totalPtsStartedOnArtWithInitialRegimen/totalPtsStartedOnArt * 100).toFixed(1);
+             var percent = (totalPtsStartedOnArt > 0) ? ( totalPtsStartedOnArtWithInitialRegimen/totalPtsStartedOnArt * 100).toFixed(1) + "%" : "-";
 
              jq("#startedOnArtWithInitialRegimen").html(totalPtsStartedOnArtWithInitialRegimen);
              jq("#totalStartedOnArtInitialRegimen").html(totalPtsStartedOnArt);
-             jq("#percentStartedArtInitialRegimen").html(percent+"%");
+             jq("#percentStartedArtInitialRegimen").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsClinicVisitDocNextAppDate") }');
          })
@@ -697,11 +698,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsClinicVisitDocNextAppDate = data["totalPtsClinicVisitDocNextAppDate"];
              var totalPtsClinicVisit = data["totalPtsClinicVisit"];
-             var percent = ( totalPtsClinicVisitDocNextAppDate/totalPtsClinicVisit * 100).toFixed(1);
+             var percent = (totalPtsClinicVisit > 0) ?  ( totalPtsClinicVisitDocNextAppDate/totalPtsClinicVisit * 100).toFixed(1) + "%" : "-";
 
              jq("#clinicVisitWithNextAppDate").html(totalPtsClinicVisitDocNextAppDate);
              jq("#totalClinicVisitNextAppDate").html(totalPtsClinicVisit);
-             jq("#percentClinicVisitNextAppDate").html(percent+"%");
+             jq("#percentClinicVisitNextAppDate").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getInactivePtsWithDocReason") }');
          })
@@ -710,11 +711,11 @@ def id = config.id
              var data = JSON.parse(response);
              var totalInactivePtsWithReason = data["totalInactivePtsWithReason"];
              var totalInactivePts = data["totalInactivePts"];
-             var percent = ( totalInactivePtsWithReason/totalInactivePts * 100).toFixed(1);
+             var percent = (totalInactivePts > 0) ? ( totalInactivePtsWithReason/totalInactivePts * 100).toFixed(1) + "%" : "-";
 
              jq("#totalInactiveDocReason").html(totalInactivePtsWithReason);
              jq("#totalInactive").html(totalInactivePts);
-             jq("#percentInactiveDocReason").html(percent+"%");
+             jq("#percentInactiveDocReason").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsWithDrugQuantity") }');
          })
@@ -723,10 +724,10 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPickupWithQuantity = data["totalPickupWithQuantity"];
              var totalPickup = data["totalPickup"];
-             var percent = ( totalPickupWithQuantity/totalPickup * 100).toFixed(1);
+             var percent = (totalPickup > 0) ?  ( totalPickupWithQuantity/totalPickup * 100).toFixed(1) +"%" : "-";
              jq("#totalPickupWithQty").html(totalPickupWithQuantity);
              jq("#totalPickupQty").html(totalPickup);
-             jq("#percentagePickupQty").html(percent+"%");
+             jq("#percentagePickupQty").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsWithDrugDuration") }');
          }).then(function(response){
@@ -734,10 +735,10 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPickupWithDuration = data["totalPickupWithDuration"];
              var totalPickup = data["totalPickup"];
-             var percent = ( totalPickupWithDuration/totalPickup * 100).toFixed(1);
+             var percent = (totalPickup > 0) ? ( totalPickupWithDuration/totalPickup * 100).toFixed(1) + "%":"-";
              jq("#totalPickupWithDuration").html(totalPickupWithDuration);
              jq("#totalPickupDuration").html(totalPickup);
-             jq("#percentagePickupDuration").html(percent+"%");
+             jq("#percentagePickupDuration").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsWithDrugRegimen") }');
          })
@@ -746,10 +747,10 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPickupWithRegimen = data["totalPickupWithRegimen"];
              var totalPickup = data["totalPickup"];
-             var percent = ( totalPickupWithRegimen/totalPickup * 100).toFixed(1);
+             var percent = (totalPickup > 0) ? ( totalPickupWithRegimen/totalPickup * 100).toFixed(1) + "%" : "-";
              jq("#totalPickupWithRegimen").html(totalPickupWithRegimen);
              jq("#totalPickupRegimen").html(totalPickup);
-             jq("#percentagePickupRegimen").html(percent+"%");
+             jq("#percentagePickupRegimen").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsWithDrugPickupQtyLessThan180") }');
          })
@@ -759,10 +760,10 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPickupWithQtyLessThan180 = data["totalPickupWithQtyLessThan180"];
              var totalPickup = data["totalPickup"];
-             var percent = ( totalPickupWithQtyLessThan180/totalPickup * 100).toFixed(1);
+             var percent = (totalPickup > 0) ? ( totalPickupWithQtyLessThan180/totalPickup * 100).toFixed(1) + "%" : "-";
              jq("#totalPickupWithQty180").html(totalPickupWithQtyLessThan180);
              jq("#totalPickupQty180").html(totalPickup);
-             jq("#percentagePickupQty180").html(percent+"%");
+             jq("#percentagePickupQty180").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsEligibleForVLWithResult") }');
          })
@@ -772,10 +773,10 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsEligibleForVlWithResult = data["totalPtsEligibleForVlWithResult"];
              var totalPtsEligibleForVl = data["totalPtsEligibleForVl"];
-             var percent = ( totalPtsEligibleForVlWithResult/totalPtsEligibleForVl * 100).toFixed(1);
+             var percent = (totalPtsEligibleForVl > 0) ? ( totalPtsEligibleForVlWithResult/totalPtsEligibleForVl * 100).toFixed(1) + "%" : "-";
              jq("#totalEligibleWithResult").html(totalPtsEligibleForVlWithResult);
              jq("#totalEligibleResult").html(totalPtsEligibleForVl);
-             jq("#percentEligibleResult").html(percent+"%");
+             jq("#percentEligibleResult").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsWithResultAndSampleCollectionDate") }');
          })
@@ -785,10 +786,10 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsWithVlResultAndSampleCollectionDate = data["totalPtsWithVlResultAndSampleCollectionDate"];
              var totalPtsWithResult = data["totalPtsWithResult"];
-             var percent = ( totalPtsWithVlResultAndSampleCollectionDate/totalPtsWithResult * 100).toFixed(1);
+             var percent = (totalPtsWithResult > 0) ? ( totalPtsWithVlResultAndSampleCollectionDate/totalPtsWithResult * 100).toFixed(1) + "%" : "-";
              jq("#totalResultWithResultCollection").html(totalPtsWithVlResultAndSampleCollectionDate);
              jq("#totalResultCollection").html(totalPtsWithResult);
-             jq("#percentResultCollection").html(percent+"%");
+             jq("#percentResultCollection").html(percent);
              
              return  myAjax({startDate:startDate, endDate:endDate}, '${ ui.actionLink("getPtsWithResultAndSampleReceivedDate") }');
          })
@@ -797,7 +798,7 @@ def id = config.id
              var data = JSON.parse(response);
              var totalPtsWithVlResultAndReceivedDate = data["totalPtsWithVlResultAndReceivedDate"];
              var totalPtsWithResult = data["totalPtsWithResult"];
-             var percent = ( totalPtsWithVlResultAndReceivedDate/totalPtsWithResult * 100).toFixed(1);
+             var percent = (totalPtsWithResult > 0) ? ( totalPtsWithVlResultAndReceivedDate/totalPtsWithResult * 100).toFixed(1) + "%" :"-";
              jq("#totalResultWithResultSent").html(totalPtsWithVlResultAndReceivedDate);
              jq("#totalResultSent").html(totalPtsWithResult);
              jq("#percentResultSent").html(percent+"%");

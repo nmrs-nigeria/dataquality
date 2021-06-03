@@ -607,9 +607,9 @@ public class LabDao {
 			//stmt.setFetchSize(200);
 			if (allIPTEncounters.size() > 0) {
 				stmt.executeUpdate();
-				System.out.println("executing");
+				//System.out.println("executing");
 			} else {
-				System.out.println("nothign to execute");
+				//System.out.println("nothign to execute");
 			}
 			
 			return 1;
@@ -1803,12 +1803,24 @@ public class LabDao {
 			con = Database.connectionPool.getConnection();
 			
 			StringBuilder queryString = new StringBuilder(
-			        "select count(DISTINCT dqr_meta.patient_id ) AS count FROM dqr_meta  ");
-			queryString.append(" WHERE art_start_date <=? ");
+			        "select COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
+			                + " LEFT JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id "
+			                + "        AND dqr_lab.sample_collection_date=(SELECT MAX(sample_collection_date) FROM dqr_lab lastlab WHERE lastlab.patient_id=dqr_lab.patient_id "
+			                + "          HAVING MAX(sample_collection_date) <=? " + "   )"
+			                + "		JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id  WHERE   "
+			                + "	DATE_ADD(dqr_pharmacy.pickupdate,  INTERVAL (dqr_pharmacy.days_refill+28) DAY) >= ? "
+			                + "AND dqr_pharmacy.pickupdate= ( " + "	SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
+			                + "	WHERE lastpickup.patient_id=dqr_pharmacy.patient_id " + "	 HAVING MAX(pickupdate) <=? )  "
+			                + "	AND (dqr_meta.termination_status IS NULL OR dqr_meta.termination_status!=1066 )  "
+			                + "AND dqr_meta.art_start_date <= ? ");
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
 			
 			stmt.setString(i++, endDate);
+			stmt.setString(i++, endDate);
+			stmt.setString(i++, endDate);
+			stmt.setString(i++, startDate);//the patients must have been on art at least 6 months before the end date;
+			
 			rs = stmt.executeQuery();
 			
 			rs.next();
@@ -1824,7 +1836,7 @@ public class LabDao {
 		}
 	}
 	
-	public int getTotalPtsEligibleForVLWithResult(String startDate, String endDate) {
+	public int getTotalPtsEligibleForVLWithResult(String startDate, String aYearAgo, String endDate) {
 		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1833,16 +1845,24 @@ public class LabDao {
 			con = Database.connectionPool.getConnection();
 			
 			StringBuilder queryString = new StringBuilder(
-			        "select count(DISTINCT dqr_meta.patient_id ) AS count FROM dqr_meta  ");
-			queryString.append(" JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.vl_result IS NOT NULL ");
-			queryString.append(" JOIN encounter ON encounter.encounter_id=dqr_lab.encounter_id ");
-			queryString.append(" WHERE art_start_date <=? AND encounter.encounter_datetime BETWEEN ? AND ? ");
+			        "select COUNT(distinct dqr_meta.patient_id) AS count FROM dqr_meta "
+			                + " LEFT JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id "
+			                + "        AND dqr_lab.sample_collection_date=(SELECT MAX(sample_collection_date) FROM dqr_lab lastlab WHERE lastlab.patient_id=dqr_lab.patient_id "
+			                + "          HAVING MAX(sample_collection_date) >? " + "   )"
+			                + "		JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id  WHERE   "
+			                + "	DATE_ADD(dqr_pharmacy.pickupdate,  INTERVAL (dqr_pharmacy.days_refill+28) DAY) >= ? "
+			                + "AND dqr_pharmacy.pickupdate= ( " + "	SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
+			                + "	WHERE lastpickup.patient_id=dqr_pharmacy.patient_id " + "	 HAVING MAX(pickupdate) <=? )  "
+			                + "	AND (dqr_meta.termination_status IS NULL OR dqr_meta.termination_status!=1066 )  "
+			                + "AND dqr_meta.art_start_date <= ?  AND dqr_lab.vl_result IS  NOT NULL");
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
 			
+			stmt.setString(i++, aYearAgo);
 			stmt.setString(i++, endDate);
-			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
+			stmt.setString(i++, startDate);//the patients must have been on art at least 6 months before the end date;
+			
 			rs = stmt.executeQuery();
 			
 			rs.next();
@@ -1858,7 +1878,7 @@ public class LabDao {
 		}
 	}
 	
-	public List<Map<String,String>> getAllPtsEligibleForVLWithoutResult(String startDate, String endDate) {
+	public List<Map<String,String>> getAllPtsEligibleForVLWithoutResult(String startDate, String oneYearAgo, String endDate) {
 		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -1868,19 +1888,26 @@ public class LabDao {
 			con = Database.connectionPool.getConnection();
 			
 			StringBuilder queryString = new StringBuilder(
-			        "select IFNULL(encounter.encounter_id, 0) AS encounter_id, encounter.encounter_datetime, dqr_meta.patient_id, person_name.given_name, person_name.family_name, patient_identifier.identifier  FROM dqr_meta  "
+			        "select IFNULL(dqr_lab.encounter_id, 0) AS encounter_id,  dqr_meta.patient_id, person_name.given_name, person_name.family_name, patient_identifier.identifier  FROM dqr_meta  "
                           
-                            +"	LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 " 
-                               + "	JOIN person_name ON person_name.person_id=dqr_meta.patient_id " );
-                        queryString.append(" JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.vl_result IS  NULL ");
-			queryString.append(" JOIN encounter ON encounter.encounter_id=dqr_lab.encounter_id ");
-			queryString.append(" WHERE art_start_date <=? AND encounter.encounter_datetime BETWEEN ? AND ? GROUP BY dqr_meta.patient_id ");
+                                +" JOIN person_name ON person_name.person_id=dqr_meta.patient_id "
+                                        + "	LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 " 
+                                + "     LEFT JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id "
+                                + "        AND dqr_lab.sample_collection_date=(SELECT MAX(sample_collection_date) FROM dqr_lab lastlab WHERE lastlab.patient_id=dqr_lab.patient_id "
+                                + "          HAVING MAX(sample_collection_date) >? " + "   )"//greater than one year ago 
+                                + "		JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id  WHERE   "
+                                + "	DATE_ADD(dqr_pharmacy.pickupdate,  INTERVAL (dqr_pharmacy.days_refill+28) DAY) >= ? "
+                                + "AND dqr_pharmacy.pickupdate= ( " + "	SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
+                                + "	WHERE lastpickup.patient_id=dqr_pharmacy.patient_id " + "	 HAVING MAX(pickupdate) <=? )  "
+                                + "	AND (dqr_meta.termination_status IS NULL OR dqr_meta.termination_status!=1066 )  "
+                                + " AND dqr_meta.art_start_date <= ?  AND dqr_lab.vl_result IS   NULL GROUP BY dqr_meta.patient_id ");
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
 			
-			stmt.setString(i++, endDate);
+			stmt.setString(i++, oneYearAgo);
+                        stmt.setString(i++, endDate);
+                        stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
-			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 

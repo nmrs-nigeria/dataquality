@@ -528,18 +528,29 @@ public class PatientsFragmentController {
 				startDateTime = new DateTime(request.getParameter("startDate"));
 				endDateTime = new DateTime(request.getParameter("endDate"));
 				model.addAttribute("title",
-				    "Proportion of eligible patients without documented Viral Load results done in the last one year ");
+				    "Proportion of eligible patients without documented Viral Load results done between  " + startDate
+				            + " and " + endDate);
 			} else {
 				endDateTime = new DateTime(new Date());
-				startDateTime = new DateTime("1990-01-01");
+				startDateTime = endDateTime.minusMonths(12);
+				
 				model.addAttribute("title",
 				    "Proportion of eligible patients without documented Viral Load results done in the last one year");
 			}
+			
+			DateTime startDateTime2 = startDateTime.minusMinutes(12);
+			DateTime endDateTime2 = endDateTime.minusMonths(6);
+			
+			String startDate2 = startDateTime2.toString("yyyy'-'MM'-'dd");
+			String endDate2 = endDateTime2.toString("yyyy'-'MM'-'dd");
+			
 			startDate = startDateTime.toString("yyyy'-'MM'-'dd");
 			endDate = endDateTime.toString("yyyy'-'MM'-'dd");
 			model.addAttribute("startDate", startDate);
 			model.addAttribute("endDate", endDate);
-			List<Map<String, String>> patientData = labDao.getAllPtsEligibleForVLWithoutResult(startDate, endDate);
+			
+			List<Map<String, String>> patientData = labDao
+			        .getAllPtsEligibleForVLWithoutResult(endDate2, startDate2, endDate);
 			model.addAttribute("data", patientData);
 			
 		}

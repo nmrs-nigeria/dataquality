@@ -1077,7 +1077,7 @@ public class ClinicalDaoHelper {
                                 "	LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 " 
                                 + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id " + "	 WHERE  "
                                 + "	 DATE_ADD(dqr_pharmacy.pickupdate,  INTERVAL (dqr_pharmacy.days_refill+28) DAY) < ?  "
-                                + "	 AND (dqr_meta.termination_status IS NULL OR dqr_meta.termination_status!=1066 ) "
+                                + "	 AND (dqr_meta.termination_status IS NULL  ) "
                                 + "     AND dqr_pharmacy.pickupdate= (  SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
                                 + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id "
                                 + "	 HAVING MAX(pickupdate) <=? )   " );

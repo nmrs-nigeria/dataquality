@@ -65,6 +65,8 @@ public class DataqualityActivator extends BaseModuleActivator {
 	
 	public void started() {
 		Database.initConnection();
+                //sets set sql mode to no substitution 
+                Database.setSQLMode("NO_ENGINE_SUBSTITUTION");
 		System.out.println("started data quality module");
 		
 		log.info("Started Dataquality");
@@ -148,7 +150,7 @@ public class DataqualityActivator extends BaseModuleActivator {
                                     allPharmacyEncounters.clear();
                                     allClientIntakeEncounters.clear();
                                     allIPTEncounters.clear();
-                                    System.out.println("completed cycle " + i + "out of" + (totalPages - 1));
+                                    //System.out.println("completed cycle " + i + "out of" + (totalPages - 1));
                             }
                             
                             
@@ -158,7 +160,7 @@ public class DataqualityActivator extends BaseModuleActivator {
                             String now = today.toString("yyyy'-'MM'-'dd HH:mm");
                             Context.getAdministrationService().updateGlobalProperty("dqr_last_analysis_date", now);
                             Context.closeSession();
-                            System.out.println("completed");
+                            //System.out.println("completed");
                     };
 		};
 		t.scheduleAtFixedRate(tt, 5000, 10000);

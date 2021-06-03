@@ -677,10 +677,13 @@ public class UsersFragmentController {
        
         DateTime startDateTime;
         DateTime endDateTime;
+        DateTime startDateTime2;
+        DateTime endDateTime2;
         if(!request.getParameter("startDate").equalsIgnoreCase(""))
         {
             startDateTime = new DateTime(request.getParameter("startDate"));
             endDateTime = new DateTime(request.getParameter("endDate"));
+            
         }else{
             endDateTime = new DateTime();
             startDateTime = endDateTime.minusMonths(12);
@@ -688,8 +691,14 @@ public class UsersFragmentController {
         String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
 	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
-        int totalPtsEligibleForVlWithResult = labDao.getTotalPtsEligibleForVLWithResult(startDate, endDate);
-        int totalPtsEligibleForVl = labDao.getTotalPtsEligibleForVL(startDate, endDate);
+        startDateTime2 = startDateTime.minusMonths(12);
+        endDateTime2 = endDateTime.minusMonths(6);
+        
+        String startDate2 = startDateTime2.toString("yyyy'-'MM'-'dd");
+        String endDate2 = endDateTime2.toString("yyyy'-'MM'-'dd");
+        
+        int totalPtsEligibleForVlWithResult = labDao.getTotalPtsEligibleForVLWithResult(endDate2, startDate2, endDate);
+        int totalPtsEligibleForVl = labDao.getTotalPtsEligibleForVL(endDate2, endDate);
         
         Map<String, String> dataMap = new HashMap<>();
         
