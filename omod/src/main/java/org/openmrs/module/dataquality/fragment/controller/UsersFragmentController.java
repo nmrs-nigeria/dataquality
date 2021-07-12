@@ -691,7 +691,7 @@ public class UsersFragmentController {
         String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
 	String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
         
-        startDateTime2 = startDateTime.minusMonths(12);
+        startDateTime2 = endDateTime.minusMonths(12);
         endDateTime2 = endDateTime.minusMonths(6);
         
         String startDate2 = startDateTime2.toString("yyyy'-'MM'-'dd");

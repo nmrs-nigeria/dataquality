@@ -109,13 +109,17 @@ public class DataqualityActivator extends BaseModuleActivator {
                                 
                             }
                            // lastAnalysisDate = "1990-01-01";
-                            System.out.println("Last analysis Date" + lastAnalysisDate);
-                            System.out.println("Task Timer on Fixed Rate");
+                            //System.out.println("Last analysis Date" + lastAnalysisDate);
+                            //System.out.println("Task Timer on Fixed Rate");
                             //get patient count
                             int totalPatients = dao.getTotalPatients();
-                            System.out.println("total patient count" + totalPatients);
+                           // System.out.println("total patient count" + totalPatients);
                             int limit = 1000;
                             int totalPages = totalPatients / limit;
+                            if(totalPages == 0)
+                            {
+                                totalPages = 1;
+                            }
 
                             //get patients in fragments of 1000.
                             for (int i = 0; i < totalPages; i++) {
@@ -124,6 +128,7 @@ public class DataqualityActivator extends BaseModuleActivator {
                                     List<Map<String,String>> allPatients = dao.getAllPatients(limit, offset, lastAnalysisDate);
 
                                     //loop through the patients and save encounters in flat tables
+                                    //System.out.println("PPPPPPPPPPPPPPPPPPPPPPPatient SIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIzeEEEEEEEEEEEEE"+allPatients.size());
                                     for(int j=0; j<allPatients.size(); j++)
                                     {
                                         int patientId = Integer.parseInt(allPatients.get(j).get("patient_id"));

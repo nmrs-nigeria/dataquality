@@ -444,7 +444,6 @@ public class ClinicalDao {
 		try {
 			con = Database.connectionPool.getConnection();
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
-			
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 			
 			StringBuilder queryString = new StringBuilder(
@@ -456,7 +455,6 @@ public class ClinicalDao {
 			                + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id "
 			                + "	 HAVING MAX(pickupdate) <=? )   "
 			                + " AND (dqr_meta.termination_status IS NULL OR dqr_meta.termination_status!=1066 )  ");
-			
 			queryString.append(" AND dqr_meta.education_status!='' ");
 			
 			int i = 1;

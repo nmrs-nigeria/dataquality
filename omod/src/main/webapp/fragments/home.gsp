@@ -70,6 +70,9 @@ def id = config.id
             }
             else if(dataset == "TB"){
                 jq( "#resultArea" ).load( "tb.page" );
+            }else if(dataset == "OTZ")
+            {
+                jq( "#resultArea" ).load( "otz.page" );
             }
             else{
                 jq( "#resultArea" ).html(""); 

@@ -1858,6 +1858,7 @@ public class LabDao {
 			int i = 1;
 			stmt = con.prepareStatement(queryString.toString());
 			
+			System.out.println(aYearAgo + " " + endDate + " " + startDate);
 			stmt.setString(i++, aYearAgo);
 			stmt.setString(i++, endDate);
 			stmt.setString(i++, endDate);
