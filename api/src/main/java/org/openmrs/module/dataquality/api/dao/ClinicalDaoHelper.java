@@ -94,6 +94,70 @@ public class ClinicalDaoHelper {
         }
     }
 	
+	public List<Map<String,String>> getActiveAYPLHIV(String startDate, String endDate) {
+	System.out.println(startDate);
+        System.out.println(endDate);	
+         
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        List<Map<String, String>> allPatients = new ArrayList<>();
+        try {
+                con = Database.connectionPool.getConnection();
+                //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
+
+                StringBuilder queryString = new StringBuilder(
+                        " select IFNULL(hivE.encounter_id, 0) AS encounter_id, dqr_meta.patient_id, person_name.given_name, person_name.family_name, patient_identifier.identifier FROM dqr_meta "
+                        + " LEFT JOIN encounter hivE ON hivE.patient_id=dqr_meta.patient_id AND hivE.form_id=23 "
+                        + "  JOIN person_name ON person_name.person_id=dqr_meta.patient_id "
+                        + " LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "
+                        + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id "
+                        + "	 WHERE   "
+                        + "	 DATE_ADD(dqr_pharmacy.pickupdate,  INTERVAL (dqr_pharmacy.days_refill+28) DAY) >= ?  "
+                        + "     AND dqr_pharmacy.pickupdate= ( "
+                        + "		SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
+                        + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id "
+                        + "	 HAVING MAX(pickupdate) <=? )   "
+                        + " AND (dqr_meta.termination_status IS NULL OR dqr_meta.termination_status!=1066 )  ");
+
+                queryString.append(" AND (TIMESTAMPDIFF(YEAR,dqr_meta.dob,CURDATE()) > 0 AND TIMESTAMPDIFF(YEAR,dqr_meta.dob,CURDATE()) <=24) GROUP BY dqr_meta.patient_id ");
+
+                int i = 1;
+                stmt = con.prepareStatement(queryString.toString());
+                //stmt.setString(i++, startDate);
+                stmt.setString(i++, endDate);
+                stmt.setString(i++, endDate);
+                rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                   
+                    String patientId = rs.getString("patient_id");
+                    int encounterId = rs.getInt("encounter_id");
+                    String patientIdentifier = rs.getString("identifier");
+                    String firstName = rs.getString("given_name");
+                    String lastName = rs.getString("family_name");
+                    Map<String, String> tempData = new HashMap<>();
+                    tempData.put("patientId", patientId);
+                    tempData.put("encounterId", encounterId+"");
+                    tempData.put("patientIdentifier", patientIdentifier);
+                    tempData.put("firstName", firstName);
+                    tempData.put("lastName", lastName);
+                    allPatients.add(tempData);
+                }
+                return allPatients;
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+                Database.handleException(ex);
+                return null;
+        }
+        finally {
+                Database.cleanUp(rs, stmt, con);
+        }
+    }
+	
 	public List<Map<String,String>> getActivePtsWithoutMaritalStatus(String startDate, String endDate) {
 	System.out.println(startDate);
         System.out.println(endDate);	

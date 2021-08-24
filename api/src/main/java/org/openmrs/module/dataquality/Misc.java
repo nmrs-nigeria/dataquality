@@ -12,6 +12,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.joda.time.DateTime;
 
 /**
  * @author lordmaul
@@ -40,6 +45,62 @@ public class Misc {
 		}
 		
 		return educationalStatus;
+	}
+	
+	public static JSONObject getQuartersBetweenDates(String sDate, String eDate) {
+		JSONObject quarters = new JSONObject();
+		//
+		DateTime startDate = new DateTime(sDate);
+		DateTime endDate = new DateTime(eDate);
+		DateTime tempDate = startDate;
+		try {
+			do {
+				
+				int year = tempDate.getYear();
+				int month = tempDate.getMonthOfYear();
+				int quarter = Misc.getFiscalQuarter(month);
+				if (quarter == 1) {
+					year++;
+				}
+				
+				quarters.put("fy" + year + "q" + quarter, 0 + "");
+				//add a month to temp date
+				tempDate = tempDate.plusMonths(1);
+				
+			} while (tempDate.isBefore(endDate));
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return quarters;
+	}
+	
+	public static int getFiscalQuarter(int month) {
+		if (month >= 1 && month <= 3) {
+			return 2;
+		} else if (month >= 4 && month <= 6) {
+			return 3;
+		} else if (month >= 7 && month <= 9) {
+			return 4;
+		} else if (month >= 10 && month <= 12) {
+			return 1;
+		}
+		
+		return 0;
+	}
+	
+	public static int getCalendarQuarter(int month) {
+		if (month >= 1 && month <= 3) {
+			return 1;
+		} else if (month >= 4 && month <= 6) {
+			return 2;
+		} else if (month >= 7 && month <= 9) {
+			return 3;
+		} else if (month >= 10 && month <= 12) {
+			return 4;
+		}
+		
+		return 0;
 	}
 	
 	public static String getOccupationalStatus(int obsConceptId) {

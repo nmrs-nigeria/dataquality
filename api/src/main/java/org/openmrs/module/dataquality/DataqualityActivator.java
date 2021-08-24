@@ -23,7 +23,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import java.util.UUID;
+import org.openmrs.Encounter;
+//import org.openmrs.event.Event;
 import org.openmrs.GlobalProperty;
+import org.openmrs.Obs;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.UserContext;
 import org.openmrs.module.BaseModuleActivator;
@@ -62,16 +65,26 @@ public class DataqualityActivator extends BaseModuleActivator {
 	/**
 	 * @see #started()
 	 */
-	
+        
 	public void started() {
-		Database.initConnection();
-                //sets set sql mode to no substitution 
-                Database.setSQLMode("NO_ENGINE_SUBSTITUTION");
-		System.out.println("started data quality module");
-		
-		log.info("Started Dataquality");
-		this.startAnalyticsTask();
-		
+            Database.initConnection();
+            //sets set sql mode to no substitution 
+            Database.setSQLMode("NO_ENGINE_SUBSTITUTION");
+            System.out.println("started data quality module");
+
+            log.info("Started Dataquality");
+            
+            /*Event.subscribe(Encounter.class, Event.Action.CREATED.name(), getNMRsEventListener());
+            Event.subscribe(Encounter.class, Event.Action.UPDATED.name(), getNMRsEventListener());
+            Event.subscribe(Encounter.class, Event.Action.VOIDED.name(), getNMRsEventListener());
+            Event.subscribe(Encounter.class, Event.Action.RETIRED.name(), getNMRsEventListener());
+            Event.subscribe(Obs.class, null, getNMRsEventListener());
+            Event.subscribe(Patient.class, null, getNMRsEventListener());*/
+            this.startAnalyticsTask();
+	}
+	
+         private NMRSEventListener getNMRsEventListener() {
+		return Context.getRegisteredComponent("dataquality.NMRSEventListener", NMRSEventListener.class);
 	}
 	
 	/**
@@ -79,6 +92,12 @@ public class DataqualityActivator extends BaseModuleActivator {
 	 */
 	public void shutdown() {
 		log.info("Shutdown Dataquality");
+           /* Event.subscribe(Encounter.class, Event.Action.CREATED.name(), getNMRsEventListener());
+            Event.subscribe(Encounter.class, Event.Action.UPDATED.name(), getNMRsEventListener());
+            Event.subscribe(Encounter.class, Event.Action.VOIDED.name(), getNMRsEventListener());
+            Event.subscribe(Encounter.class, Event.Action.RETIRED.name(), getNMRsEventListener());
+            Event.subscribe(Obs.class, null, getNMRsEventListener());
+            Event.subscribe(Patient.class, null, getNMRsEventListener());*/
 	}
 	
 	private void startAnalyticsTask() {

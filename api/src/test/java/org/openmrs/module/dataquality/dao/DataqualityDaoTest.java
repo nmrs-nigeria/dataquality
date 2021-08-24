@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.dataquality.api.dao;
 
+import java.util.Iterator;
+import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.junit.Ignore;
 import org.openmrs.api.UserService;
@@ -17,7 +19,9 @@ import org.openmrs.module.dataquality.Item;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.hamcrest.Matchers.*;
+import org.joda.time.DateTime;
 import static org.junit.Assert.*;
+import org.openmrs.module.dataquality.Misc;
 
 /**
  * It is an integration test (extends BaseModuleContextSensitiveTest), which verifies DAO methods
@@ -55,4 +59,5 @@ public class DataqualityDaoTest extends BaseModuleContextSensitiveTest {
 		assertThat(savedItem, hasProperty("owner", is(item.getOwner())));
 		assertThat(savedItem, hasProperty("description", is(item.getDescription())));
 	}
+	
 }

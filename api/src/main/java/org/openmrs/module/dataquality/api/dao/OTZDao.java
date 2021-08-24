@@ -34,14 +34,16 @@ public class OTZDao {
                                 " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                 " JOIN person ON person.person_id=dqr_meta.patient_id\n" +
                                 " JOIN person_name ON person_name.person_id=dqr_meta.patient_id\n" +
-                                " JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id "+
+                                " JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.date_enrolled BETWEEN ? AND ? "+
                                 " where dqr_meta.patient_id IN (SELECT patient_id FROM patient_program where program_id=5 \n" +
                                 " AND patient_program.date_enrolled BETWEEN ? AND ? " + ") GROUP BY dqr_meta.patient_id ");
 			int i = 1;
 			//DateTime now = new DateTime(new Date());
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
-			
+			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
@@ -87,7 +89,7 @@ public class OTZDao {
 			queryString.append(" AND patient_id IN (SELECT patient_id FROM dqr_pharmacy WHERE pickupdate >=?)");*/
                         StringBuilder queryString = new StringBuilder("SELECT dqr_meta.patient_id, patient_identifier.identifier, YEAR(CURDATE()) - YEAR(person.birthdate) AS age, obs.value_datetime AS nextappdate, patient_program.date_enrolled,  TIMESTAMPDIFF(MONTH, obs.value_datetime, patient_program.date_enrolled ),   person.gender, person.birthdate, person_name.given_name, person_name.family_name FROM dqr_meta \n" +
                         "	 JOIN person ON person.person_id=dqr_meta.patient_id " +
-                        "	 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 " +
+                        "	 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                         "     JOIN person_name ON person_name.person_id=dqr_meta.patient_id " +
                         "      JOIN encounter carecard ON carecard.patient_id=dqr_meta.patient_id AND carecard.form_id=14 AND  " +
@@ -102,7 +104,9 @@ public class OTZDao {
 			//DateTime now = new DateTime(new Date());
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
-			stmt.setString(i++, startDate);
+                        stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -151,7 +155,7 @@ public class OTZDao {
                         "    person.gender, person.birthdate, person_name.given_name, person_name.family_name FROM dqr_meta\n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                         "        JOIN person ON person.person_id = dqr_meta.patient_id\n" +
-                        "        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id\n" +
+                        "        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND  patient_program.date_enrolled BETWEEN ? AND ?" +
                         "        AND patient_program.program_id = 5 " +
                         "        JOIN person_name ON person_name.person_id = dqr_meta.patient_id\n" +
                         "        JOIN encounter carecard ON carecard.patient_id = dqr_meta.patient_id\n" +
@@ -181,7 +185,9 @@ public class OTZDao {
                         int i = 1;
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
-			stmt.setString(i++, startDate);
+                        stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -231,7 +237,7 @@ public class OTZDao {
                                     "FROM dqr_meta\n" +
                                     "        JOIN person ON person.person_id = dqr_meta.patient_id\n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                                    "        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                    "        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                     "        JOIN person_name ON person_name.person_id = dqr_meta.patient_id\n" +
                                     "        JOIN encounter carecard ON carecard.patient_id = dqr_meta.patient_id\n" +
                                     "        AND carecard.form_id IN (14, 69)\n" +
@@ -250,6 +256,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -298,8 +306,8 @@ public class OTZDao {
                                 "	FROM dqr_meta" +
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
-                                "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ?" +
+                                "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id "+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                                 "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
                                 "									WHERE baselinelab.patient_id = dqr_lab.patient_id  AND" +
@@ -314,7 +322,9 @@ public class OTZDao {
                         int i = 1;
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
-			stmt.setString(i++, startDate);
+                        stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -364,7 +374,7 @@ public class OTZDao {
                                 "	FROM dqr_meta" +
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                                   " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ?" +
                                 "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                                 "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
@@ -381,6 +391,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -430,7 +442,7 @@ public class OTZDao {
                                 "	FROM dqr_meta" +
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ?" +
                                 "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                                 "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
@@ -447,6 +459,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -496,7 +510,7 @@ public class OTZDao {
                                 "	FROM dqr_meta" +
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                 "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                                 "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
@@ -513,6 +527,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -561,7 +577,7 @@ public class OTZDao {
                                 "    person.gender, person.birthdate, person_name.given_name, person_name.family_name\n" +
                                 "	FROM dqr_meta" +
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ?" +
                                 "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
@@ -579,6 +595,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -628,7 +646,7 @@ public class OTZDao {
                                 "	FROM dqr_meta" +
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ?" +
                                 "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                                 "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
@@ -645,6 +663,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -693,7 +713,7 @@ public class OTZDao {
                                 "    person.gender, person.birthdate, person_name.given_name, person_name.family_name\n" +
                                 "	FROM dqr_meta" +
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ?" +
                                 "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
@@ -711,6 +731,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -759,7 +781,7 @@ public class OTZDao {
                                 "    person.gender, person.birthdate, person_name.given_name, person_name.family_name\n" +
                                 "	FROM dqr_meta" +
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                 "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                                   " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
@@ -777,6 +799,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -825,7 +849,7 @@ public class OTZDao {
 "                                person.gender, person.birthdate, person_name.given_name, person_name.family_name\n" +
 "                            FROM dqr_meta \n" +
 "                                    JOIN person ON person.person_id = dqr_meta.patient_id \n" +
-"                                    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 \n" +
+"                                    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
 "                                    JOIN person_name ON person_name.person_id = dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
 "                                    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id AND\n" +
@@ -843,6 +867,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -893,7 +919,7 @@ public class OTZDao {
                             "		  JOIN obs artobs ON artobs.concept_id=159599 AND artobs.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                             "				JOIN person ON person.person_id = dqr_meta.patient_id \n" +
-                            "				JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 \n" +
+                            "				JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ?" +
                             "				JOIN person_name ON person_name.person_id = dqr_meta.patient_id \n" +
                             "		\n" +
                             "		WHERE dqr_meta.patient_id NOT IN (SELECT patient_id FROM dqr_lab WHERE vl_order='True' AND TIMESTAMPDIFF(MONTH,dqr_lab.sample_collection_date, patient_program.date_enrolled ) <= 12 ) AND\n" +
@@ -905,6 +931,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -965,7 +993,7 @@ public class OTZDao {
                                 "    TIMESTAMPDIFF(MONTH,labform.encounter_datetime,patient_program.date_enrolled),person.gender, person.birthdate, person_name.given_name, person_name.family_name\n" +
                                 "FROM dqr_meta\n" +
                                 "        JOIN person ON person.person_id = dqr_meta.patient_id\n" +
-                                "        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ?" +
                                 "        JOIN person_name ON person_name.person_id = dqr_meta.patient_id\n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                 "        JOIN encounter labform ON labform.patient_id = dqr_meta.patient_id\n" +
@@ -984,6 +1012,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1044,7 +1074,7 @@ public class OTZDao {
                         StringBuilder queryString = new StringBuilder("SELECT patient_identifier.identifier, dqr_meta.patient_id, YEAR(CURDATE()) - YEAR(person.birthdate) AS age,  patient_program.date_enrolled,person.gender, person.birthdate, person_name.given_name, person_name.family_name\n" +
 "                                  FROM dqr_meta \n" +
 "                                        JOIN person ON person.person_id = dqr_meta.patient_id\n" +
-"                                        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+"                                        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ?" +
 "                                        JOIN person_name ON person_name.person_id = dqr_meta.patient_id\n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
 "                                        JOIN dqr_lab labformbaseline ON labformbaseline.patient_id = dqr_meta.patient_id \n" +
@@ -1068,6 +1098,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1115,7 +1147,7 @@ public class OTZDao {
                         StringBuilder queryString = new StringBuilder("SELECT patient_identifier.identifier, dqr_meta.patient_id, YEAR(CURDATE()) - YEAR(person.birthdate) AS age,  patient_program.date_enrolled,person.gender, person.birthdate, person_name.given_name, person_name.family_name\n" +
 "                                  FROM dqr_meta \n" +
 "                                        JOIN person ON person.person_id = dqr_meta.patient_id\n" +
-"                                        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+"                                        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
 "                                        JOIN person_name ON person_name.person_id = dqr_meta.patient_id\n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
 "                                        JOIN dqr_lab labformbaseline ON labformbaseline.patient_id = dqr_meta.patient_id \n" +
@@ -1140,6 +1172,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1187,7 +1221,7 @@ public class OTZDao {
                         StringBuilder queryString = new StringBuilder("SELECT patient_identifier.identifier, dqr_meta.patient_id, YEAR(CURDATE()) - YEAR(person.birthdate) AS age,  patient_program.date_enrolled,person.gender, person.birthdate, person_name.given_name, person_name.family_name\n" +
 "                                  FROM dqr_meta \n" +
 "                                        JOIN person ON person.person_id = dqr_meta.patient_id\n" +
-"                                        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+"                                        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
 "                                        JOIN person_name ON person_name.person_id = dqr_meta.patient_id\n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
 "                                        JOIN dqr_lab labformbaseline ON labformbaseline.patient_id = dqr_meta.patient_id \n" +
@@ -1211,6 +1245,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1257,7 +1293,7 @@ public class OTZDao {
 			queryString.append(" AND patient_id IN (SELECT patient_id FROM dqr_pharmacy WHERE pickupdate >=?)");*/
                         StringBuilder queryString = new StringBuilder("SELECT patient_identifier.identifier, dqr_meta.patient_id, YEAR(CURDATE()) - YEAR(person.birthdate) AS age, obs.value_datetime AS nextappdate, patient_program.date_enrolled,  TIMESTAMPDIFF(MONTH, obs.value_datetime, patient_program.date_enrolled ),   person.gender, person.birthdate, person_name.given_name, person_name.family_name FROM dqr_meta \n" +
                         "	 JOIN person ON person.person_id=dqr_meta.patient_id " +
-                        "	 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 " +
+                        "	 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 AND patient_program.date_enrolled BETWEEN ? AND ?  " +
                         "     JOIN person_name ON person_name.person_id=dqr_meta.patient_id " +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                         "      JOIN encounter carecard ON carecard.patient_id=dqr_meta.patient_id AND carecard.form_id=14 AND  " +
@@ -1273,6 +1309,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1320,9 +1358,9 @@ public class OTZDao {
                         "    patient_program.date_enrolled, TIMESTAMPDIFF(MONTH, obs.value_datetime, patient_program.date_enrolled), " +
                         "    person.gender, person.birthdate, person_name.given_name, person_name.family_name FROM dqr_meta\n" +
                         "        JOIN person ON person.person_id = dqr_meta.patient_id\n" +
-                        "        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id\n" +
+                        "        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id  AND patient_program.program_id = 5  AND patient_program.date_enrolled BETWEEN ? AND ?" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                        "        AND patient_program.program_id = 5 " +
+                      
                         "        JOIN person_name ON person_name.person_id = dqr_meta.patient_id\n" +
                         "        JOIN encounter carecard ON carecard.patient_id = dqr_meta.patient_id\n" +
                         "        AND carecard.form_id = 14\n" +
@@ -1350,6 +1388,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1399,7 +1439,7 @@ public class OTZDao {
                                     "FROM dqr_meta\n" +
                                     "        JOIN person ON person.person_id = dqr_meta.patient_id\n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                                    "        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                    "        JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                     "        JOIN person_name ON person_name.person_id = dqr_meta.patient_id\n" +
                                     "        JOIN encounter carecard ON carecard.patient_id = dqr_meta.patient_id\n" +
                                     "        AND carecard.form_id IN (14, 69)\n" +
@@ -1418,6 +1458,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1467,7 +1509,7 @@ public class OTZDao {
                                                             "	JOIN obs artobs ON artobs.concept_id=159599 AND artobs.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                                             "	JOIN person ON person.person_id = dqr_meta.patient_id \n" +
-                                                            "	JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 \n" +
+                                                            "	JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                                             "	JOIN person_name ON person_name.person_id = dqr_meta.patient_id \n" +
                                                             "   WHERE \n" +
                                                             "   dqr_meta.patient_id NOT IN (SELECT patient_id FROM dqr_lab WHERE TIMESTAMPDIFF(MONTH,dqr_lab.sample_collection_date, patient_program.date_enrolled)<= 6)\n" +
@@ -1478,6 +1520,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1528,7 +1572,7 @@ public class OTZDao {
                                                             "	JOIN obs artobs ON artobs.concept_id=159599 AND artobs.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                                             "	JOIN person ON person.person_id = dqr_meta.patient_id \n" +
-                                                            "	JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 \n" +
+                                                            "	JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                                 " JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.sample_collection_date>patient_program.date_enrolled AND dqr_lab.vl_order='True' " +            
                                                 "	JOIN person_name ON person_name.person_id = dqr_meta.patient_id \n" +
                                                             "   WHERE \n" +
@@ -1540,6 +1584,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1590,7 +1636,7 @@ public class OTZDao {
                                                             "	JOIN obs artobs ON artobs.concept_id=159599 AND artobs.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                                             "	JOIN person ON person.person_id = dqr_meta.patient_id \n" +
-                                                            "	JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 \n" +
+                                                            "	JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                                 " JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.sample_collection_date>patient_program.date_enrolled AND dqr_lab.vl_order='True' AND dqr_lab.vl_result IS NOT NULL " +            
                                                 "	JOIN person_name ON person_name.person_id = dqr_meta.patient_id \n" +
                                                             "   WHERE \n" +
@@ -1602,6 +1648,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1652,7 +1700,7 @@ public class OTZDao {
                                                             "	JOIN obs artobs ON artobs.concept_id=159599 AND artobs.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                                             "	JOIN person ON person.person_id = dqr_meta.patient_id \n" +
-                                                            "	JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 \n" +
+                                                            "	JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                                 " JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.sample_collection_date>patient_program.date_enrolled AND dqr_lab.vl_order='True' AND dqr_lab.vl_result<200 " +            
                                                 "	JOIN person_name ON person_name.person_id = dqr_meta.patient_id \n" +
                                                             "   WHERE \n" +
@@ -1664,6 +1712,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1714,7 +1764,7 @@ public class OTZDao {
                                                             "	JOIN obs artobs ON artobs.concept_id=159599 AND artobs.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                                             "	JOIN person ON person.person_id = dqr_meta.patient_id \n" +
-                                                            "	JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 \n" +
+                                                            "	JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                                 " JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.sample_collection_date>patient_program.date_enrolled AND dqr_lab.vl_order='True' AND dqr_lab.vl_result>200 AND dqr_lab.vl_result<1000 " +            
                                                 "	JOIN person_name ON person_name.person_id = dqr_meta.patient_id \n" +
                                                             "   WHERE \n" +
@@ -1726,6 +1776,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1776,7 +1828,7 @@ public class OTZDao {
                                                             "	JOIN obs artobs ON artobs.concept_id=159599 AND artobs.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                                             "	JOIN person ON person.person_id = dqr_meta.patient_id \n" +
-                                                            "	JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 \n" +
+                                                            "	JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                                 " JOIN dqr_lab ON dqr_lab.patient_id=dqr_meta.patient_id AND dqr_lab.sample_collection_date>patient_program.date_enrolled AND dqr_lab.vl_order='True' AND dqr_lab.vl_result>=1000 " +            
                                                 "	JOIN person_name ON person_name.person_id = dqr_meta.patient_id \n" +
                                                             "   WHERE \n" +
@@ -1788,6 +1840,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
+                        stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			//stmt.setString(i++, sixMonthsAgo);
 			rs = stmt.executeQuery();
@@ -1837,7 +1891,7 @@ public class OTZDao {
                                 "	FROM dqr_meta" +
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ?  " +
                                 "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                                 "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
@@ -1853,6 +1907,8 @@ public class OTZDao {
                         int i = 1;
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
+                        stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
                         stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
@@ -1904,7 +1960,7 @@ public class OTZDao {
                                 "	FROM dqr_meta" +
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                 "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                                 "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
@@ -1920,6 +1976,8 @@ public class OTZDao {
                         int i = 1;
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
+                        stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
                         stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
@@ -1971,7 +2029,7 @@ public class OTZDao {
                                 "	FROM dqr_meta" +
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                 "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                                 "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
@@ -1987,6 +2045,8 @@ public class OTZDao {
                         int i = 1;
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
+                        stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
                         stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
@@ -2038,7 +2098,7 @@ public class OTZDao {
                                 "	FROM dqr_meta" +
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                 "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                                 "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
@@ -2054,6 +2114,8 @@ public class OTZDao {
                         int i = 1;
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
+                        stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
                         stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
@@ -2106,7 +2168,7 @@ public class OTZDao {
                                 "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                
-                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                                "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                                 "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                                 "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                                 " JOIN obs ON obs.concept_id=166097 AND obs.value_coded=165645 AND obs.obs_datetime >=baselinelab.sample_collection_date "+
@@ -2123,6 +2185,8 @@ public class OTZDao {
                         int i = 1;
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
+                        stmt.setString(i++, startDate);
+			stmt.setString(i++, endDate);
                         stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
@@ -2151,7 +2215,9 @@ public class OTZDao {
 		finally {
 			Database.cleanUp(rs, stmt, con);
 		}
-	}	public List<OTZPatient> getTotalEnrolledWithVLPast12MonthsResultAbove1000WithRepeatVl(String startDate, String endDate, String sixMonthsAgo) {
+	}
+    
+public List<OTZPatient> getTotalEnrolledWithVLPast12MonthsResultAbove1000WithRepeatVl(String startDate, String endDate, String sixMonthsAgo) {
 		
     PreparedStatement stmt = null;
     ResultSet rs = null;
@@ -2172,7 +2238,7 @@ public class OTZDao {
                     "	FROM dqr_meta" +
                     "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                      " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                    "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                    "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                     "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                     "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                     "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
@@ -2189,6 +2255,8 @@ public class OTZDao {
             int i = 1;
             //String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
             stmt = con.prepareStatement(queryString.toString());
+            stmt.setString(i++, startDate);
+            stmt.setString(i++, endDate);
             stmt.setString(i++, endDate);
             stmt.setString(i++, startDate);
             stmt.setString(i++, endDate);
@@ -2238,7 +2306,7 @@ public class OTZDao {
                     "	FROM dqr_meta" +
                     "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                      " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                    "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                    "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                     "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                     "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                     "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
@@ -2255,6 +2323,8 @@ public class OTZDao {
             int i = 1;
             //String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
             stmt = con.prepareStatement(queryString.toString());
+            stmt.setString(i++, startDate);
+            stmt.setString(i++, endDate);
             stmt.setString(i++, endDate);
             stmt.setString(i++, startDate);
             stmt.setString(i++, endDate);
@@ -2304,7 +2374,7 @@ public class OTZDao {
                     "	FROM dqr_meta" +
                     "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                      " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                    "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                    "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                     "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                     "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                     "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
@@ -2321,6 +2391,8 @@ public class OTZDao {
             int i = 1;
             //String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
             stmt = con.prepareStatement(queryString.toString());
+            stmt.setString(i++, startDate);
+            stmt.setString(i++, endDate);
             stmt.setString(i++, endDate);
             stmt.setString(i++, startDate);
             stmt.setString(i++, endDate);
@@ -2370,7 +2442,7 @@ public class OTZDao {
                     "	FROM dqr_meta" +
                     "    JOIN person ON person.person_id = dqr_meta.patient_id " +
                      " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                    "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5\n" +
+                    "    JOIN patient_program ON patient_program.patient_id = dqr_meta.patient_id AND patient_program.program_id = 5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                     "    JOIN person_name ON person_name.person_id = dqr_meta.patient_id"+
                     "    JOIN dqr_lab baselinelab ON baselinelab.patient_id=dqr_meta.patient_id" +
                     "    AND baselinelab.sample_collection_date =(SELECT dqr_lab.sample_collection_date  FROM dqr_lab" +
@@ -2387,6 +2459,8 @@ public class OTZDao {
             int i = 1;
             //String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
             stmt = con.prepareStatement(queryString.toString());
+            stmt.setString(i++, startDate);
+            stmt.setString(i++, endDate);
             stmt.setString(i++, endDate);
             stmt.setString(i++, startDate);
             stmt.setString(i++, endDate);
@@ -2435,7 +2509,7 @@ public class OTZDao {
 "                                 JOIN person ON person.person_id=dqr_meta.patient_id\n" +
 "                                 JOIN person_name ON person_name.person_id=dqr_meta.patient_id\n" +
                      " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-"                                 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id\n" +
+"                                 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.date_enrolled BETWEEN ? AND ?" +
 "                                 JOIN dqr_pharmacy pharmacybefore ON pharmacybefore.patient_id=dqr_meta.patient_id AND\n" +
 "                                 pharmacybefore.pickupdate=(\n" +
 "									 SELECT dqr_pharmacy.pickupdate FROM dqr_pharmacy\n" +
@@ -2455,6 +2529,8 @@ public class OTZDao {
             int i = 1;
             //String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
             stmt = con.prepareStatement(queryString.toString());
+            stmt.setString(i++, startDate);
+            stmt.setString(i++, endDate);
             stmt.setString(i++, startDate);
             stmt.setString(i++, endDate);
             //stmt.setString(i++, sixMonthsAgo);
@@ -2502,7 +2578,7 @@ public class OTZDao {
 "                                 JOIN person ON person.person_id=dqr_meta.patient_id\n" +
 "                                 JOIN person_name ON person_name.person_id=dqr_meta.patient_id\n" +
                      " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-"                                 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id\n" +
+"                                 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.date_enrolled BETWEEN ? AND ?" +
 "                                 JOIN dqr_pharmacy pharmacybefore ON pharmacybefore.patient_id=dqr_meta.patient_id AND\n" +
 "                                 pharmacybefore.pickupdate=(\n" +
 "									 SELECT dqr_pharmacy.pickupdate FROM dqr_pharmacy\n" +
@@ -2522,6 +2598,8 @@ public class OTZDao {
             int i = 1;
             //String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
             stmt = con.prepareStatement(queryString.toString());
+            stmt.setString(i++, startDate);
+            stmt.setString(i++, endDate);
             stmt.setString(i++, startDate);
             stmt.setString(i++, endDate);
             //stmt.setString(i++, sixMonthsAgo);
@@ -2565,14 +2643,15 @@ public class OTZDao {
                                 " JOIN person ON person.person_id=dqr_meta.patient_id\n" +
                                          " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                                 " JOIN person_name ON person_name.person_id=dqr_meta.patient_id\n" +
-                                " JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id "+
+                                " JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 AND patient_program.date_enrolled BETWEEN ? AND ? "+
                                 " where dqr_meta.patient_id IN (SELECT patient_id FROM patient_program where program_id=5 \n" +
                                 " AND patient_program.date_enrolled BETWEEN ? AND ? " + ") GROUP BY dqr_meta.patient_id ");
 			int i = 1;
 			//DateTime now = new DateTime(new Date());
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
-			
+			stmt.setString(i++, startDate);
+                        stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
@@ -2613,7 +2692,7 @@ public class OTZDao {
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 			StringBuilder queryString = new StringBuilder("SELECT patient_identifier.identifier, dqr_meta.patient_id, YEAR(CURDATE()) - YEAR(person.birthdate) AS age, patient_program.date_enrolled,    person.gender, person.birthdate, person_name.given_name, person_name.family_name FROM dqr_meta\n" +
 "	JOIN person ON person.person_id=dqr_meta.patient_id \n" +
-"		 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 \n" +
+"		 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
 "		 JOIN person_name ON person_name.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
 "		  JOIN obs trackingobs oN trackingobs.concept_id=165470 AND trackingobs.person_id=dqr_meta.patient_id AND \n" +
@@ -2624,7 +2703,8 @@ public class OTZDao {
 			//DateTime now = new DateTime(new Date());
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
-			
+			stmt.setString(i++, startDate);
+                        stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
@@ -2665,7 +2745,7 @@ public class OTZDao {
 			//stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 			StringBuilder queryString = new StringBuilder("SELECT patient_identifier.identifier, lastpickup.pickupdate,  dqr_meta.patient_id, YEAR(CURDATE()) - YEAR(person.birthdate) AS age, patient_program.date_enrolled,    person.gender, person.birthdate, person_name.given_name, person_name.family_name FROM dqr_meta\n" +
                         "	JOIN person ON person.person_id=dqr_meta.patient_id \n" +
-                        "		 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 \n" +
+                        "		 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                         "		 JOIN person_name ON person_name.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
                         "		 JOIN dqr_pharmacy lastpickup ON lastpickup.patient_id=dqr_meta.patient_id AND \n" +
@@ -2679,7 +2759,8 @@ public class OTZDao {
 			//DateTime now = new DateTime(new Date());
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
-			
+			stmt.setString(i++, startDate);
+                         stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
                         stmt.setString(i++, endDate);
@@ -2722,7 +2803,7 @@ public class OTZDao {
 			StringBuilder queryString = new StringBuilder("SELECT patient_identifier.identifier, dqr_meta.patient_id, YEAR(CURDATE()) - YEAR(person.birthdate) AS age, patient_program.date_enrolled,    person.gender, person.birthdate, person_name.given_name, person_name.family_name FROM dqr_meta\n" +
 "	JOIN person ON person.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-"		 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 \n" +
+"		 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
 "		 JOIN person_name ON person_name.person_id=dqr_meta.patient_id \n" +
 "		  JOIN obs trackingobs oN trackingobs.concept_id=165470 AND trackingobs.person_id=dqr_meta.patient_id AND \n" +
 "          trackingobs.value_coded=165889 AND trackingobs.obs_datetime > patient_program.date_enrolled\n" +
@@ -2733,6 +2814,8 @@ public class OTZDao {
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
 			
+                        stmt.setString(i++, startDate);
+                        stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
@@ -2774,7 +2857,7 @@ public class OTZDao {
 			StringBuilder queryString = new StringBuilder("SELECT patient_identifier.identifier, dqr_meta.patient_id, YEAR(CURDATE()) - YEAR(person.birthdate) AS age, patient_program.date_enrolled,    person.gender, person.birthdate, person_name.given_name, person_name.family_name FROM dqr_meta\n" +
 "	JOIN person ON person.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-"		 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 \n" +
+"		 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
 "		 JOIN person_name ON person_name.person_id=dqr_meta.patient_id \n" +
 "		  JOIN obs outcomeobs oN outcomeobs.concept_id=166275 AND outcomeobs.person_id=dqr_meta.patient_id AND \n" +
 "          outcomeobs.value_coded=166351 AND outcomeobs.obs_datetime >= patient_program.date_enrolled\n" +
@@ -2784,7 +2867,8 @@ public class OTZDao {
 			//DateTime now = new DateTime(new Date());
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
-			
+			stmt.setString(i++, startDate);
+                        stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
@@ -2826,7 +2910,7 @@ public class OTZDao {
 			StringBuilder queryString = new StringBuilder("SELECT patient_identifier.identifier, dqr_meta.patient_id, YEAR(CURDATE()) - YEAR(person.birthdate) AS age, patient_program.date_enrolled,    person.gender, person.birthdate, person_name.given_name, person_name.family_name FROM dqr_meta\n" +
                 "	JOIN person ON person.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-                "		 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 \n" +
+                "		 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
                 "		 JOIN person_name ON person_name.person_id=dqr_meta.patient_id \n" +
                 "		  JOIN obs transitionedobs oN transitionedobs.concept_id=166272 AND transitionedobs.person_id=dqr_meta.patient_id AND \n" +
                 "          transitionedobs.value_coded=1065 AND transitionedobs.obs_datetime >= patient_program.date_enrolled\n" +
@@ -2836,7 +2920,8 @@ public class OTZDao {
 			//DateTime now = new DateTime(new Date());
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
-			
+			stmt.setString(i++, startDate);
+                        stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();
@@ -2878,7 +2963,7 @@ public class OTZDao {
 			StringBuilder queryString = new StringBuilder("SELECT patient_identifier.identifier, dqr_meta.patient_id, YEAR(CURDATE()) - YEAR(person.birthdate) AS age, patient_program.date_enrolled,    person.gender, person.birthdate, person_name.given_name, person_name.family_name FROM dqr_meta\n" +
 "	JOIN person ON person.person_id=dqr_meta.patient_id \n" +
                                  " JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "+
-"		 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 \n" +
+"		 JOIN patient_program ON patient_program.patient_id=dqr_meta.patient_id AND patient_program.program_id=5 AND patient_program.date_enrolled BETWEEN ? AND ? " +
 "		 JOIN person_name ON person_name.person_id=dqr_meta.patient_id \n" +
 "		  JOIN obs outcomeobs oN outcomeobs.concept_id=166275 AND outcomeobs.person_id=dqr_meta.patient_id AND \n" +
 "          outcomeobs.value_coded=166274 AND outcomeobs.obs_datetime >= patient_program.date_enrolled\n" +
@@ -2888,7 +2973,8 @@ public class OTZDao {
 			//DateTime now = new DateTime(new Date());
 			//String nowString = now.toString("yyyy'-'MM'-'dd' 'HH':'mm");
 			stmt = con.prepareStatement(queryString.toString());
-			
+			stmt.setString(i++, startDate);
+                        stmt.setString(i++, endDate);
 			stmt.setString(i++, startDate);
 			stmt.setString(i++, endDate);
 			rs = stmt.executeQuery();

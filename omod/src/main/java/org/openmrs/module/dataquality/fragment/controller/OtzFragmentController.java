@@ -5,6 +5,7 @@
  */
 package org.openmrs.module.dataquality.fragment.controller;
 
+import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
 import org.openmrs.api.UserService;
+import org.openmrs.module.dataquality.Misc;
 import org.openmrs.module.dataquality.OTZPatient;
+import org.openmrs.module.dataquality.api.dao.ClinicalDaoHelper;
 import org.openmrs.module.dataquality.api.dao.Database;
 import org.openmrs.module.dataquality.api.dao.OTZDao;
 import org.openmrs.ui.framework.annotation.SpringBean;
@@ -50,7 +53,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalAYPLHIVEnrolledInOTZ(startDate, endDate);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -116,7 +118,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithScheduledPickup6MonthsBefore(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -182,7 +183,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWhoKeptScheduledPickup6MonthsBefore(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -248,7 +248,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithGoodAdhScore6MonthsBefore(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -314,7 +313,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVL12MonthsBefore(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -380,7 +378,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVL12MonthsBeforeAndBelow200(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -446,7 +443,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVL12MonthsBeforeAndBtw200AND1000(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -512,7 +508,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVL12MonthsBeforeAndAboveOrEqual1000(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -578,7 +573,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVL6MonthsBefore(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -644,7 +638,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVL6MonthsBeforeAndBelow200(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -710,7 +703,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVL6MonthsBeforeAndBtw200AND1000(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -776,7 +768,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVL6MonthsBeforeAndAboveOrEqual1000(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -842,7 +833,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEligibleForMonthZeroVL(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -908,7 +898,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEligibleForMonthZeroVLWithSampleCollectedAtEnrollment(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -974,7 +963,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalWithBaseLineVLBelow1000AndMonthZeroVlBelow200(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1040,7 +1028,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalWithBaseLineVLBelow1000AndMonthZeroVlAbove200(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1106,7 +1093,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalWithBaseLineVLBelow1000AndMonthZeroVlAbove1000(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1172,7 +1158,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithScheduledPickupAfter(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1238,7 +1223,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWhoKeptScheduledPickupAfter(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1304,7 +1288,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithGoodAdhScoreAfter(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1370,7 +1353,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledEligibleForVL(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1436,7 +1418,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledEligibleForVLWithSampleTaken(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1502,7 +1483,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledEligibleForVLWithSampleTakenAndResult(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1568,7 +1548,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledEligibleForVLWithSampleTakenAndResultBelow200(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1634,7 +1613,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledEligibleForVLWithSampleTakenAndResultAbove200Below1000(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1700,7 +1678,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledEligibleForVLWithSampleTakenAndResultAbove1000(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1766,7 +1743,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVLPast12Months(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1832,7 +1808,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVLPast12MonthsResultBelow200(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1898,7 +1873,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVLPast12MonthsResultAbove200Below1000(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -1964,7 +1938,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVLPast12MonthsResultAbove1000(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2030,7 +2003,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVLPast12MonthsResultAbove1000CompletedEAC(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2096,7 +2068,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVLPast12MonthsResultAbove1000WithRepeatVl(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2162,7 +2133,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVLPast12MonthsResultAbove1000WithRepeatVlBelow200(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2228,7 +2198,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVLPast12MonthsResultAbove1000WithRepeatVlAbove200Below1000(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2294,7 +2263,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithVLPast12MonthsResultAbove1000WithRepeatVlAbove1000(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2360,7 +2328,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithSwitchTo2ndLine(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2426,7 +2393,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalEnrolledWithSwitchTo3rdLine(startDate, endDate, sixMonths);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2492,7 +2458,6 @@ public class OtzFragmentController {
             List<OTZPatient> allPatients = otzDao.getTotalAYPLHIVEnrolledInOTZWhoComplete7(startDate, endDate);
             for(int i=0; i<allPatients.size(); i++)
             {
-                System.out.println(allPatients.get(i).getGender());
                 if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
                 {
                     if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2558,7 +2523,6 @@ public class OtzFragmentController {
 	        List<OTZPatient> allPatients = otzDao.getTotalEnrolledAndTransferredOutAfter(startDate, endDate);
 	        for(int i=0; i<allPatients.size(); i++)
 	        {
-	            System.out.println(allPatients.get(i).getGender());
 	            if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
 	            {
 	                if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2624,7 +2588,6 @@ public class OtzFragmentController {
 	        List<OTZPatient> allPatients = otzDao.getTotalEnrolledAndLTFUAfter(startDate, endDate);
 	        for(int i=0; i<allPatients.size(); i++)
 	        {
-	            System.out.println(allPatients.get(i).getGender());
 	            if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
 	            {
 	                if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2690,7 +2653,6 @@ public class OtzFragmentController {
 	        List<OTZPatient> allPatients = otzDao.getTotalEnrolledAndDiedAfter(startDate, endDate);
 	        for(int i=0; i<allPatients.size(); i++)
 	        {
-	            System.out.println(allPatients.get(i).getGender());
 	            if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
 	            {
 	                if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2756,7 +2718,7 @@ public class OtzFragmentController {
 	        List<OTZPatient> allPatients = otzDao.getTotalEnrolledAndOptedOutAfter(startDate, endDate);
 	        for(int i=0; i<allPatients.size(); i++)
 	        {
-	            System.out.println(allPatients.get(i).getGender());
+	            //System.out.println(allPatients.get(i).getGender());
 	            if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
 	            {
 	                if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2822,7 +2784,7 @@ public class OtzFragmentController {
 	        List<OTZPatient> allPatients = otzDao.getTotalEnrolledAndTransitionedAfter(startDate, endDate);
 	        for(int i=0; i<allPatients.size(); i++)
 	        {
-	            System.out.println(allPatients.get(i).getGender());
+	            //System.out.println(allPatients.get(i).getGender());
 	            if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
 	            {
 	                if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2888,7 +2850,7 @@ public class OtzFragmentController {
 	        List<OTZPatient> allPatients = otzDao.getTotalEnrolledAndExitedAfter(startDate, endDate);
 	        for(int i=0; i<allPatients.size(); i++)
 	        {
-	            System.out.println(allPatients.get(i).getGender());
+	            //System.out.println(allPatients.get(i).getGender());
 	            if(allPatients.get(i).getGender().equalsIgnoreCase("M") || allPatients.get(i).getGender().equalsIgnoreCase("Male"))
 	            {
 	                if(allPatients.get(i).getAge() >=10 && allPatients.get(i).getAge() <=14)
@@ -2931,5 +2893,82 @@ public class OtzFragmentController {
 	        //dataMap.put("totalAdultsTestedPositive",  adultsTestedPositive+"");
 	        return new JSONObject(dataMap).toString();
 
+	}
+	
+	public String getTxCurr(HttpServletRequest request) {
+		DateTime startDateTime = new DateTime(request.getParameter("startDate"));
+		DateTime endDateTime = new DateTime(request.getParameter("endDate"));
+		DateTime sixMonthsAgo = endDateTime.minusMonths(6);
+		//Database.initConnection();
+		String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+		String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+		String sixMonths = sixMonthsAgo.toString("yyyy'-'MM'-'dd");
+		ClinicalDaoHelper clinicalDaoHelper = new ClinicalDaoHelper();
+		List<Map<String, String>> activeAYPLHIV = clinicalDaoHelper.getActiveAYPLHIV(startDate, endDate);
+		
+		String json = new Gson().toJson(activeAYPLHIV);
+		
+		//return "hello";
+		return json;
+		
+	}
+	
+	public String getAYPLHIVEnrolled(HttpServletRequest request) {
+		DateTime startDateTime = new DateTime(request.getParameter("startDate"));
+		DateTime endDateTime = new DateTime(request.getParameter("endDate"));
+		DateTime sixMonthsAgo = endDateTime.minusMonths(6);
+		//Database.initConnection();
+		String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+		String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+		String sixMonths = sixMonthsAgo.toString("yyyy'-'MM'-'dd");
+                
+                
+                
+                
+		OTZDao otzDao = new OTZDao();
+                
+		List<OTZPatient> allPatients = otzDao.getTotalAYPLHIVEnrolledInOTZ(startDate, endDate);
+		
+                JSONObject quarters = Misc.getQuartersBetweenDates(startDate, endDate);
+                
+                
+                Map<String, Object> data = new HashMap<>();
+                data.put("quarters", quarters);
+                data.put("patients", allPatients);
+		String json = new Gson().toJson(data);
+		
+		//return "hello";
+		return json;
+		
+	}
+        
+        
+        public String getTotalWhoCompleted(HttpServletRequest request) {
+		DateTime startDateTime = new DateTime(request.getParameter("startDate"));
+		DateTime endDateTime = new DateTime(request.getParameter("endDate"));
+		DateTime sixMonthsAgo = endDateTime.minusMonths(6);
+		//Database.initConnection();
+		String startDate = startDateTime.toString("yyyy'-'MM'-'dd");
+		String endDate = endDateTime.toString("yyyy'-'MM'-'dd");
+		String sixMonths = sixMonthsAgo.toString("yyyy'-'MM'-'dd");
+                
+                
+                
+                
+		OTZDao otzDao = new OTZDao();
+                
+		List<OTZPatient> allPatients = otzDao.getTotalAYPLHIVEnrolledInOTZ(startDate, endDate);
+		
+                JSONObject quarters = Misc.getQuartersBetweenDates(startDate, endDate);
+                
+                
+                Map<String, Object> data = new HashMap<>();
+                data.put("quarters", quarters);
+                data.put("patients", allPatients);
+		String json = new Gson().toJson(data);
+		
+		//return "hello";
+		return json;
+		
 	}
 }
