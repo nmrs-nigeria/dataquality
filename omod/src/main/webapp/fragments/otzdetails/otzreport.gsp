@@ -32,6 +32,7 @@ def title = config.title
                 <th>Female 10-14</th>
                 <th>Female 15-19</th>
                 <th>Female 20-24</th>
+                <th>Total</th>
                 <th  style="text-align:center">Action</th>
 
              </tr>
@@ -47,6 +48,7 @@ def title = config.title
                 <td class="loadingView num4"  id="totalEnrolledF10To14">-</td>
                 <td class="loadingView num4"  id="totalEnrolledF15To19">-</td>
                 <td class="loadingView num4"  id="totalEnrolledF20To24">-</td>
+                <td class="loadingView num4"  id="totalEnrolledTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -74,6 +76,7 @@ def title = config.title
                 <td class="loadingView num4" id="totalEnrolledWithApp6MtPriorF10To14">-</td>
                 <td class="loadingView num4" id="totalEnrolledWithApp6MtPriorF15To19">-</td>
                 <td class="loadingView num4" id="totalEnrolledWithApp6MtPriorF20To24">-</td>
+                <td class="loadingView num4" id="totalEnrolledWithApp6MtPriorTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -94,13 +97,14 @@ def title = config.title
             </tr>
             <tr>
                 <td><%= i++ %></td>
-                <td># of OTZ members who kept their drug pick-up appointment in the last six months prior to enrolment on OTZ</td>
+                <td># of OTZ members who kept their drug pick-up appointment in the last six months prior to enrollment on OTZ</td>
                 <td class="loadingView num4" id="totalEnrolledKeptAppPriorM10To14">-</td>
                 <td class="loadingView num4" id="totalEnrolledKeptAppPriorM15To19">-</td>
                 <td class="loadingView num4" id="totalEnrolledKeptAppPriorM20To24">-</td>
                 <td class="loadingView num4" id="totalEnrolledKeptAppPriorF10To14">-</td>
                 <td class="loadingView num4" id="totalEnrolledKeptAppPriorF15To19">-</td>
                 <td class="loadingView num4" id="totalEnrolledKeptAppPriorF20To24">-</td>
+                <td class="loadingView num4" id="totalEnrolledKeptAppPriorTotal">-</td>
                 
                 <td>
                     <div class="panel panel-default">
@@ -129,6 +133,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledGoodAdhPriorF10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledGoodAdhPriorF15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledGoodAdhPriorF20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledGoodAdhPriorTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -156,6 +161,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledBaselineResultF10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResultF15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResultF20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledBaselineResultTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -183,6 +189,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledBaselineResultBelow200F10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResultBelow200F15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResultBelow200F20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledBaselineResultBelow200Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -210,6 +217,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult200To1000F10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult200To1000F15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult200To1000F20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledBaselineResult200To1000Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -236,6 +244,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledBaselineResultAbove1000F10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResultAbove1000F15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResultAbove1000F20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledBaselineResultAbove1000Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -263,6 +272,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtF10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtF15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtF20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -290,6 +300,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtBelow200F10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtBelow200F15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtBelow200F20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtBelow200Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -317,6 +328,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtBt200To1000F10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtBt200To1000F15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtBt200To1000F20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtBt200To1000Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -344,6 +356,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtBelow1000Gt1000F10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtBelow1000Gt1000F15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtBelow1000Gt1000F20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledBaselineResult6MtBelow1000Gt1000Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -371,6 +384,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledEligibleMtZF10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledEligibleMtZF15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledEligibleMtZF20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledEligibleMtZTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -398,6 +412,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledEligibleMtZSampleF10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledEligibleMtZSampleF15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledEligibleMtZSampleF20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledEligibleMtZSampleTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -425,6 +440,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledB1000MZ200F10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledB1000MZ200F15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledB1000MZ200F20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledB1000MZ200Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -452,6 +468,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledB1000MZ200To1000F10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledB1000MZ200To1000F15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledB1000MZ200To1000F20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledB1000MZ200To1000Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -479,6 +496,7 @@ def title = config.title
                 <td class="loadingView num3"  id="totalEnrolledB1000MZ1000F10To14">-</td>
                 <td class="loadingView num3"  id="totalEnrolledB1000MZ1000F15To19">-</td>
                 <td class="loadingView num3"  id="totalEnrolledB1000MZ1000F20To24">-</td>
+                <td class="loadingView num3"  id="totalEnrolledB1000MZ1000Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -506,6 +524,7 @@ def title = config.title
                 <td class="loadingView num3"  id="scheduledPickupFUF10To14">-</td>
                 <td class="loadingView num3"  id="scheduledPickupFUF15To19">-</td>
                 <td class="loadingView num3"  id="scheduledPickupFUF20To24">-</td>
+                <td class="loadingView num3"  id="scheduledPickupFUTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -534,6 +553,7 @@ def title = config.title
                 <td class="loadingView num3"  id="scheduledKeptPickupFUF10To14">-</td>
                 <td class="loadingView num3"  id="scheduledKeptPickupFUF15To19">-</td>
                 <td class="loadingView num3"  id="scheduledKeptPickupFUF20To24">-</td>
+                <td class="loadingView num3"  id="scheduledKeptPickupFUTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -561,6 +581,7 @@ def title = config.title
                 <td class="loadingView num3"  id="goodAdhFUF10To14">-</td>
                 <td class="loadingView num3"  id="goodAdhFUF15To19">-</td>
                 <td class="loadingView num3"  id="goodAdhFUF20To24">-</td>
+                <td class="loadingView num3"  id="goodAdhFUTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -589,6 +610,7 @@ def title = config.title
                 <td class="loadingView num3"  id="eligibleFUF10To14">-</td>
                 <td class="loadingView num3"  id="eligibleFUF15To19">-</td>
                 <td class="loadingView num3"  id="eligibleFUF20To24">-</td>
+                <td class="loadingView num3"  id="eligibleFUTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -616,6 +638,7 @@ def title = config.title
                 <td class="loadingView num3"  id="samplesTakenF10To14">-</td>
                 <td class="loadingView num3"  id="samplesTakenF15To19">-</td>
                 <td class="loadingView num3"  id="samplesTakenF20To24">-</td>
+                <td class="loadingView num3"  id="samplesTakenTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -643,6 +666,7 @@ def title = config.title
                 <td class="loadingView num3"  id="samplesTakenResultF10To14">-</td>
                 <td class="loadingView num3"  id="samplesTakenResultF15To19">-</td>
                 <td class="loadingView num3"  id="samplesTakenResultF20To24">-</td>
+                <td class="loadingView num3"  id="samplesTakenResultTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -670,6 +694,7 @@ def title = config.title
                 <td class="loadingView num3"  id="samplesTakenResult200F10To14">-</td>
                 <td class="loadingView num3"  id="samplesTakenResult200F15To19">-</td>
                 <td class="loadingView num3"  id="samplesTakenResult200F20To24">-</td>
+                <td class="loadingView num3"  id="samplesTakenResult200Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -697,6 +722,7 @@ def title = config.title
                 <td class="loadingView num3"  id="samplesTakenResult200To1000F10To14">-</td>
                 <td class="loadingView num3"  id="samplesTakenResult200To1000F15To19">-</td>
                 <td class="loadingView num3"  id="samplesTakenResult200To1000F20To24">-</td>
+                <td class="loadingView num3"  id="samplesTakenResult200To1000Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -725,6 +751,7 @@ def title = config.title
                 <td class="loadingView num3"  id="samplesTakenResult1000F10To14">-</td>
                 <td class="loadingView num3"  id="samplesTakenResult1000F15To19">-</td>
                 <td class="loadingView num3"  id="samplesTakenResult1000F20To24">-</td>
+                <td class="loadingView num3"  id="samplesTakenResult1000Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -752,6 +779,7 @@ def title = config.title
                 <td class="loadingView num3"  id="resultPast12MtF10To14">-</td>
                 <td class="loadingView num3"  id="resultPast12MtF15To19">-</td>
                 <td class="loadingView num3"  id="resultPast12MtF20To24">-</td>
+                <td class="loadingView num3"  id="resultPast12MtTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -779,6 +807,7 @@ def title = config.title
                 <td class="loadingView num3"  id="resultPast12Mt200F10To14">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt200F15To19">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt200F20To24">-</td>
+                <td class="loadingView num3"  id="resultPast12Mt200Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -806,6 +835,7 @@ def title = config.title
                 <td class="loadingView num3"  id="resultPast12Mt200To100F10To14">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt200To100F15To19">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt200To100F20To24">-</td>
+                <td class="loadingView num3"  id="resultPast12Mt200To100Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -833,6 +863,7 @@ def title = config.title
                 <td class="loadingView num3"  id="resultPast12Mt1000F10To14">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt1000F15To19">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt1000F20To24">-</td>
+                <td class="loadingView num3"  id="resultPast12Mt1000Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -860,6 +891,7 @@ def title = config.title
                 <td class="loadingView num3"  id="resultPast12Mt1000EACF10To14">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt1000EACF15To19">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt1000EACF20To24">-</td>
+                <td class="loadingView num3"  id="resultPast12Mt1000EACTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -887,6 +919,7 @@ def title = config.title
                 <td class="loadingView num3"  id="resultPast12Mt1000RepeatF10To14">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt1000RepeatF15To19">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt1000RepeatF20To24">-</td>
+                <td class="loadingView num3"  id="resultPast12Mt1000RepeatTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -914,6 +947,7 @@ def title = config.title
                 <td class="loadingView num3"  id="resultPast12Mt1000Repeat200F10To14">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt1000Repeat200F15To19">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt1000Repeat200F20To24">-</td>
+                <td class="loadingView num3"  id="resultPast12Mt1000Repeat200Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -941,6 +975,7 @@ def title = config.title
                 <td class="loadingView num3"  id="resultPast12Mt1000Repeat200To1000F10To14">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt1000Repeat200To1000F15To19">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt1000Repeat200To1000F20To24">-</td>
+                <td class="loadingView num3"  id="resultPast12Mt1000Repeat200To1000Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -968,6 +1003,7 @@ def title = config.title
                 <td class="loadingView num3"  id="resultPast12Mt1000Repeat1000F10To14">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt1000Repeat1000F15To19">-</td>
                 <td class="loadingView num3"  id="resultPast12Mt1000Repeat1000F20To24">-</td>
+                <td class="loadingView num3"  id="resultPast12Mt1000Repeat1000Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -995,6 +1031,7 @@ def title = config.title
                 <td class="loadingView num3"  id="switchTo2ndF10To14">-</td>
                 <td class="loadingView num3"  id="switchTo2ndF15To19">-</td>
                 <td class="loadingView num3"  id="switchTo2ndF20To24">-</td>
+                <td class="loadingView num3"  id="switchTo2ndTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -1022,6 +1059,7 @@ def title = config.title
                 <td class="loadingView num3"  id="switchTo3rdF10To14">-</td>
                 <td class="loadingView num3"  id="switchTo3rdF15To19">-</td>
                 <td class="loadingView num3"  id="switchTo3rdF20To24">-</td>
+                <td class="loadingView num3"  id="switchTo3rdTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -1048,6 +1086,7 @@ def title = config.title
                 <td class="loadingView num3"  id="completed7F10To14">-</td>
                 <td class="loadingView num3"  id="completed7F15To19">-</td>
                 <td class="loadingView num3"  id="completed7F20To24">-</td>
+                <td class="loadingView num3"  id="completed7Total">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -1075,6 +1114,7 @@ def title = config.title
                 <td class="loadingView num3"  id="transferredOutF10To14">-</td>
                 <td class="loadingView num3"  id="transferredOutF15To19">-</td>
                 <td class="loadingView num3"  id="transferredOutF20To24">-</td>
+                <td class="loadingView num3"  id="transferredOutTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -1101,6 +1141,7 @@ def title = config.title
                 <td class="loadingView num3"  id="ltfuF10To14">-</td>
                 <td class="loadingView num3"  id="ltfuF15To19">-</td>
                 <td class="loadingView num3"  id="ltfuF20To24">-</td>
+                <td class="loadingView num3"  id="ltfuTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -1128,6 +1169,7 @@ def title = config.title
                 <td class="loadingView num3"  id="deadF10To14">-</td>
                 <td class="loadingView num3"  id="deadF15To19">-</td>
                 <td class="loadingView num3"  id="deadF20To24">-</td>
+                <td class="loadingView num3"  id="deadTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -1155,6 +1197,7 @@ def title = config.title
                 <td class="loadingView num3"  id="optedOutF10To14">-</td>
                 <td class="loadingView num3"  id="optedOutF15To19">-</td>
                 <td class="loadingView num3"  id="optedOutF20To24">-</td>
+                <td class="loadingView num3"  id="optedOutTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -1182,6 +1225,7 @@ def title = config.title
                 <td class="loadingView num3"  id="transitionedF10To14">-</td>
                 <td class="loadingView num3"  id="transitionedF15To19">-</td>
                 <td class="loadingView num3"  id="transitionedF20To24">-</td>
+                <td class="loadingView num3"  id="transitionedTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -1209,6 +1253,7 @@ def title = config.title
                 <td class="loadingView num3"  id="exitedF10To14">-</td>
                 <td class="loadingView num3"  id="exitedF15To19">-</td>
                 <td class="loadingView num3"  id="exitedF20To24">-</td>
+                <td class="loadingView num3"  id="exitedTotal">-</td>
                 <td>
                     <div class="panel panel-default">
                         <div class="panel-body">

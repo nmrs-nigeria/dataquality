@@ -34,6 +34,7 @@ def Misc = config.Misc;
                 <th>Pepfar ID</th>
                 <th>Gender</th>
                 <th>Age</th>
+                 <th>Date Enrolled</th>
                 <!--<th>Age Range</th>-->
                 
         </thead>
@@ -50,6 +51,7 @@ def Misc = config.Misc;
                         <td><%= patients.get(i).getPepfarId()%></td>
                         <td><%= patients.get(i).getGender()%></td>
                         <td><%= patients.get(i).getAge()%></td>
+                        <td><%= patients.get(i).getEnrollmentDate()%></td>
                         
                     </tr>
                 <%}

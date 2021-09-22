@@ -1,20 +1,48 @@
 
+<br/>
     <div class="row" >
-       <div class="col-sm-4 col-md-4">
-            <a class="bootcards-summary-item label-warning showDetails" href="javascript:void(0);" data-isOptimum="true" data-weight="less_20" data-regimen=""  data-title="Total AYPLHIV enrolled in OTZ"  >
+        <div class="col-sm-4 col-md-4">
+            <a class="bootcards-summary-item label-green1 showDetails" href="javascript:void(0);" data-isOptimum="true" data-weight="less_20" data-regimen=""  data-title="Total AYPLHIV enrolled in OTZ"  >
                <div class="row">
-                   <div class="col-sm-5"><i class=" icon-user"></i></div>
-                   <div class="col-sm-7"><h4><strong><span class="large" id="totalEnrolledInOTZ">-</span><br/></strong> </h4></div>
+                   <div class="col-sm-5"><i class="icon-info  fa fa-users"></i></div>
+                   <div class="col-sm-7"><h4><strong><span class="large icon-info" id="txCurrAyP">-</span><br/></strong> </h4></div>
                </div>
-               <span class="label label-info" id="optimal_less_20_percent">Total AYPLHIV enrolled in OTZ</span>
+               <span class="label label-info" id="optimal_less_20_percent">Tx Curr for AYPLHIVs in facility</span>
             </a>
             
+        </div>
+        
+       <div class="col-sm-4 col-md-8">
+            <a class="bootcards-summary-item label-white showDetails" href="javascript:void(0);" data-isOptimum="true" data-weight="less_20" data-regimen=""  data-title="Total AYPLHIV enrolled in OTZ"  >
+               <div class="row">
+                   <div class="col-sm-5"><i class="icon-success icon-user"></i></div>
+                   <div class="col-sm-7"><h4><strong><span class="large icon-success" id="totalEnrolledInOTZ">-</span><br/></strong> </h4></div>
+               </div>
+               <span class="label label-success" id="optimal_less_20_percent">Total AYPLHIV enrolled in OTZ</span>
+            </a>
+            
+        </div>
+       
+    </div>
+    <br/>
+    
+    <div class="row" >
+       
+         <div class="col-sm-4 col-md-4">
+            <a class="bootcards-summary-item label-info showDetails" href="javascript:void(0);" data-isOptimum="true" data-weight="bet_20_30" data-regimen="" data-title="Total Male AYPLHIV enrolled in OTZ" >
+               <div class="row">
+                   <div class="col-sm-5"><i class=" icon-info fa icon-bar-chart"></i></div>
+                   <div class="col-sm-7"><h4><strong><span class="large icon-info" id="aypEnrolled">-</span><br/></strong> </h4></div>
+               </div>
+               <span class="label label-success" id="optimal_20_30_percent">Proportion of AYPLHIVs enrolled in OTZ</span>
+
+            </a>
         </div>
         <div class="col-sm-4 col-md-4">
             <a class="bootcards-summary-item label-green2 showDetails" href="javascript:void(0);" data-isOptimum="true" data-weight="bet_20_30" data-regimen="" data-title="Total Male AYPLHIV enrolled in OTZ" >
                <div class="row">
-                   <div class="col-sm-5"><i class="icon-user"></i></div>
-                   <div class="col-sm-7"><h4><strong><span class="large" id="totalEnrolledInOTZMale">-</span><br/></strong> </h4></div>
+                   <div class="col-sm-5"><i class=" icon-info fa fa-male"></i></div>
+                   <div class="col-sm-7"><h4><strong><span class="large icon-info" id="totalEnrolledInOTZMale">-</span><br/></strong> </h4></div>
                </div>
                <span class="label label-warning" id="optimal_20_30_percent">Total Male AYPLHIV enrolled in OTZ</span>
 
@@ -23,37 +51,13 @@
         <div class="col-sm-4 col-md-4">
             <a class="bootcards-summary-item label-success showDetails" href="javascript:void(0);" data-isOptimum="true" data-weight="above_30" data-regimen="" data-title="Total Female AYPLHIV enrolled in OTZ">
                <div class="row">
-                   <div class="col-sm-5"><i class="icon-user"></i></div>
-                   <div class="col-sm-7"><h4><strong><span class="large" id="totalEnrolledInOTZFemale">-</span><br/></strong> </h4></div>
+                   <div class="col-sm-5"><i class=" icon-info fa fa-female"></i></div>
+                   <div class="col-sm-7"><h4><strong><span class="large icon-info" id="totalEnrolledInOTZFemale">-</span><br/></strong> </h4></div>
                </div>
                <span class="label label-info" id="optimal_above_30_percent">Total Female AYPLHIV enrolled in OTZ</span>
 
             </a>
             <!--<h3 class="centertext"><strong > >30kg </strong></h3>-->
-        </div>
-    </div>
-    <br/>
-    
-    <div class="row" >
-       <div class="col-sm-4 col-md-6">
-            <a class="bootcards-summary-item label-green1 showDetails" href="javascript:void(0);" data-isOptimum="true" data-weight="less_20" data-regimen=""  data-title="Total AYPLHIV enrolled in OTZ"  >
-               <div class="row">
-                   <div class="col-sm-5"><i class=" icon-user"></i></div>
-                   <div class="col-sm-7"><h4><strong><span class="large" id="txCurrAyP">-</span><br/></strong> </h4></div>
-               </div>
-               <span class="label label-info" id="optimal_less_20_percent">Tx Curr for AYPLHIVs in facility</span>
-            </a>
-            
-        </div>
-        <div class="col-sm-4 col-md-6">
-            <a class="bootcards-summary-item label-info showDetails" href="javascript:void(0);" data-isOptimum="true" data-weight="bet_20_30" data-regimen="" data-title="Total Male AYPLHIV enrolled in OTZ" >
-               <div class="row">
-                   <div class="col-sm-5"><i class="icon-user"></i></div>
-                   <div class="col-sm-7"><h4><strong><span class="large" id="aypEnrolled">-</span><br/></strong> </h4></div>
-               </div>
-               <span class="label label-success" id="optimal_20_30_percent">Proportion of AYPLHIVs in facility enrolled in OTZ</span>
-
-            </a>
         </div>
         
         
@@ -111,6 +115,7 @@ var total2024 = 0;
     jq("#totalEnrolledInOTZMale").html(totalMale);
     
     getDashboardValues();
+    getVlData();
     
  }
  
@@ -173,6 +178,7 @@ var total2024 = 0;
          
         var lastQuarter = "";
         var otzData = new Array();
+        console.log(quarters);
         for(var key in quarters)
         {
             if(quarters.hasOwnProperty(key))
@@ -183,10 +189,11 @@ var total2024 = 0;
                         totalCount:quarters[key],
                         color:"#589BD4"
                      })
-                lastQuarter = key.toUpperCase();
+                //lastQuarter = key.toUpperCase();
             }
             
         }
+        lastQuarter =  dqr_getFiscalQuarter(endDate).toUpperCase();
         
         /*var legendData = [{color:"#e35b17", title:"Patient with VL >=1000 cp/ml"}, {color:"#edc009", title:"Patient with VL between 200 - 999 cp/ml"},
                         {color:"#23ba58", title:"Patient with VL <200 cp/ml"},      
@@ -206,7 +213,7 @@ var total2024 = 0;
         var totalByGender = new Array();
         totalByGender.push({title: "Male", value: totalMale, weightBand:"above_30", regimen:"male", isOptimum:"false" })
         totalByGender.push({title: "Female", value: totalFemale, weightBand:"above_30", regimen:"female", isOptimum:"false" });
-        var colors = ["#A0CEF0", "#B8B8B8"]
+        var colors = ["#A0CEF0", "#a903fc"]
 
          buildPieCharts(totalByGender, "value", "title", "chartTotalEnrolledGender", false, true, colors);
 

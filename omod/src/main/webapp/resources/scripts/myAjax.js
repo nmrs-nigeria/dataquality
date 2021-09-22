@@ -18,6 +18,10 @@ function setupDatePickerPositioner()
    
 }
 
+function leapYear(year)
+{
+    return (year % 100 === 0) ? (year % 400 === 0) : (year % 4 === 0);
+}
 
 function getCohorts(type, cohortAjaxUrl, callback)
 {
@@ -44,8 +48,6 @@ function getCohorts(type, cohortAjaxUrl, callback)
             })
         
 }
-
-
 
 
 function getCohorts2(type, cohortAjaxUrl)
@@ -132,10 +134,26 @@ function buildBarCharts(title, chartData, graphArray, categoryField, chartDiv, p
     valueAxis.axisAlpha = 0;
     valueAxis.dashLength = 5;
     valueAxis.title = title;
+    valueAxis.align = "left"
     valueAxis.titleColor = "#333333";
     valueAxis.unit = "";
     
     chart.addValueAxis(valueAxis);
+    
+    
+    var valueAxis2 = new AmCharts.ValueAxis();
+    valueAxis2.stackType = stackType; // This line makes chart 3D stacked (columns are placed one behind another)
+    valueAxis2.gridAlpha = 0.2;
+    valueAxis2.gridColor = "#333333";
+    valueAxis2.axisColor = "#333333";
+    valueAxis2.axisAlpha = 0;
+    valueAxis2.dashLength = 5;
+    valueAxis2.align = "right"
+    valueAxis2.title = "testing";
+    valueAxis2.titleColor = "#333333";
+    valueAxis2.unit = "";
+    
+    chart.addValueAxis(valueAxis2);
 
 
     // CURSOR
@@ -155,6 +173,7 @@ function buildBarCharts(title, chartData, graphArray, categoryField, chartDiv, p
         graph1.weightBand = graphArray[i]["weightBand"];
         graph1.regimen = graphArray[i]["regimen"];
         graph1.isOptimum = graphArray[i]["isOptimum"];
+         graph1.chartType = graphArray[i]["chartType"];
         graph1.valueField = graphArray[i]["field"];
         var description = graphArray[i]["description"];
         graph1.type = "column";
@@ -184,6 +203,176 @@ function buildBarCharts(title, chartData, graphArray, categoryField, chartDiv, p
         legend.labelWidth = 350;
         legend.data =  legendData//[{title: "One", color: "#3366CC"},{title: "Two", color: "#FFCC33"}];
         legend.horizontalGap = 2;
+        chart.addLegend(legend);
+    }
+
+   chart.addListener("clickGraphItem", graphClickHandler)
+   chart.write(chartDiv);
+}
+
+
+function dataQuality_calculateMin(max, min)
+{
+    var newMin = min - ((max + min)/2 );
+    return (newMin >=0)?  newMin : 0;
+}
+
+function dataQuality_calculateMax(max, min)
+{
+    
+    return max + (max * 0.2);
+}
+
+
+function dataQuality_buildBarCharts(title, chartData, graphArray, categoryField, chartDiv, postFix, stackType, legendData, enableCategoryLabels=true, is3d=false, min=0, max=0)
+{
+    var chart = new AmCharts.AmSerialChart();
+    chart.dataProvider = chartData;
+    chart.categoryField = categoryField;
+    //chart.color = "#333333";
+    //chart.fontSize = 14;
+    //chart.startDuration = 1;
+    chart.plotAreaBorderAlpha = 0.2;
+    // the following two lines makes chart 3D
+    
+    if(is3d == true){
+        chart.angle = 30;
+        chart.depth3D = 20;
+    }
+
+    chart.startDuration = 1;
+
+    // AXESchartData2chartDiv
+    // category
+    var categoryAxis = chart.categoryAxis;
+    categoryAxis.gridAlpha = 0.2;
+    categoryAxis.gridPosition = "start";
+    categoryAxis.gridColor = "#ffffff";
+    categoryAxis.axisColor = "#333333";
+    categoryAxis.axisAlpha = 0;
+    categoryAxis.dashLength = 5;
+    categoryAxis.labelsEnabled = enableCategoryLabels;
+
+    // value
+    var valueAxis = new AmCharts.ValueAxis();
+    valueAxis.stackType = stackType; // This line makes chart 3D stacked (columns are placed one behind another)
+    valueAxis.gridAlpha = 0.2;
+    valueAxis.gridColor = "#333333";
+    valueAxis.axisColor = "#333333";
+    valueAxis.axisAlpha = 0;
+    valueAxis.dashLength = 5;
+    valueAxis.title = title;
+    valueAxis.position = "left"
+    valueAxis.titleColor = "#333333";
+    valueAxis.unit = "";
+    
+    if(max >0){
+        valueAxis.minimum = min;
+        valueAxis.maximum = max;
+        valueAxis.strictMinMax = true;
+        console.log("got here");
+    }
+    chart.addValueAxis(valueAxis);
+    
+    
+    var valueAxis2 = new AmCharts.ValueAxis();
+    valueAxis2.stackType = stackType; // This line makes chart 3D stacked (columns are placed one behind another)
+    valueAxis2.gridAlpha = 0.2;
+    valueAxis2.gridColor = "#333333";
+    valueAxis2.axisColor = "#333333";
+    valueAxis2.axisAlpha = 0;
+    valueAxis2.dashLength = 5;
+    valueAxis2.position = "right"
+    valueAxis2.title = "Percentage";
+    valueAxis2.titleColor = "#333333";
+    valueAxis2.unit = "";
+    valueAxis2.minimum = 0;
+    valueAxis2.maximum = 120;
+    valueAxis2.strictMinMax = true;
+    
+    chart.addValueAxis(valueAxis2);
+    
+
+    // CURSOR
+    var chartCursor = new AmCharts.ChartCursor();
+    chartCursor.cursorAlpha = 0;
+    chartCursor.zoomable = true;
+    chartCursor.categoryBalloonEnabled = false;
+    chart.addChartCursor(chartCursor);
+
+    chart.categoryAxis.labelRotation = 60;
+    
+    for(var i=0; i<graphArray.length; i++)
+    {
+        
+                        
+        var graph1 = new AmCharts.AmGraph();
+        
+        graph1.title = graphArray[i]["title"];
+        graph1.weightBand = graphArray[i]["weightBand"];
+        graph1.regimen = graphArray[i]["regimen"];
+        graph1.isOptimum = graphArray[i]["isOptimum"];
+        graph1.chartType = graphArray[i]["chartType"];
+        graph1.valueField = graphArray[i]["field"];
+        var description = graphArray[i]["description"];
+        graph1.type = graphArray[i]["type"];
+        
+        
+        if(graphArray[i]["type"] == "column")
+        {
+            graph1.fillAlphas = 1;
+            graph1.lineAlpha = 0;
+            graph1.labelText = "[[value]]"+postFix;
+             graph1.balloonText = graphArray[i]["title"]+" [["+description+"]]<br><span style='font-size:14px;'>[[value]]</span>"//graphArray[i]["description"]+" [[category]]: <b>[[value]]</b>"+postFix;
+        }
+        else{
+            graph1.bulletBorderAlpha = 1;
+            graph1.bulletBorderThickness = 2;
+            graph1.lineThickness = 2;
+            graph1.bullet = "round";
+            graph1.bulletSize = 8;
+            graph1.labelText = "[[value]] %";
+             graph1.balloonText = graphArray[i]["title"]+" [["+description+"]]<br><span style='font-size:14px;'>[[value]]%</span>"//graphArray[i]["description"]+" [[category]]: <b>[[value]]</b>"+postFix;
+        }
+        //graph1.periodValue = graphArray[i]["title"]+" [["+description+"]]<br><span style='font-size:14px;'>[[value]]</span>";
+        
+         
+        
+        
+        graph1.regimenId = 1;
+        if(typeof graphArray[i]["color"] == "undefined"){
+            graph1.colorField = "color";
+        }else{
+            graph1.lineColor = graphArray[i]["color"];
+        }
+        
+        
+        if(graphArray[i]["valueAxis"] == 1){
+            graph1.valueAxis = valueAxis;
+        }
+        else{
+            graph1.valueAxis = valueAxis2;
+        }
+        
+        
+        
+        //
+        
+        graph1.addListener("clickGraphItem", graphClickHandler)
+       
+        chart.addGraph(graph1);
+    }
+    // LEGEND
+    if(legendData.length > 0)
+    {
+        var legend = new AmCharts.AmLegend();
+    
+        legend.borderAlpha = 0.2;
+        legend.labelWidth = 800;
+        legend.labelWidth = 350;
+        legend.data =  legendData//[{title: "One", color: "#3366CC"},{title: "Two", color: "#FFCC33"}];
+        legend.horizontalGap = 2;
+        legend.verticalGap = 20;
         chart.addLegend(legend);
     }
 
@@ -238,12 +427,20 @@ function buildPieCharts(chartData, valueField, titleField, divId, is3d=false, is
 
 function graphClickHandler(event)
 {
-     var jq = jQuery;
+    var jq = jQuery;
     var isOptimum = event.graph.isOptimum;
     var chartType = event.graph.chartType;
-    if(isOptimum == "vl"){
-        renderVlPatientDetails(event.item.category, "Patient details");
+    
+    
+    var category = event.item.category;
+    
+    
+    
+    
+    if(chartType == "vlotz"){
+        dataquality_renderOTZData(isOptimum, category, "Line list");
     }
+    
     else if(isOptimum == "eac")
     {
         renderEACPatientDetails(event.item.category, "EAC");
@@ -326,6 +523,72 @@ jq(document).ready(function(){
         
     });
 })
+
+
+
+function dataquality_renderOTZData(isOptimum, category,  title)
+{
+    jq("#tableContainer").html('<table class="dataTable2"><thead><tr><th nowrap>S/N</th><th nowrap>Pepfar ID</th><th nowrap>ART Start date</th><th nowrap>Date of Birth</th><th nowrap>Age</th><th nowrap>Date Enrolled in OTZ</th> <th nowrap>Sample Collection Date</th> <th nowrap>VL Result</th><th>Action4</th> </tr></thead><tbody id="detailsArea"></tbody></table>');
+    
+    jq("#detailsModal").modal("show");
+    var html = "";
+    var sn = 1;
+    
+    
+    console.log(category, isOptimum);
+    var fullData = new Array();
+    if(isOptimum == "eligible6mts")
+    {
+        fullData = patientsEligibleObj[category];
+    }
+    else if(isOptimum == "sampleTaken6t")
+    {
+        fullData = patientsWithSampleObj[category];
+    }else if(isOptimum == "withResult")
+    {
+        fullData = patientsWithResultObj[category];
+    }else if(isOptimum == "suppressed6Months")
+    {
+        fullData = patientsSuppressedPast6MonthsObj[category];
+    }
+    else if(isOptimum == "withResult12Months")
+    {
+        fullData = patientsWithResultPast12MonthObj[category];
+    }
+    else if(isOptimum == "suppressed12Months")
+    {
+        fullData = patientsSuppressedPast12MonthsObj[category];
+        
+    }
+    
+    var html = "";
+   
+    for(var i=0; i<fullData.length; i++)
+    {  
+        var patientData = fullData[i];
+        var patientId = patientData["patientId"];
+        html += "<tr>"; 
+        html += "<td >"+(i+1)+"</td>";
+        html += "<td>"+patientData["pepfarId"]+"</td>";
+        //html += "<td>"+patientData["firstName"]+" "+patientData["lastName"]+"</td>";
+        html += "<td>"+patientData["artStartDate"].substring(0, 10)+"</td>";
+        html += "<td>"+patientData["dob"].substring(0, 10)+"</td>";
+        html += "<td>"+patientData["age"]+"</td>";
+        html += "<td>"+patientData["enrollmentDate"].substring(0, 10)+"</td>";
+        html += "<td>"+((patientData["sampleCollectionDate"] == null) ? "N/A" : patientData["sampleCollectionDate"].substring(0, 10))+"</td>";
+        html += "<td>"+patientData["viralLoad"]+"</td>";
+        html += "<td><a class='button' target='_blank' href='/coreapps/clinicianfacing/patient.page?patientId="+patientId+"'>Patient Dashboard<a></td>"
+        
+        html += "</tr>";
+   
+    }
+    //reInitializeDatatable(title);
+    jq("#detailsArea").html(html);
+    
+    //initialize datatable
+   reInitializeDatatable2(title);
+}
+
 
 function renderPatientDetails(isOptimum, weight, regimen, title)
 {
@@ -520,6 +783,60 @@ function reInitializeDatatable(title)
 }
 
 
+function reInitializeDatatable2(title)
+{
+  
+    jq(".dataTable2").DataTable({
+        
+             pageLength: 100,
+             "lengthMenu": [[50, 100, 250, 500, -1], [50, 100, 250, 500, "All"]],
+             "columnDefs": [
+                { "searchable": false, "targets": [0] }  // Disable search on first and last columns
+              ],
+              dom: 'lfBrtip',
+                buttons: [
+                    'copy', 
+                   // 'csv', 
+                    {
+                        extend: 'csv',
+                        title:title,
+                        exportOptions: {
+                            columns: [0,1,2,3,4]
+                        }
+                        //messageTop: '<%= title; %>'
+                    },
+                    {
+                        extend: 'excel',
+                        title:title,
+                        exportOptions: {
+                            columns: [0,1,2,3,4]
+                        }
+                        //messageTop: '<%= title; %>'
+                    },
+                    {
+                        extend: 'pdf',
+                        title:title,
+                        exportOptions: {
+                            columns: [0,1,2,3,4]
+                        }
+                        //messageTop: '<%= title; %>'
+                    },
+                    {
+                        extend: 'print',
+                        title:title,
+                        exportOptions: {
+                            columns: [0,1,2,3,4]
+                        }
+                        //messageTop: '<%= title; %>'
+                    },
+                    //'pdf', 
+                    //'print'
+                ]
+
+                });
+}
+
+
  
 function buildVlPatientHtml(i, patientData, action)
 {
@@ -637,6 +954,36 @@ function getOptimalType(conceptId)
     else {
         return -1;
     }
+}
+
+function getDateRangeForQuarter(quarter, year)
+{
+    var startDate = "";
+    var endDate = "";
+    if(quarter == 1)
+    {
+        year = year -1;
+        startDate = year+"-10-01";
+        endDate = year+"-12-31";
+    }else if(quarter == 2)
+    {
+         startDate = year+"-01-01";
+        endDate = year+"-03-31";
+    }
+    else if(quarter == 3)
+    {
+        
+         startDate = year+"-04-01";
+        endDate = year+"-06-30";
+    }
+    else if(quarter == 4)
+    {
+         startDate = year+"-07-01";
+        endDate = year+"-09-30";
+    }
+    
+    console.log(year);
+    return [startDate, endDate];
 }
 
 

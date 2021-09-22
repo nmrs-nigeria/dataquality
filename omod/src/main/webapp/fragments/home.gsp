@@ -13,11 +13,13 @@ ui.includeCss("dataquality", "buttons.dataTables.min.css")
 ui.includeCss("dataquality", "jquery.dataTables.min.css")
 
 
+
 def id = config.id
 %>
+<link rel="stylesheet" href="/<%= ui.contextPath();%>/ms/uiframework/resource/dataquality/font-awesome/css/font-awesome.min.css"/>
 <%=ui.resourceLinks()%>
 <div class="container">
-    <h2>Data Quality Module</h2>
+    <h2>Aggregate Reports</h2>
     <div class="row">
         <label class="col-sm-4 col-md-2 "><strong>Dataset</strong></label>
         <div class="col-sm-4 col-md-4">

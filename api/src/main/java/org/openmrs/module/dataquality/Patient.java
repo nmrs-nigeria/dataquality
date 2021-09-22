@@ -16,6 +16,8 @@ public class Patient {
 	
 	private String givenName;
 	
+	private String artStartDate;
+	
 	private String familyName;
 	
 	private String dob;
@@ -23,6 +25,8 @@ public class Patient {
 	private String gender;
 	
 	private float viralLoad;
+	
+	private String sampleCollectionDate;
 	
 	private int age;
 	
@@ -88,6 +92,22 @@ public class Patient {
 	
 	public void setPepfarId(String pepfarId) {
 		this.pepfarId = pepfarId;
+	}
+	
+	public String getSampleCollectionDate() {
+		return sampleCollectionDate;
+	}
+	
+	public void setSampleCollectionDate(String sampleCollectionDate) {
+		this.sampleCollectionDate = sampleCollectionDate;
+	}
+	
+	public String getArtStartDate() {
+		return artStartDate;
+	}
+	
+	public void setArtStartDate(String artStartDate) {
+		this.artStartDate = artStartDate;
 	}
 	
 }

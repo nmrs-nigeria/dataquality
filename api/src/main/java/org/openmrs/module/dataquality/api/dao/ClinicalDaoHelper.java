@@ -109,20 +109,23 @@ public class ClinicalDaoHelper {
                 //stmt = Database.conn.createStatement(java.sql.ResultSet.TYPE_FORWARD_ONLY, java.sql.ResultSet.CONCUR_READ_ONLY);
 
                 StringBuilder queryString = new StringBuilder(
-                        " select IFNULL(hivE.encounter_id, 0) AS encounter_id, dqr_meta.patient_id, person_name.given_name, person_name.family_name, patient_identifier.identifier FROM dqr_meta "
-                        + " LEFT JOIN encounter hivE ON hivE.patient_id=dqr_meta.patient_id AND hivE.form_id=23 "
-                        + "  JOIN person_name ON person_name.person_id=dqr_meta.patient_id "
-                        + " LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 "
-                        + " JOIN dqr_pharmacy ON dqr_pharmacy.patient_id=dqr_meta.patient_id "
-                        + "	 WHERE   "
-                        + "	 DATE_ADD(dqr_pharmacy.pickupdate,  INTERVAL (dqr_pharmacy.days_refill+28) DAY) >= ?  "
-                        + "     AND dqr_pharmacy.pickupdate= ( "
-                        + "		SELECT MAX(pickupdate) FROM dqr_pharmacy lastpickup "
-                        + "        WHERE lastpickup.patient_id=dqr_pharmacy.patient_id "
-                        + "	 HAVING MAX(pickupdate) <=? )   "
-                        + " AND (dqr_meta.termination_status IS NULL OR dqr_meta.termination_status!=1066 )  ");
-
-                queryString.append(" AND (TIMESTAMPDIFF(YEAR,dqr_meta.dob,CURDATE()) > 0 AND TIMESTAMPDIFF(YEAR,dqr_meta.dob,CURDATE()) <=24) GROUP BY dqr_meta.patient_id ");
+                        "  select IFNULL(hivE.encounter_id, 0) AS encounter_id, dqr_meta.patient_id, dqr_meta.dob, person_name.given_name, person_name.family_name, patient_identifier.identifier FROM dqr_meta \n" +
+                            "                         LEFT JOIN encounter hivE ON hivE.patient_id=dqr_meta.patient_id AND hivE.form_id=23 \n" +
+                            "                          JOIN person_name ON person_name.person_id=dqr_meta.patient_id \n" +
+                            "                         LEFT JOIN patient_identifier ON patient_identifier.patient_id=dqr_meta.patient_id AND patient_identifier.identifier_type=4 \n" +
+                            "                         JOIN dqr_pharmacy lastpickup ON lastpickup.patient_id=dqr_meta.patient_id \n" +
+                            "                         AND lastpickup.pickupdate=(\n" +
+                            "							SELECT pickupdate FROM dqr_pharmacy WHERE lastpickup.patient_id=dqr_pharmacy.patient_id\n" +
+                            "                            AND pickupdate <=?\n" +
+                            "                            ORDER BY pickupdate DESC LIMIT 0,1\n" +
+                            "                         )\n" +
+                            "                 WHERE   \n" +
+                            "                        	 DATE_ADD(lastpickup.pickupdate,  INTERVAL (lastpickup.days_refill+28) DAY) >= ? \n" +
+                            "                            \n" +
+                            "                         AND (dqr_meta.termination_status IS NULL OR dqr_meta.termination_status!=1066 )  \n" +
+                            "\n" +
+                            "      AND (TIMESTAMPDIFF(YEAR,dqr_meta.dob,CURDATE()) > 0 AND TIMESTAMPDIFF(YEAR,dqr_meta.dob,CURDATE()) <=24)\n" +
+                            "     GROUP BY dqr_meta.patient_id  ");
 
                 int i = 1;
                 stmt = con.prepareStatement(queryString.toString());

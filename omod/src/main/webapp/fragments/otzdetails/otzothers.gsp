@@ -65,8 +65,8 @@ function renderLossesChart(totalDead, totalTransferred, totalLTFU)
 
 function renderExitChart(exited, transitioned, optedOut)
 {
-      var  legendData = [{color:"#dbc518", title:"Dead"}, {color:"#0fbf3e", title:"Transferred out"},
-                    {color:"#bf700f", title:"IIT"},      
+      var  legendData = [{color:"#dbc518", title:"Exited"}, {color:"#0fbf3e", title:"Transitioned"},
+                    {color:"#bf700f", title:"Opted out"},      
              ]
           
           //Total enrolled in OTZ by Sex distribution
